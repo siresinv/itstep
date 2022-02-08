@@ -25,5 +25,5 @@ int main()
 	}
 
 	std::cout << "-------------------------------------" << std::endl;
-	std::cout << "Вся дистанция за " << nDay << " дн. равна " << distanceFull << std::endl;
+	std::cout << "Общая дистанция за " << nDay << " дн. равна " << distanceFull << std::endl;
 }
