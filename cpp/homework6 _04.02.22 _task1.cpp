@@ -6,8 +6,6 @@
 
 int main()
 {
-	
-
 	setlocale(0, "");
 
 	const int nDay = 4;
