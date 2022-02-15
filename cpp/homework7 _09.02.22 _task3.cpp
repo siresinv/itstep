@@ -25,16 +25,17 @@ int main()
 	int height;
 	char symb;
 
-	
+	/*
 	do
 	{
 		// Выбираем два случайных нечетных числа от 7 до 25 - (от 6 до 25)
 		width = rand() % 20 + 6;
 		height = rand() % 20 + 6;
 	} while (width % 2 == 0 || height % 2 == 0);
-	
+	*/
 
-
+	width = 5;
+	height = 17;
 
 	float wRatio; // Коэффициент соотношения сторон
 	float hRatio; // Коэффициент соотношения сторон
