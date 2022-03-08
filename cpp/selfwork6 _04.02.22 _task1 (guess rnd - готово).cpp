@@ -22,7 +22,7 @@ int main()
 	char guessNumState;
 
 	minGuessNum = 0;
-	maxGuessNum = 1000000000;
+	maxGuessNum = 1000;
 	nTry = 0;
 
 	do {

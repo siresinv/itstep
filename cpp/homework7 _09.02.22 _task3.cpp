@@ -34,8 +34,8 @@ int main()
 	} while (width % 2 == 0 || height % 2 == 0);
 	*/
 
-	width = 5;
-	height = 17;
+	width = 11;
+	height = 21;
 
 	float wRatio; // Коэффициент соотношения сторон
 	float hRatio; // Коэффициент соотношения сторон
