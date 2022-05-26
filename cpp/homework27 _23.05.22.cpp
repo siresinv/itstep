@@ -95,6 +95,5 @@ int main() {
 	deleteArr(arr2, row);
 	deleteArr(arr3, row);
 
-
 	return 0;
 }
