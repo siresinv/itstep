@@ -130,7 +130,7 @@ void task3() {
 			for (int k = 0; k < 4; k++) {
 				delete[]arr3[i][j][k];
 			}
-			delete[]arr3[i][j];
+			// delete[]arr3[i][j]; // РУГАЕТСЯ НА ЭТУ СТРОКУ И ВСЁ!!!
 		}
 		delete[]arr3[i];
 	}
@@ -180,9 +180,15 @@ int** task4_multMatrix(int** matrix1, int** matrix2, int row, int col) {
 	int cell = 0;
 
 
-	for (int i = 0; i < col; i++) {
-		for (int j = 0; j < row; j++) {
-			
+	for (int i = 0; i < row; i++) {
+		for (int j = 0; j < col; j++) {
+			for (int k = 0; k < ; k++) {
+
+			}
+
+			matrix3[i][0] += [i][j] * [j][i];
+
+
 		}
 	}
 
