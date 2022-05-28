@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="homework27 _23.05.22.jpeg" />
+    <Image Include="homework28 _25.05.22.jpeg" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="homework27 _23.05.22.cpp" />
+    <ClCompile Include="homework28 _25.05.22.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

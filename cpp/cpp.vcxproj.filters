@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="homework27 _23.05.22.jpeg">
+    <Image Include="homework28 _25.05.22.jpeg">
       <Filter>Файлы ресурсов</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="homework27 _23.05.22.cpp">
+    <ClCompile Include="homework28 _25.05.22.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
