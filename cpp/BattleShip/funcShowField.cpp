@@ -30,7 +30,7 @@ const char ICON_ABOUT_SHIP = ' ';
 const char ICON_SHOT_MISS = '.';
 const char ICON_SHOT_HIT = 'X';
 
-enum fieldCellType
+enum fieldCellType // типы клеток поля
 {
 	cellSee,
 	cellShip,
@@ -39,7 +39,7 @@ enum fieldCellType
 	cellAboutShip
 };
 
-enum shipType
+enum shipType // типы кораблей с соответствующим количеством палуб
 {
 	shipBoat = 1,
 	shipDestroyer,
@@ -47,11 +47,11 @@ enum shipType
 	shipLincor
 };
 
-enum shotResultType
+enum shotResultType // результаты выстрелов
 {
 	shotRepeat,
 	shotMiss,
-	shotHit,
+	shotHit
 }; 
 
 int* getShipList() {
@@ -59,11 +59,11 @@ int* getShipList() {
 	return arrShipList;
 }
 
-int getShipLastCell(int firstCell, int nDeck) {
+int getShipLastCell(int firstCell, int nDeck) { // получение последней(оконечной) клетки корабля
 	return firstCell + nDeck - 1;
 }
 
-bool isShipOnField(int letter, int digit, int nDeck, bool direction) {
+bool isShipOnField(int letter, int digit, int nDeck, bool direction) { // проверка - корабль уместиться на поле при расстановке
 	if (direction) {
 		if (getShipLastCell(digit, nDeck) > FIELD_SIZE_X - 1) {
 			return false;
@@ -78,8 +78,8 @@ bool isShipOnField(int letter, int digit, int nDeck, bool direction) {
 	return true;
 }
 
-int* getCoordRectAboutShip(int letter, int digit, int nDeck, bool direction){
-	/// Возвращает массив с координатами прямоугольника вокруг корабля
+int* getCoordRectAboutShip(int letter, int digit, int nDeck, bool direction){ // Возвращает массив с координатами прямоугольника вокруг корабля
+	
 	
 	int rectX1;
 	int rectY1;
@@ -105,11 +105,11 @@ int* getCoordRectAboutShip(int letter, int digit, int nDeck, bool direction){
 	return arrCoordRectAboutShip;
 }
 
-void setCell(int* cell, int value) {
+void setCell(int* cell, int value) { // установка соответствующей клетки на поле
 	*cell = value;
 }
 
-void setRectAboutShip(int** field, int rectX1, int rectY1, int rectX2, int rectY2) {
+void setRectAboutShip(int** field, int rectX1, int rectY1, int rectX2, int rectY2) { // установка прямоугольника вокруг корабля
 	for (int i = rectY1; i <= rectY2; i++) {
 		for (int j = rectX1; j <= rectX2; j++) {
 			int& cell = *(*(field + i) + j);
@@ -118,7 +118,7 @@ void setRectAboutShip(int** field, int rectX1, int rectY1, int rectX2, int rectY
 	}
 }
 
-bool isSetableShip(int** field, int letter, int digit, int nDeck, bool direction) {
+bool isSetableShip(int** field, int letter, int digit, int nDeck, bool direction) { // проверка возможности установки корабля на поле - не мешают ли другие корабли
 	if (direction) {
 		for (int i = digit; i <= getShipLastCell(digit, nDeck); i++) {
 			if (*(*(field + letter) + i) != cellSee) return false;
@@ -132,7 +132,7 @@ bool isSetableShip(int** field, int letter, int digit, int nDeck, bool direction
 	return true;
 }
 
-bool setShip(int** field, int letter, int digit, int nDeck, bool direction) {
+void setShip(int** field, int letter, int digit, int nDeck, bool direction) { // установка корабля на поле
 	if (direction) {
 		for (int i = digit; i <= getShipLastCell(digit, nDeck); i++) {
 			int& cell = *(*(field + letter) + i);
@@ -145,10 +145,11 @@ bool setShip(int** field, int letter, int digit, int nDeck, bool direction) {
 			setCell(&cell, cellShip);
 		}
 	}
-	return true;
 }
 
-void setRandShip(int** field, int nDeck, bool direction) {
+
+///////////////
+void selectRandShip(int** field, int nDeck, bool direction) { // выбор случайного корабля для установки
 
 	int randLetter;
 	int randDigit;
@@ -164,7 +165,7 @@ void setRandShip(int** field, int nDeck, bool direction) {
 		} while (!isShipOnField(randLetter, randDigit, nDeck, direction));
 	} while (!isSetableShip(field, randLetter, randDigit, nDeck, direction));
 	
-	setShip(field, randLetter, randDigit, nDeck, direction);
+	setShip(field, randLetter, randDigit, nDeck, direction); // - это переместить отсюда
 
 	int* arrCoordRectAboutShip = getCoordRectAboutShip(randLetter, randDigit, nDeck, direction);
 	rectX1 = arrCoordRectAboutShip[0];
@@ -173,49 +174,62 @@ void setRandShip(int** field, int nDeck, bool direction) {
 	rectY2 = arrCoordRectAboutShip[3];
 	delete[]arrCoordRectAboutShip;
 
-	setRectAboutShip(field, rectX1, rectY1, rectX2, rectY2);
+	setRectAboutShip(field, rectX1, rectY1, rectX2, rectY2); // - это переместить отсюда
 }
 
-bool getRandDirection() {
+bool getRandDirection() { // случайный выбор направления для установки корабля - горизонтально, вертикально
 	return ((rand() % 1000) % 2 == 0) ? true : false;
 }
 
-int getShotResult(int** field, int letter, int digit) {
+int getShotResult(int** field, int letter, int digit) { // возвращение результата выстрела
 	int shotCell = *(*(field + letter) + digit);
 	
 	if (shotCell == cellSee || shotCell == cellAboutShip) {
 		return shotMiss;
 	}
 	else if (shotCell == cellShotMiss || shotCell == cellShotHit) {
-		//doShot(field, letter, digit); //ТУТ ПОДУМАТЬ КАК ????? что это - не помню
 		return shotRepeat;
 	}
 	else {
-			return shotHit;
+		return shotHit;
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-
-void scanFieldAfterHit(int** field, int letter, int digit) {
 
 
-void scanFieldAfterHit(int** field, int letter, int digit) {
-	int firstLetterHit;
-	int firstDigitHit;
-	int 
-	for (int i = 0; i < FIELD_SIZE_Y; i++) {
-		for (int j = 0; j < FIELD_SIZE_X; j++) {
-			int shotCell = *(*(field + i) + j);
-			if (shotCell == cellShotHit) {
-				firstLetterHit = i;
-				firstDigitHit = j;
-			}
-		}
+
+/////////////// по-красивее переписать
+int& getShipFirstCell(int** field, int letter, int digit) { // получение первой клетки корабля после попадания в него
+	int i = letter;
+	int j = digit;
+
+	while (i > 0 && (*(*(field + i - 1) + digit) == cellShip || *(*(field + i - 1) + digit) == cellShotHit)) {
+		i--;
 	}
+
+	while (j > 0 && (*(*(field + letter) + j - 1) == cellShip || *(*(field + letter) + j - 1) == cellShotHit)) {
+		j--;
+	}
+	//std::cout << "\t" << i << " + " << j;
+	return *(*(field + i) + j);
 }
 
-int doShot(int** field, int letter, int digit) {
+bool getShipDirection(int cell) {
+
+
+	return true;
+}
+
+void scanFieldAfterHit(int** field, int letter, int digit) {
+	getShipFirstCell(field, letter, digit);
+
+}
+
+
+
+
+
+int doShot(int** field, int letter, int digit) { // осуществление выстрела
 	int& cell = *(*(field + letter) + digit);
 	int shotResult = getShotResult(field, letter, digit);
 	if (shotResult != shotRepeat){
@@ -225,7 +239,6 @@ int doShot(int** field, int letter, int digit) {
 			break;
 		case shotHit:
 			setCell(&cell, cellShotHit);
-			scanFieldAfterHit(field, letter, digit);
 			break;
 		default:
 			break;
@@ -234,15 +247,17 @@ int doShot(int** field, int letter, int digit) {
 	return shotResult;
 }
 
-void createFleet(int** field) {
+
+//////////////////
+void createFleet(int** field) { // создание флота
 	int* arrShipList = getShipList();
-	for (int i = 0; i < 10; i++) {
-		setRandShip(field, arrShipList[i], getRandDirection());
+	for (int i = 0; i < 10; i++) { // 10 - sizeof использовать
+		selectRandShip(field, arrShipList[i], getRandDirection());
 	}
 	delete[] arrShipList;
 }
 
-void showField(int** field) {
+void showField(int** field) { // вывод поля на экран
 	std::cout << "-----------------------------------------";
 	std::cout << std::endl;
 	for (int i = 0; i < FIELD_SIZE_Y; i++) {
@@ -273,20 +288,21 @@ void showField(int** field) {
 	}
 }
 
-int* getSeeLine() {
-	int* seeLine = new int [FIELD_SIZE_X];
-	for (int i = 0; i < FIELD_SIZE_X; i++) {
-		*(seeLine + i) = cellSee;
-	}
-	return seeLine;
-}
-
-int** createField() {
+int** createField() { // создание пустого поля
 	int** field = new int* [FIELD_SIZE_Y];
 	for (int i = 0; i < FIELD_SIZE_Y; i++) {
-		field[i] = getSeeLine();
+		field[i] = new int[FIELD_SIZE_X];
 	}
 	return field;
+}
+
+void fillFieldSee(int** field) { // заполнение поля морем
+	for (int i = 0; i < FIELD_SIZE_Y; i++) {
+		for (int j = 0; j < FIELD_SIZE_X; j++) {
+			int& cell = *(*(field + i) + j);
+			setCell(&cell, cellSee);
+		}
+	}
 }
 
 int main() {
@@ -297,8 +313,10 @@ int main() {
 	int randDigit;
 
 	int** field1 = createField();
+	fillFieldSee(field1);
 	createFleet(field1);
 	showField(field1);
+	int shotResult;
 
 	std::cout << std::endl;
 	std::cout << std::endl;
@@ -312,14 +330,20 @@ int main() {
 
 			std::cout << "--" << i << "-- " << randLetter << ", " << randDigit;
 			std::cout << std::endl;
-		} while (doShot(field1, randLetter, randDigit) == shotRepeat);
+			shotResult = doShot(field1, randLetter, randDigit);
+		} while (shotResult == shotRepeat);
+		if (shotResult == shotHit) {
+			scanFieldAfterHit(field1, randLetter, randDigit);
+		}
 		
+
+
 		showField(field1);
 		std::cout << std::endl;
 		std::cout << std::endl;
 	}
 
-	// Удаление массива
+	// Удаление массива поля
 	for (int i = 0; i < FIELD_SIZE_Y; i++) {
 		delete[] field1[i];
 	}

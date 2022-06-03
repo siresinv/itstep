@@ -19,10 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="classwork29 _30.05.22 _task2.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="homework28 _25.05.22.jpeg" />
+    <ClCompile Include="BattleShip\funcShowField.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
