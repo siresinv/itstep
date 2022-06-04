@@ -181,6 +181,8 @@ bool getRandDirection() { // случайный выбор направлени�
 	return ((rand() % 1000) % 2 == 0) ? true : false;
 }
 
+
+// ЗДЕСЬ МОЖНО ЧЕРЕЗ ССЫЛКУ НА ЯЧЕКЙ СДЕЛАТЬ
 int getShotResult(int** field, int letter, int digit) { // возвращение результата выстрела
 	int shotCell = *(*(field + letter) + digit);
 	
@@ -196,12 +198,13 @@ int getShotResult(int** field, int letter, int digit) { // возвращени�
 }
 
 
-
+// ПЕРЕПИСАТЬ ФУНКЦИИ, КОТОРЫЕ ПОЛУЧАЮТ КООРДИНАТЫ ЯЧЕЙКИ НА ПОЛУЧЕНИЕ ССЫЛКИ НА НЕЕ
 
 /////////////// по-красивее переписать
-int& getShipFirstCell(int** field, int letter, int digit) { // получение первой клетки корабля после попадания в него
+int* getShipFirstCell(int** field, int letter, int digit) { // получение первой клетки корабля после попадания в него
 	int i = letter;
 	int j = digit;
+	//int* arrShipFirstCell = new int[2]; //две координаты
 
 	while (i > 0 && (*(*(field + i - 1) + digit) == cellShip || *(*(field + i - 1) + digit) == cellShotHit)) {
 		i--;
@@ -211,18 +214,72 @@ int& getShipFirstCell(int** field, int letter, int digit) { // получени�
 		j--;
 	}
 	//std::cout << "\t" << i << " + " << j;
-	return *(*(field + i) + j);
+	//return *(*(field + i) + j);
+	int* arrShipFirstCell = new int[2]{ i,j };
+	//arrShipFirstCell = {i, j}; // КАК СДКЛАТЬ, ЧТОБЫ ЭТА СТРОКА РАБОТАЛА??????????
+	return arrShipFirstCell;
 }
 
-bool getShipDirection(int cell) {
-
-
+bool getShipDirection(int** field, int firstLetter, int firstDigit) { // возвращает направление установки уорабля. TRUE - горизонтально. Одинарный - тоже горизонтально
+	if (firstLetter < FIELD_SIZE_Y - 1) {
+		int nextCell = *(*(field + firstLetter + 1) + firstDigit);
+		//std::cout << "---------" << nextCell << "_____________";
+		if (nextCell == cellShip || nextCell == cellShotHit) {
+			return false;
+		}
+	}
 	return true;
 }
 
-void scanFieldAfterHit(int** field, int letter, int digit) {
-	getShipFirstCell(field, letter, digit);
+/////////////// по-красивее переписать
+int getShipDeckAmount(int** field, int firstLetter, int firstDigit, bool direction) {
+	int i = firstLetter;
+	int j = firstDigit;
+	int nDeck = 1;
 
+	if (direction) {
+		while (j < FIELD_SIZE_X - 1 && (*(*(field + i) + j + 1) == cellShip || *(*(field + i) + j + 1) == cellShotHit)) {
+			j++;
+			nDeck++;
+		}
+	}
+	else {
+		while (i < FIELD_SIZE_Y - 1 && (*(*(field + i + 1) + j) == cellShip || *(*(field + i + 1) + j) == cellShotHit)) {
+			i++;
+			nDeck++;
+		}
+	}
+	return nDeck;
+}
+
+
+
+/////////////// по-красивее переписать
+bool isShipKilled(int** field, int firstLetter, int firstDigit, bool direction, int nDeck) {
+
+	if (direction) {
+		for (int j = firstDigit; j <= firstDigit + nDeck - 1; j++) {
+			if (*(*(field + firstLetter) + j) == cellShip) return false;
+		}
+	}
+	else {
+		for (int i = firstLetter; i <= firstLetter + nDeck - 1; i++) {
+			if (*(*(field + i) + firstDigit) == cellShip) return false;
+		}
+	}
+	return true;
+}
+
+bool scanShipAfterHit(int** field, int letter, int digit) {
+	int* arrShipFirstCell = getShipFirstCell(field, letter, digit);
+	int firstLetter = arrShipFirstCell[0];
+	int firstDigit = arrShipFirstCell[1];
+	bool direction = getShipDirection(field, firstLetter, firstDigit);
+	int nDeck = getShipDeckAmount(field, firstLetter, firstDigit, direction);
+	bool shipDead = isShipKilled(field, firstLetter, firstDigit, direction, nDeck);
+	std::cout << "let:" << firstLetter << " dig:" << firstDigit << " dir:" << direction << " deck:" << nDeck << " dead:" << shipDead;
+	std::cout << std::endl;
+	return shipDead;
 }
 
 
@@ -323,7 +380,7 @@ int main() {
 
 
 	// ГЕНЕРАЦИЯ СЛУЧАЙНЫХ ВЫСТРЕЛОВ
-	for (int i = 1; i < 10; i++) {
+	/*for (int i = 1; i < 10; i++) {
 		do {
 			randLetter = rand() % FIELD_SIZE_Y;
 			randDigit = rand() % FIELD_SIZE_X;
@@ -333,14 +390,55 @@ int main() {
 			shotResult = doShot(field1, randLetter, randDigit);
 		} while (shotResult == shotRepeat);
 		if (shotResult == shotHit) {
-			scanFieldAfterHit(field1, randLetter, randDigit);
+			std::cout << scanShipAfterHit(field1, randLetter, randDigit);
 		}
 		
+		do {
+			randLetter = rand() % FIELD_SIZE_Y;
+			randDigit = rand() % FIELD_SIZE_X;
+
+			std::cout << "--" << i << "-- " << randLetter << ", " << randDigit;
+			std::cout << std::endl;
+			shotResult = doShot(field1, randLetter, randDigit);
+		} while (shotResult == shotRepeat);
+		if (shotResult == shotHit) {
+			std::cout << scanShipAfterHit(field1, randLetter, randDigit);
+		}
 
 
 		showField(field1);
 		std::cout << std::endl;
 		std::cout << std::endl;
+
+	}	
+		*/
+		
+
+	// ГЕНЕРАЦИЯ ПОСЛЕДОВАТЕЛЬНЫХ ВЫСТРЕЛОВ
+	int shotCounter = 0;
+	for (int i = 0; i < FIELD_SIZE_Y; i++) {
+		for (int j = 0; j < FIELD_SIZE_X; j++) {
+			//do {
+				//randLetter = rand() % FIELD_SIZE_Y;
+				//randDigit = rand() % FIELD_SIZE_X;
+			//std::cout << ++shotCounter;
+				//std::cout << "--" << i << "-- " << randLetter << ", " << randDigit;
+			//std::cout << std::endl;
+			shotResult = doShot(field1, i, j);
+			//} while (shotResult == shotRepeat);
+			if (shotResult == shotHit) {
+				scanShipAfterHit(field1, i, j);
+				showField(field1);
+				std::cout << std::endl;
+				std::cout << std::endl;
+			}
+
+
+			/*showField(field1);
+			std::cout << std::endl;
+			std::cout << std::endl;*/
+		}
+		
 	}
 
 	// Удаление массива поля
