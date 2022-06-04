@@ -8,21 +8,19 @@
 
 
 
-// таки что-то придумать для контроля убил/ранил. воо - какие клетки вокруг той в которую попал
-//	функцию - какие клетки вокруг той, в которую попали
-// но система не будет знать какой корабль убит, но это наверно и не надо
-// но это пригодится для умной стрельбы
-// еще умный обстрел из статей
-// А КАК БЛИН РАМКУ ВОКРУГ КОРАБЛЯ ПРИ ОБСТРЕЛЕ - ТОЧНЕЕ ПРИ ПОЛНОМ ПОТОПЛЕНИИ КОРАБЛЯ
-
-
-// вывод кораблей у стеночки - тут установка первой клетки на край и в соответствующем направлением расположение корабля
-// сделать совсем рандомно расстановку кораблей а не сначала линкоры, потом крейсеры и т.д. - массив перемещать
-
+// - еще умный обстрел из статей
+// - вывод кораблей у стеночки - тут установка первой клетки на край и в соответствующем направлением расположение корабля
+// 
+// 
+// ! обстрел рядом с попаданием реализовать - горизонтально/вертикально. потом функцию с возможными положениями клеток
+// ! сделать совсем рандомно расстановку кораблей а не сначала линкоры, потом крейсеры и т.д. - массив перемещать
+// !! ПЕРЕПИСАТЬ ФУНКЦИИ, КОТОРЫЕ ПОЛУЧАЮТ КООРДИНАТЫ ЯЧЕЙКИ НА ПОЛУЧЕНИЕ ССЫЛКИ НА НЕЕ
+// !! РАЗОБРАТЬСЯ С ПЕРЕДАЧЕЙ ССЫЛОК, УКАЗАТЕЛЕЙ - ГЛЕ КУДА ЛУЧШЕ? ИЛИ ВЕЗДЕ ОДНО СДЕЛАТЬ?
+// !! ПРОТОТИПЫ ФУНКЦИЙ СДЕЛАТЬ
+// !! ПРЕЗЕНТАЦИЮ. БЛОК-СХЕМУ
 
 const int FIELD_SIZE_X = 10;
 const int FIELD_SIZE_Y = 10;
-
 
 const char ICON_SEE = ' ';
 const char ICON_SHIP = 219;
@@ -54,11 +52,31 @@ enum shotResultType // результаты выстрелов
 	shotHit
 }; 
 
-int* getShipList() {
-	int* arrShipList = new int[] {shipLincor, shipCruiser, shipCruiser, shipDestroyer, shipDestroyer, shipDestroyer, shipBoat, shipBoat, shipBoat, shipBoat};
+enum gamerState // состояния игрока
+{
+	init,
+	ready,
+	wait,
+	move,
+	win,
+	lose
+};
+
+enum gameState{
+	prep,
+	start,
+	paused,
+	end,
+	stop
+};
+
+shipType* getShipList() {
+	shipType* arrShipList = new shipType[] {shipLincor, shipCruiser, shipCruiser, shipDestroyer, shipDestroyer, shipDestroyer, shipBoat, shipBoat, shipBoat, shipBoat};
 	return arrShipList;
 }
 
+
+/////////// // получение последней(оконечной) клетки корабля
 int getShipLastCell(int firstCell, int nDeck) { // получение последней(оконечной) клетки корабля
 	return firstCell + nDeck - 1;
 }
@@ -74,13 +92,10 @@ bool isShipOnField(int letter, int digit, int nDeck, bool direction) { // про
 			return false;
 		}
 	}
-
 	return true;
 }
 
 int* getCoordRectAboutShip(int letter, int digit, int nDeck, bool direction){ // Возвращает массив с координатами прямоугольника вокруг корабля
-	
-	
 	int rectX1;
 	int rectY1;
 	int rectX2;
@@ -109,7 +124,17 @@ void setCell(int* cell, int value) { // установка соответств�
 	*cell = value;
 }
 
-void setRectAboutShip(int** field, int rectX1, int rectY1, int rectX2, int rectY2) { // установка прямоугольника вокруг корабля
+
+///// допиливать - при потоплении как сверять куда ставить. МОЖНО - КЛЕТКИ ВОКРУГ ПОТОПЛЕННОГО КОРАБЛЯ
+void setRectAboutShip(int** field, int firstLetter, int firstDigit, int nDeck, int direction) { // установка прямоугольника вокруг корабля
+
+	int* arrCoordRectAboutShip = getCoordRectAboutShip(firstLetter, firstDigit, nDeck, direction);
+	int rectX1 = arrCoordRectAboutShip[0];
+	int rectY1 = arrCoordRectAboutShip[1];
+	int rectX2 = arrCoordRectAboutShip[2];
+	int rectY2 = arrCoordRectAboutShip[3];
+	delete[]arrCoordRectAboutShip;
+
 	for (int i = rectY1; i <= rectY2; i++) {
 		for (int j = rectX1; j <= rectX2; j++) {
 			int& cell = *(*(field + i) + j);
@@ -147,45 +172,24 @@ void setShip(int** field, int letter, int digit, int nDeck, bool direction) { //
 	}
 }
 
-
-///////////////
-void selectRandShip(int** field, int nDeck, bool direction) { // выбор случайного корабля для установки
-
+int* getRandPosition(int** field, int nDeck, bool direction) { // выбор случайной позиции корабля для установки
 	int randLetter;
 	int randDigit;
-	int rectX1;
-	int rectY1;
-	int rectX2;
-	int rectY2;
-
 	do {
 		do {
 			randLetter = rand() % FIELD_SIZE_Y;
 			randDigit = rand() % FIELD_SIZE_X;
 		} while (!isShipOnField(randLetter, randDigit, nDeck, direction));
 	} while (!isSetableShip(field, randLetter, randDigit, nDeck, direction));
-	
-	setShip(field, randLetter, randDigit, nDeck, direction); // - это переместить отсюда
-
-	int* arrCoordRectAboutShip = getCoordRectAboutShip(randLetter, randDigit, nDeck, direction);
-	rectX1 = arrCoordRectAboutShip[0];
-	rectY1 = arrCoordRectAboutShip[1];
-	rectX2 = arrCoordRectAboutShip[2];
-	rectY2 = arrCoordRectAboutShip[3];
-	delete[]arrCoordRectAboutShip;
-
-	setRectAboutShip(field, rectX1, rectY1, rectX2, rectY2); // - это переместить отсюда
+	int* arrRandPosition = new int[2]{ randLetter, randDigit };
+	return arrRandPosition;
 }
 
 bool getRandDirection() { // случайный выбор направления для установки корабля - горизонтально, вертикально
-	return ((rand() % 1000) % 2 == 0) ? true : false;
+	return ((rand() % 2) % 2 == 0) ? true : false;
 }
 
-
-// ЗДЕСЬ МОЖНО ЧЕРЕЗ ССЫЛКУ НА ЯЧЕКЙ СДЕЛАТЬ
-int getShotResult(int** field, int letter, int digit) { // возвращение результата выстрела
-	int shotCell = *(*(field + letter) + digit);
-	
+shotResultType getShotResult(int& shotCell) { // возвращение результата выстрела
 	if (shotCell == cellSee || shotCell == cellAboutShip) {
 		return shotMiss;
 	}
@@ -197,8 +201,6 @@ int getShotResult(int** field, int letter, int digit) { // возвращени�
 	}
 }
 
-
-// ПЕРЕПИСАТЬ ФУНКЦИИ, КОТОРЫЕ ПОЛУЧАЮТ КООРДИНАТЫ ЯЧЕЙКИ НА ПОЛУЧЕНИЕ ССЫЛКИ НА НЕЕ
 
 /////////////// по-красивее переписать
 int* getShipFirstCell(int** field, int letter, int digit) { // получение первой клетки корабля после попадания в него
@@ -220,10 +222,9 @@ int* getShipFirstCell(int** field, int letter, int digit) { // получени�
 	return arrShipFirstCell;
 }
 
-bool getShipDirection(int** field, int firstLetter, int firstDigit) { // возвращает направление установки уорабля. TRUE - горизонтально. Одинарный - тоже горизонтально
+bool getShipDirection(int** field, int firstLetter, int firstDigit) { // возвращает направление установленного корабля. TRUE - горизонтально. Одинарный - тоже горизонтально
 	if (firstLetter < FIELD_SIZE_Y - 1) {
 		int nextCell = *(*(field + firstLetter + 1) + firstDigit);
-		//std::cout << "---------" << nextCell << "_____________";
 		if (nextCell == cellShip || nextCell == cellShotHit) {
 			return false;
 		}
@@ -252,10 +253,8 @@ int getShipDeckAmount(int** field, int firstLetter, int firstDigit, bool directi
 	return nDeck;
 }
 
-
-
 /////////////// по-красивее переписать
-bool isShipKilled(int** field, int firstLetter, int firstDigit, bool direction, int nDeck) {
+bool scanShipAfterHit(int** field, int firstLetter, int firstDigit, bool direction, int nDeck) {
 
 	if (direction) {
 		for (int j = firstDigit; j <= firstDigit + nDeck - 1; j++) {
@@ -270,32 +269,29 @@ bool isShipKilled(int** field, int firstLetter, int firstDigit, bool direction, 
 	return true;
 }
 
-bool scanShipAfterHit(int** field, int letter, int digit) {
+bool isShipKilled(int** field, int letter, int digit) { // возвращает - корабль потоплен или нет
 	int* arrShipFirstCell = getShipFirstCell(field, letter, digit);
 	int firstLetter = arrShipFirstCell[0];
 	int firstDigit = arrShipFirstCell[1];
 	bool direction = getShipDirection(field, firstLetter, firstDigit);
 	int nDeck = getShipDeckAmount(field, firstLetter, firstDigit, direction);
-	bool shipDead = isShipKilled(field, firstLetter, firstDigit, direction, nDeck);
-	std::cout << "let:" << firstLetter << " dig:" << firstDigit << " dir:" << direction << " deck:" << nDeck << " dead:" << shipDead;
+	bool shipKilled = scanShipAfterHit(field, firstLetter, firstDigit, direction, nDeck);
+	std::cout << "let:" << firstLetter << " dig:" << firstDigit << " dir:" << direction << " deck:" << nDeck << " killed:" << shipKilled;
 	std::cout << std::endl;
-	return shipDead;
+	delete[] arrShipFirstCell;
+	return shipKilled;
 }
 
-
-
-
-
-int doShot(int** field, int letter, int digit) { // осуществление выстрела
-	int& cell = *(*(field + letter) + digit);
-	int shotResult = getShotResult(field, letter, digit);
+shotResultType doShot(int** field, int letter, int digit) { // осуществление выстрела
+	int& shotCell = *(*(field + letter) + digit);
+	shotResultType shotResult = getShotResult(shotCell);
 	if (shotResult != shotRepeat){
 		switch (shotResult) {
 		case shotMiss:
-			setCell(&cell, cellShotMiss);
+			setCell(&shotCell, cellShotMiss);
 			break;
 		case shotHit:
-			setCell(&cell, cellShotHit);
+			setCell(&shotCell, cellShotHit);
 			break;
 		default:
 			break;
@@ -304,12 +300,19 @@ int doShot(int** field, int letter, int digit) { // осуществление �
 	return shotResult;
 }
 
-
-//////////////////
-void createFleet(int** field) { // создание флота
-	int* arrShipList = getShipList();
+//////////////////  // 10 - sizeof использовать
+void createRandFleet(int** field) { // создание флота
+	shipType* arrShipList = getShipList();
+	
 	for (int i = 0; i < 10; i++) { // 10 - sizeof использовать
-		selectRandShip(field, arrShipList[i], getRandDirection());
+		int nDeck = arrShipList[i];
+		int direction = getRandDirection();
+		int* arrRandPosition = getRandPosition(field, nDeck, direction);
+		int randLetter = arrRandPosition[0];
+		int randDigit = arrRandPosition[1];
+		setShip(field, randLetter, randDigit, nDeck, direction);
+		setRectAboutShip(field, randLetter, randDigit, nDeck, direction);
+		delete[] arrRandPosition;
 	}
 	delete[] arrShipList;
 }
@@ -362,22 +365,97 @@ void fillFieldSee(int** field) { // заполнение поля морем
 	}
 }
 
+
+// удаление структур/экземпляров
+// с указателями как-то по особенному обращение ->
+// а у ENUM Есть какой-то размер
+
+struct gamer{
+	int number;
+	char* name[10];
+	bool type;
+	int** field;
+	gamerState state;
+	int moveAmount;
+	int liveShipsAmount;
+	int killedShipsAmount;
+	int hitsAmount;
+};
+
+struct game{
+	int number;
+	gameState state;
+	bool type; // HUMAN-PC = 0. PC-PC = 1
+	gamer* gamersList; // 2
+};
+
+gamer createGamer(int number, /*char* name,*/ bool type) {
+	gamer newGamer;
+
+	newGamer.number = number;
+	//newGamer.name = *name; // ПРОСТО ПОНЯТЬ КАК ЭТО ДЕЛАЕТСЯ И УБРАТЬ - ИМЯ НЕ НУЖНО
+	newGamer.type = type; //HUMAN=0/ PC=1
+	newGamer.field = createField();
+	newGamer.state = init;
+	newGamer.moveAmount = 0;
+	newGamer.liveShipsAmount = 10; // 10
+	newGamer.killedShipsAmount = 0;
+	newGamer.hitsAmount = 0;
+
+	return newGamer;
+}
+
+game createGame(int number, bool type, gamer* gamersList) {
+	game newGame;
+
+	newGame.number = number;
+	newGame.state = prep;
+	newGame.type = type;
+	newGame.gamersList = gamersList;
+	return newGame;
+}
+
+void setReadyGamer(gamer gamer) {
+	fillFieldSee(gamer.field);
+	createRandFleet(gamer.field);
+	gamer.state = ready;
+}
+
 int main() {
 	//setlocale(0, "");
 	srand(time(NULL));
+
+	// intro();
+	// создать игру ?
+	// выбор типа игры - кто с кем. а если еще и чел-чел
+	// расстановка всегда рандомная
+	// собственно игра сразу стартует
+	// компьютер всегда умный
+	// попробовать реализовать выбор клетки стрелками
+	// https://www.cyberforum.ru/cpp-beginners/thread755195.html
+	// в любом режиме возможность паузы, остановки, перезапуска, создание новой
+	// при этом выводится окно состояния игры или результаты
+	// выход
+	// ВСЕ НА АНГЛИЙСКОМ
+
+
+	gamer gamer1 = createGamer(1, 1); // А МОЖНО ЭТО В МАССИВ И В ЦИКЛ - ДЛЯ ЛЮБОГО КОЛИЧЕСТВА ИГРОКОВ И МЕНЬШЕ ПЕРЕМЕННЫХ)
+	setReadyGamer(gamer1);
+
+	gamer gamer2 = createGamer(2, 1);
+	setReadyGamer(gamer2);
+
+	gamer* gamersList = new gamer[]{gamer1, gamer2};
+	game game1 = createGame(1, 1, gamersList);
 	
-	int randLetter;
-	int randDigit;
 
-	int** field1 = createField();
-	fillFieldSee(field1);
-	createFleet(field1);
-	showField(field1);
-	int shotResult;
+
+	showField(gamer1.field);
+	shotResultType shotResult;
 
 	std::cout << std::endl;
 	std::cout << std::endl;
-
+	showField(gamer2.field);
 
 	// ГЕНЕРАЦИЯ СЛУЧАЙНЫХ ВЫСТРЕЛОВ
 	/*for (int i = 1; i < 10; i++) {
@@ -424,11 +502,11 @@ int main() {
 			//std::cout << ++shotCounter;
 				//std::cout << "--" << i << "-- " << randLetter << ", " << randDigit;
 			//std::cout << std::endl;
-			shotResult = doShot(field1, i, j);
+			shotResult = doShot(gamer1.field, i, j);
 			//} while (shotResult == shotRepeat);
 			if (shotResult == shotHit) {
-				scanShipAfterHit(field1, i, j);
-				showField(field1);
+				isShipKilled(gamer1.field, i, j);
+				showField(gamer1.field);
 				std::cout << std::endl;
 				std::cout << std::endl;
 			}
@@ -438,12 +516,18 @@ int main() {
 			std::cout << std::endl;
 			std::cout << std::endl;*/
 		}
-		
 	}
 
-	// Удаление массива поля
+	// Удаление массива поля - В ФУНКЦИЮ
 	for (int i = 0; i < FIELD_SIZE_Y; i++) {
-		delete[] field1[i];
+		delete[] gamer1.field[i];
 	}
-	delete[] field1;
+	delete[] gamer1.field;
+
+	for (int i = 0; i < FIELD_SIZE_Y; i++) {
+		delete[] gamer2.field[i];
+	}
+	delete[] gamer2.field;
+
+	delete[] gamersList;
 }
