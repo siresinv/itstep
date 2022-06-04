@@ -21,6 +21,7 @@
 
 const int FIELD_SIZE_X = 10;
 const int FIELD_SIZE_Y = 10;
+const int GAMERS_AMOUNT = 2;
 
 const char ICON_SEE = ' ';
 const char ICON_SHIP = 219;
@@ -405,20 +406,19 @@ gamer createGamer(int number, /*char* name,*/ bool type) {
 	return newGamer;
 }
 
-game createGame(int number, bool type, gamer* gamersList) {
+game createGame(int number, bool type) {
 	game newGame;
 
 	newGame.number = number;
 	newGame.state = prep;
 	newGame.type = type;
-	newGame.gamersList = gamersList;
+	newGame.gamersList;
 	return newGame;
 }
 
-void setReadyGamer(gamer gamer) {
+void getField(gamer gamer) {
 	fillFieldSee(gamer.field);
 	createRandFleet(gamer.field);
-	gamer.state = ready;
 }
 
 int main() {
@@ -434,28 +434,32 @@ int main() {
 	// попробовать реализовать выбор клетки стрелками
 	// https://www.cyberforum.ru/cpp-beginners/thread755195.html
 	// в любом режиме возможность паузы, остановки, перезапуска, создание новой
+	// Очередь ходов - пока не нажата клавиша меню, пока один не выиграл. Если попал, то ход не переходит?
 	// при этом выводится окно состояния игры или результаты
 	// выход
 	// ВСЕ НА АНГЛИЙСКОМ
 
-
-	gamer gamer1 = createGamer(1, 1); // А МОЖНО ЭТО В МАССИВ И В ЦИКЛ - ДЛЯ ЛЮБОГО КОЛИЧЕСТВА ИГРОКОВ И МЕНЬШЕ ПЕРЕМЕННЫХ)
-	setReadyGamer(gamer1);
-
-	gamer gamer2 = createGamer(2, 1);
-	setReadyGamer(gamer2);
-
-	gamer* gamersList = new gamer[]{gamer1, gamer2};
-	game game1 = createGame(1, 1, gamersList);
+	game game = createGame(1, 1); // создали игру
+	gamer* gamersList = new gamer[GAMERS_AMOUNT]; // создали игроков
+	for (int i = 0; i < GAMERS_AMOUNT; i++) {
+		gamersList[i] = createGamer(i, 1);
+	}
+	game.gamersList = gamersList; // поместили игроков в игру
+	for (int i = 0; i < GAMERS_AMOUNT; i++) {
+		getField(gamersList[i]); // дали игрокам игровые поля, присвоили игрокам статус ГОТОВ
+		gamersList[i].state = ready;
+	}
 	
 
 
-	showField(gamer1.field);
+
+
+	showField(gamersList[0].field);
 	shotResultType shotResult;
 
 	std::cout << std::endl;
 	std::cout << std::endl;
-	showField(gamer2.field);
+	showField(gamersList[1].field);
 
 	// ГЕНЕРАЦИЯ СЛУЧАЙНЫХ ВЫСТРЕЛОВ
 	/*for (int i = 1; i < 10; i++) {
@@ -502,11 +506,11 @@ int main() {
 			//std::cout << ++shotCounter;
 				//std::cout << "--" << i << "-- " << randLetter << ", " << randDigit;
 			//std::cout << std::endl;
-			shotResult = doShot(gamer1.field, i, j);
+			shotResult = doShot(gamersList[0].field, i, j);
 			//} while (shotResult == shotRepeat);
 			if (shotResult == shotHit) {
-				isShipKilled(gamer1.field, i, j);
-				showField(gamer1.field);
+				isShipKilled(gamersList[0].field, i, j);
+				showField(gamersList[0].field);
 				std::cout << std::endl;
 				std::cout << std::endl;
 			}
@@ -518,16 +522,13 @@ int main() {
 		}
 	}
 
-	// Удаление массива поля - В ФУНКЦИЮ
-	for (int i = 0; i < FIELD_SIZE_Y; i++) {
-		delete[] gamer1.field[i];
+	// Удаление массива полей игроков - В ФУНКЦИЮ
+	for (int g = 0; g < GAMERS_AMOUNT; g++) {
+		for (int i = 0; i < FIELD_SIZE_Y; i++) {
+			delete[] gamersList[g].field[i];
+		}
+		delete[] gamersList[g].field;
 	}
-	delete[] gamer1.field;
-
-	for (int i = 0; i < FIELD_SIZE_Y; i++) {
-		delete[] gamer2.field[i];
-	}
-	delete[] gamer2.field;
-
+	
 	delete[] gamersList;
 }
