@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <stdlib.h>
 #include <math.h>
+//#include <WinUser.h>
+#include <Windows.h>
 
 
 
@@ -63,13 +65,17 @@ enum gamerState // состояния игрока
 	lose
 };
 
+// добавить перфиксы game / gamer
 enum gameState{
+	empty,
 	prep,
 	start,
 	paused,
 	end,
 	stop
 };
+
+
 
 shipType* getShipList() {
 	shipType* arrShipList = new shipType[] {shipLincor, shipCruiser, shipCruiser, shipDestroyer, shipDestroyer, shipDestroyer, shipBoat, shipBoat, shipBoat, shipBoat};
@@ -319,10 +325,13 @@ void createRandFleet(int** field) { // создание флота
 }
 
 void showField(int** field) { // вывод поля на экран
-	std::cout << "-----------------------------------------";
+	char firstLetter = 'A';
+	std::cout << "    1   2   3   4   5   6   7   8   9   10";
+	std::cout << std::endl;
+	std::cout << "  -----------------------------------------";
 	std::cout << std::endl;
 	for (int i = 0; i < FIELD_SIZE_Y; i++) {
-		std::cout << "|";
+		std::cout << char(firstLetter + i) << " |";
 		for (int j = 0; j < FIELD_SIZE_X; j++) {
 
 			int cell = *(*(field + i) + j);
@@ -344,7 +353,7 @@ void showField(int** field) { // вывод поля на экран
 			}
 		}
 		std::cout << std::endl;
-		std::cout << "-----------------------------------------";
+		std::cout << "  -----------------------------------------";
 		std::cout << std::endl;
 	}
 }
@@ -406,12 +415,12 @@ gamer createGamer(int number, /*char* name,*/ bool type) {
 	return newGamer;
 }
 
-game createGame(int number, bool type) {
+game createEmptyGame() {
 	game newGame;
 
-	newGame.number = number;
-	newGame.state = prep;
-	newGame.type = type;
+	newGame.number;
+	newGame.state = empty;
+	newGame.type;
 	newGame.gamersList;
 	return newGame;
 }
@@ -421,35 +430,123 @@ void getField(gamer gamer) {
 	createRandFleet(gamer.field);
 }
 
-int main() {
-	//setlocale(0, "");
-	srand(time(NULL));
+void showIntro() {
+	std::cout << "-----------------------------------------" << std::endl;
+	std::cout << "  *** BattleShip v1.1 (by SyresinVA) ***" << std::endl;
+	std::cout << "-----------------------------------------" << std::endl;
+}
 
-	// intro();
-	// создать игру ?
+void showSelectGameType() {
+	std::cout << "-----------------------------------------" << std::endl;
+	std::cout << "Select type of game \n(1 - HUMAN-PC, 2 - PC-PC): " << std::endl;
+	std::cout << "-----------------------------------------" << std::endl;
+}
+
+
+void selectGameType() {
+	
+}
+
+
+// умное сделать - т.е. показывать в определенный момент только то, что нужно
+void showMenu() {
+
+}
+
+
+enum menuItems {
+	doCreate = 1,
+	doStart,
+	doPause,
+	doStatistic,
+	doStop,
+	doRestart,
+	doCancel, //???
+	doExit
+};
+
+menuItems getMenuChoice() {
+
+	return doCancel;
+}
+
+
+void showStatistic(game game) {
+
+}
+
+
+
+
+int main() {
+	srand(time(NULL));
+	game currentGame = createEmptyGame(); // создали пустую игру
+	// Либо это можно через меню один первый раз
+	
 	// выбор типа игры - кто с кем. а если еще и чел-чел
 	// расстановка всегда рандомная
-	// собственно игра сразу стартует
 	// компьютер всегда умный
 	// попробовать реализовать выбор клетки стрелками
 	// https://www.cyberforum.ru/cpp-beginners/thread755195.html
-	// в любом режиме возможность паузы, остановки, перезапуска, создание новой
+	// в любом режиме возможность старта, паузы, просмотра статистики, остановки, перезапуска, создание новой - ЦИФРЫ С ШИФТОМ
 	// Очередь ходов - пока не нажата клавиша меню, пока один не выиграл. Если попал, то ход не переходит?
 	// при этом выводится окно состояния игры или результаты
 	// выход
 	// ВСЕ НА АНГЛИЙСКОМ
 
-	game game = createGame(1, 1); // создали игру
+	showIntro();
+	showSelectGameType();
+	selectGameType();
+
+	// ПРИ ПЕРЕЗАПУСКЕ ПОЛЯ НЕ СТИРАТЬ
+	
+	currentGame.number = 1; // присвоили игре номер
 	gamer* gamersList = new gamer[GAMERS_AMOUNT]; // создали игроков
 	for (int i = 0; i < GAMERS_AMOUNT; i++) {
 		gamersList[i] = createGamer(i, 1);
 	}
-	game.gamersList = gamersList; // поместили игроков в игру
+	currentGame.gamersList = gamersList; // поместили игроков в игру
 	for (int i = 0; i < GAMERS_AMOUNT; i++) {
 		getField(gamersList[i]); // дали игрокам игровые поля, присвоили игрокам статус ГОТОВ
 		gamersList[i].state = ready;
 	}
-	
+	int a = 1;
+	while (a == 1) {
+		if (GetAsyncKeyState('A') & 0x8000/*Check if high-order bit is set (1 << 15)*/) {
+			std::cout << "1";
+		}
+	}
+
+	showStatistic(currentGame);
+	if (currentGame.state) {
+		showMenu();
+	}
+	menuItems menuChoice = getMenuChoice();
+
+	/*do {
+		showIntro();
+		// проверка существует ли игра, игроки, статусы. Какой пункт меню выбран
+		gameState currentGameState = game.state;
+		//createMenuItem(currentGameState);
+		//createScreen(currentGameState); 
+
+				if (игра не существует  ) {
+			showMenu();
+			menuItems menuChoice = getMenuChoice();
+			continue;
+		}
+		else {
+			menuItems menuChoice = getMenuChoice();
+			continue;
+		}
+		// проверка существует ли игра, игроки, их статусы. Какой пункт меню выбран
+		// созданиепунктовменю(играстатус, игрокстатус)
+		showMenu();
+		menuItems menuChoice = getMenuChoice();
+	} while (menuChoice != doExit);*/
+
+
+
 
 
 
@@ -509,10 +606,10 @@ int main() {
 			shotResult = doShot(gamersList[0].field, i, j);
 			//} while (shotResult == shotRepeat);
 			if (shotResult == shotHit) {
-				isShipKilled(gamersList[0].field, i, j);
-				showField(gamersList[0].field);
-				std::cout << std::endl;
-				std::cout << std::endl;
+				//isShipKilled(gamersList[0].field, i, j);
+				//showField(gamersList[0].field);
+				//std::cout << std::endl;
+				//std::cout << std::endl;
 			}
 
 
