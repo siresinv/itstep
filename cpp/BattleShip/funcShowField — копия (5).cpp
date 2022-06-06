@@ -431,15 +431,15 @@ void getField(gamer gamer) {
 }
 
 void showIntro() {
-	std::cout << "---------------------------------------------" << std::endl;
-	std::cout << "   *** BattleShip v1.1 (by SyresinVA) ***" << std::endl;
-	std::cout << "---------------------------------------------" << std::endl;
+	std::cout << "-----------------------------------------" << std::endl;
+	std::cout << "  *** BattleShip v1.1 (by SyresinVA) ***" << std::endl;
+	std::cout << "-----------------------------------------" << std::endl;
 }
 
 void showSelectGameType() {
-	std::cout << "---------------------------------------------" << std::endl;
+	std::cout << "-----------------------------------------" << std::endl;
 	std::cout << "Select type of game \n(1 - HUMAN-PC, 2 - PC-PC): " << std::endl;
-	std::cout << "---------------------------------------------" << std::endl;
+	std::cout << "-----------------------------------------" << std::endl;
 }
 
 
@@ -510,14 +510,12 @@ int main() {
 		getField(gamersList[i]); // дали игрокам игровые поля, присвоили игрокам статус ГОТОВ
 		gamersList[i].state = ready;
 	}
-
-
-	//int a = 1;
-	//while (a == 1) {
-	//	if (GetAsyncKeyState('A') & 0x8000/*Check if high-order bit is set (1 << 15)*/) {
-	//		std::cout << "1";
-	//	}
-	//}
+	int a = 1;
+	while (a == 1) {
+		if (GetAsyncKeyState('A') & 0x8000/*Check if high-order bit is set (1 << 15)*/) {
+			std::cout << "1";
+		}
+	}
 
 	showStatistic(currentGame);
 	if (currentGame.state) {
