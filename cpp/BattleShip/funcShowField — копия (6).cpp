@@ -1,39 +1,28 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
-
-#include <iostream>
+﻿#include <iostream>
 #include <stdlib.h>
 #include <math.h>
-#include <stdio.h>
-#include <conio.h>
 //#include <WinUser.h>
-//#include <Windows.h>
+#include <Windows.h>
 
 
-// - расстановка всегда рандомная. компьютер всегда умный
-// - попробовать реализовать выбор клетки стрелками
+
+
+
+
+
 // - еще умный обстрел из статей
 // - вывод кораблей у стеночки - тут установка первой клетки на край и в соответствующем направлением расположение корабля
-// - в файле всё сохранять и считывать
-// - меню в файле хранить можно
 // 
 // 
 // ! обстрел рядом с попаданием реализовать - горизонтально/вертикально. потом функцию с возможными положениями клеток
 // ! сделать совсем рандомно расстановку кораблей а не сначала линкоры, потом крейсеры и т.д. - массив перемещать
 // !! ПЕРЕПИСАТЬ ФУНКЦИИ, КОТОРЫЕ ПОЛУЧАЮТ КООРДИНАТЫ ЯЧЕЙКИ НА ПОЛУЧЕНИЕ ССЫЛКИ НА НЕЕ
 // !! РАЗОБРАТЬСЯ С ПЕРЕДАЧЕЙ ССЫЛОК, УКАЗАТЕЛЕЙ - ГЛЕ КУДА ЛУЧШЕ? ИЛИ ВЕЗДЕ ОДНО СДЕЛАТЬ?
-// !! ПРОТОТИПЫ ФУНКЦИЙ СДЕЛАТЬ. функции раскидать последовательно
+// !! ПРОТОТИПЫ ФУНКЦИЙ СДЕЛАТЬ
 // !! ПРЕЗЕНТАЦИЮ. БЛОК-СХЕМУ
-// ВСЕ НА АНГЛИЙСКОМ
-// https://www.cyberforum.ru/cpp-beginners/thread755195.html
-// ИСПОЛЬЗОВАТЬ ВСЁ ЧТО ПРОШЛИ - С Т Р О О О О О О К И ! ! !
-// с русским не стал заморачиваться из-за кодировок спецсимволов, а потом уж некогда стало)
-// https://metanit.com/cpp/tutorial/4.7.php - циклы по массивам можно переделать - более удобно будет
-// 
-
 
 const int FIELD_SIZE_X = 10;
 const int FIELD_SIZE_Y = 10;
-const int SHIPS_AMOUNT = 10;
 const int GAMERS_AMOUNT = 2;
 
 const char ICON_SEE = ' ';
@@ -50,6 +39,7 @@ enum fieldCellType // типы клеток поля
 	cellShotHit,
 	cellAboutShip
 };
+
 enum shipType // типы кораблей с соответствующим количеством палуб
 {
 	shipBoat = 1,
@@ -57,53 +47,38 @@ enum shipType // типы кораблей с соответствующим к�
 	shipCruiser,
 	shipLincor
 };
+
 enum shotResultType // результаты выстрелов
 {
 	shotRepeat,
 	shotMiss,
 	shotHit
 }; 
+
 enum gamerState // состояния игрока
 {
-	gamerInit,
-	gamerReady,
-	gamerWait,
-	gamerMove,
-	gamerWin,
-	gamerLose
+	init,
+	ready,
+	wait,
+	move,
+	win,
+	lose
 };
+
+// добавить перфиксы game / gamer
 enum gameState{
-	gameEmpty,
-	gamePrep,
-	gameStart,
-	gamePaused,
-	gameEnd,
-	gameStop
+	empty,
+	prep,
+	start,
+	paused,
+	end,
+	stop
 };
-
-const int MENU_ITEMS_AMOUNT = 10;
-const char MENU_ITEM_NAME[MENU_ITEMS_AMOUNT][50] = {
-	"[C]reate game",
-	"Se[L]ect type of game",
-	"[S]tart game",
-	"[P]ause",
-	"[V]iew Statistic",
-	"S[T]op game",
-	"[R]estart game",
-	"[E]xit",
-	"[Y]es",
-	"[N]o"
-};
-const char MENU_HOT_KEY[MENU_ITEMS_AMOUNT] = { 'C', 'L', 'S', 'P', 'V', 'T', 'R', 'E', 'Y', 'N' };
-
-const int SEPARATE_LINE_LEN = 45;
-int SEPARATE_LINE_LEN_FOR_DIGIT = 4;
-
 
 
 
 shipType* getShipList() {
-	shipType* arrShipList = new shipType[SHIPS_AMOUNT] {shipLincor, shipCruiser, shipCruiser, shipDestroyer, shipDestroyer, shipDestroyer, shipBoat, shipBoat, shipBoat, shipBoat};
+	shipType* arrShipList = new shipType[] {shipLincor, shipCruiser, shipCruiser, shipDestroyer, shipDestroyer, shipDestroyer, shipBoat, shipBoat, shipBoat, shipBoat};
 	return arrShipList;
 }
 
@@ -112,7 +87,6 @@ shipType* getShipList() {
 int getShipLastCell(int firstCell, int nDeck) { // получение последней(оконечной) клетки корабля
 	return firstCell + nDeck - 1;
 }
-
 
 bool isShipOnField(int letter, int digit, int nDeck, bool direction) { // проверка - корабль уместиться на поле при расстановке
 	if (direction) {
@@ -333,10 +307,11 @@ shotResultType doShot(int** field, int letter, int digit) { // осуществ�
 	return shotResult;
 }
 
+//////////////////  // 10 - sizeof использовать
 void createRandFleet(int** field) { // создание флота
 	shipType* arrShipList = getShipList();
 	
-	for (int i = 0; i < SHIPS_AMOUNT; i++) { // 10 - sizeof использовать
+	for (int i = 0; i < 10; i++) { // 10 - sizeof использовать
 		int nDeck = arrShipList[i];
 		int direction = getRandDirection();
 		int* arrRandPosition = getRandPosition(field, nDeck, direction);
@@ -349,27 +324,11 @@ void createRandFleet(int** field) { // создание флота
 	delete[] arrShipList;
 }
 
-
-void showSeparateLine(int nDash) {
-	for (int i = 0; i < nDash; i++) {
-		std::cout << "-";
-	}
-	//std::cout << std::endl;
-}
-
-
-// ДОПИЛИВАТЬ - КОМУ ЧТО И В КАКИХ СЛУЧАЯХ ВЫВОДИТЬ
 void showField(int** field) { // вывод поля на экран
 	char firstLetter = 'A';
-	std::cout << "    ";
-	for (int i = 0; i < FIELD_SIZE_X; i++) {
-		std::cout << i + 1 << "   "; // здесь на БУУУУДУЩЕЕ - количество пробелов на один меньше чем количество цифр
-	}
-	
+	std::cout << "    1   2   3   4   5   6   7   8   9   10";
 	std::cout << std::endl;
-	std::cout << "  ";
-	showSeparateLine(FIELD_SIZE_X * SEPARATE_LINE_LEN_FOR_DIGIT);
-	std::cout << "-";
+	std::cout << "  -----------------------------------------";
 	std::cout << std::endl;
 	for (int i = 0; i < FIELD_SIZE_Y; i++) {
 		std::cout << char(firstLetter + i) << " |";
@@ -394,14 +353,12 @@ void showField(int** field) { // вывод поля на экран
 			}
 		}
 		std::cout << std::endl;
-		std::cout << "  ";
-		showSeparateLine(FIELD_SIZE_X * SEPARATE_LINE_LEN_FOR_DIGIT);
-		std::cout << "-";
+		std::cout << "  -----------------------------------------";
 		std::cout << std::endl;
 	}
 }
 
-int** createEmptyField() { // создание пустого поля
+int** createField() { // создание пустого поля
 	int** field = new int* [FIELD_SIZE_Y];
 	for (int i = 0; i < FIELD_SIZE_Y; i++) {
 		field[i] = new int[FIELD_SIZE_X];
@@ -418,9 +375,14 @@ void fillFieldSee(int** field) { // заполнение поля морем
 	}
 }
 
+
+// удаление структур/экземпляров
+// с указателями как-то по особенному обращение ->
+// а у ENUM Есть какой-то размер
+
 struct gamer{
 	int number;
-	//char name[10];
+	char* name[10];
 	bool type;
 	int** field;
 	gamerState state;
@@ -434,17 +396,17 @@ struct game{
 	int number;
 	gameState state;
 	bool type; // HUMAN-PC = 0. PC-PC = 1
-	gamer* gamersList;
+	gamer* gamersList; // 2
 };
 
-gamer createGamer(int number, bool type) {
+gamer createGamer(int number, /*char* name,*/ bool type) {
 	gamer newGamer;
 
 	newGamer.number = number;
-	//strcpy(newGamer.name, name);
+	//newGamer.name = *name; // ПРОСТО ПОНЯТЬ КАК ЭТО ДЕЛАЕТСЯ И УБРАТЬ - ИМЯ НЕ НУЖНО
 	newGamer.type = type; //HUMAN=0/ PC=1
-	newGamer.field = createEmptyField();
-	newGamer.state = gamerInit;
+	newGamer.field = createField();
+	newGamer.state = init;
 	newGamer.moveAmount = 0;
 	newGamer.liveShipsAmount = 10; // 10
 	newGamer.killedShipsAmount = 0;
@@ -457,7 +419,7 @@ game createEmptyGame() {
 	game newGame;
 
 	newGame.number;
-	newGame.state = gameEmpty;
+	newGame.state = empty;
 	newGame.type;
 	newGame.gamersList;
 	return newGame;
@@ -474,22 +436,41 @@ void showIntro() {
 	std::cout << "---------------------------------------------" << std::endl;
 }
 
-
-//
 void showSelectGameType() {
 	std::cout << "---------------------------------------------" << std::endl;
 	std::cout << "Select type of game \n(1 - HUMAN-PC, 2 - PC-PC): " << std::endl;
 	std::cout << "---------------------------------------------" << std::endl;
 }
 
-//
+
 void selectGameType() {
 	
 }
 
 
+// умное сделать - т.е. показывать в определенный момент только то, что нужно
+void showMenu() {
 
-//
+}
+
+
+enum menuItems {
+	doCreate = 1,
+	doStart,
+	doPause,
+	doStatistic,
+	doStop,
+	doRestart,
+	doCancel, //???
+	doExit
+};
+
+menuItems getMenuChoice() {
+
+	return doCancel;
+}
+
+
 void showStatistic(game game) {
 
 }
@@ -497,134 +478,52 @@ void showStatistic(game game) {
 
 
 
-
-//
-enum menuAction {
-	doCreate,
-	doSelect,
-	doStart,
-	doPause,
-	doStatistic,
-	doStop,
-	doRestart,
-	doExit,
-	doYes,
-	doNo
-};
-
-struct menuItem {
-	menuAction action;
-	char name[50];
-	char key;
-};
-
-
-menuItem* getMenuList() {
-	menuItem* menuList = new menuItem[MENU_ITEMS_AMOUNT];
-	for (int i = 0; i < MENU_ITEMS_AMOUNT; i++) {
-		menuList[i].action = menuAction(i);
-		strcpy(menuList[i].name, MENU_ITEM_NAME[i]);
-		menuList[i].key = MENU_HOT_KEY[i];
-	}
-	return menuList;
-}
-
-menuItem* getCurrentMenu(menuItem* menuList, menuAction* actionList, int nAction) {
-	menuItem* currentMenu = new menuItem[nAction];
-	for (int i = 0; i < MENU_ITEMS_AMOUNT; i++) {
-		for (int j = 0; j < nAction; j++) {
-			if (menuList[i].action == actionList[j]) {
-				currentMenu[j] = menuList[i];
-				continue;
-			}
-		}
-	}
-
-	return currentMenu;
-}
-
-
-void showMessage(char* message) {
-	showSeparateLine(SEPARATE_LINE_LEN);
-	std::cout << std::endl;
-	std::cout << message;
-	std::cout << std::endl;
-	std::cout << std::endl;
-	
-}
-
-void showCurrentMenu(menuItem* currentMenu, int nAction) {
-	
-	char msg[] = "Menu";
-	showMessage(msg);
-
-	for (int i = 0; i < nAction; i++) {
-		std::cout << currentMenu[i].name;
-		std::cout << std::endl;
-	}
-	showSeparateLine(SEPARATE_LINE_LEN);
-	std::cout << std::endl;
-}
-
-
-void getMenuChoise(menuItem* currentMenu) {
-	/*do {
-		int a = _getch();
-	} while (true);
-	
-	if (a == 'a') {
-		std::cout << "";
-	}*/
-
-	exit(0);
-}
-
 int main() {
-	menuItem* menuList = getMenuList();
-
-	// delet menuList currentMenu - в соответствующих местах
-
 	srand(time(NULL));
-
-	showIntro();
-	//showSelectGameType();
-	//selectGameType();
-
-	menuAction actionList[] = { doCreate, doExit };
-	int nCurrentMenuItem = sizeof(actionList) / sizeof(actionList[0]);
-	menuItem* currentMenu = getCurrentMenu(menuList, actionList, nCurrentMenuItem);
-	showCurrentMenu(currentMenu, nCurrentMenuItem);
-	getMenuChoise(currentMenu);
-	//exit(0);
-	
-	
-
-
-
 	game currentGame = createEmptyGame(); // создали пустую игру
-
-	// выбор типа игры - кто с кем. а если еще и чел-чел
+	// Либо это можно через меню один первый раз
 	
+	// выбор типа игры - кто с кем. а если еще и чел-чел
+	// расстановка всегда рандомная
+	// компьютер всегда умный
+	// попробовать реализовать выбор клетки стрелками
+	// https://www.cyberforum.ru/cpp-beginners/thread755195.html
 	// в любом режиме возможность старта, паузы, просмотра статистики, остановки, перезапуска, создание новой - ЦИФРЫ С ШИФТОМ
 	// Очередь ходов - пока не нажата клавиша меню, пока один не выиграл. Если попал, то ход не переходит?
 	// при этом выводится окно состояния игры или результаты
 	// выход
+	// ВСЕ НА АНГЛИЙСКОМ
+
+	showIntro();
+	showSelectGameType();
+	selectGameType();
+
 	// ПРИ ПЕРЕЗАПУСКЕ ПОЛЯ НЕ СТИРАТЬ
-
 	
-
-
 	currentGame.number = 1; // присвоили игре номер
 	gamer* gamersList = new gamer[GAMERS_AMOUNT]; // создали игроков
 	for (int i = 0; i < GAMERS_AMOUNT; i++) {
-		gamersList[i] = createGamer(i, 1); // здесь тип игрока выбирается в зависимости от режима
+		gamersList[i] = createGamer(i, 1);
 	}
 	currentGame.gamersList = gamersList; // поместили игроков в игру
 	for (int i = 0; i < GAMERS_AMOUNT; i++) {
 		getField(gamersList[i]); // дали игрокам игровые поля, присвоили игрокам статус ГОТОВ
-		gamersList[i].state = gamerReady;
+		gamersList[i].state = ready;
 	}
 
+
+	//int a = 1;
+	//while (a == 1) {
+	//	if (GetAsyncKeyState('A') & 0x8000/*Check if high-order bit is set (1 << 15)*/) {
+	//		std::cout << "1";
+	//	}
+	//}
+
+	showStatistic(currentGame);
+	if (currentGame.state) {
+		showMenu();
+	}
+	menuItems menuChoice = getMenuChoice();
 
 	/*do {
 		showIntro();
@@ -635,17 +534,17 @@ int main() {
 
 				if (игра не существует  ) {
 			showMenu();
-			menuItem menuChoice = getMenuChoice();
+			menuItems menuChoice = getMenuChoice();
 			continue;
 		}
 		else {
-			menuItem menuChoice = getMenuChoice();
+			menuItems menuChoice = getMenuChoice();
 			continue;
 		}
 		// проверка существует ли игра, игроки, их статусы. Какой пункт меню выбран
 		// созданиепунктовменю(играстатус, игрокстатус)
 		showMenu();
-		menuItem menuChoice = getMenuChoice();
+		menuItems menuChoice = getMenuChoice();
 	} while (menuChoice != doExit);*/
 
 
@@ -653,13 +552,74 @@ int main() {
 
 
 
-	for (int i = 0; i < GAMERS_AMOUNT; i++) {
-		showField(gamersList[i].field);
+
+	showField(gamersList[0].field);
+	shotResultType shotResult;
+
+	std::cout << std::endl;
+	std::cout << std::endl;
+	showField(gamersList[1].field);
+
+	// ГЕНЕРАЦИЯ СЛУЧАЙНЫХ ВЫСТРЕЛОВ
+	/*for (int i = 1; i < 10; i++) {
+		do {
+			randLetter = rand() % FIELD_SIZE_Y;
+			randDigit = rand() % FIELD_SIZE_X;
+
+			std::cout << "--" << i << "-- " << randLetter << ", " << randDigit;
+			std::cout << std::endl;
+			shotResult = doShot(field1, randLetter, randDigit);
+		} while (shotResult == shotRepeat);
+		if (shotResult == shotHit) {
+			std::cout << scanShipAfterHit(field1, randLetter, randDigit);
+		}
+		
+		do {
+			randLetter = rand() % FIELD_SIZE_Y;
+			randDigit = rand() % FIELD_SIZE_X;
+
+			std::cout << "--" << i << "-- " << randLetter << ", " << randDigit;
+			std::cout << std::endl;
+			shotResult = doShot(field1, randLetter, randDigit);
+		} while (shotResult == shotRepeat);
+		if (shotResult == shotHit) {
+			std::cout << scanShipAfterHit(field1, randLetter, randDigit);
+		}
+
+
+		showField(field1);
 		std::cout << std::endl;
 		std::cout << std::endl;
+
+	}	
+		*/
+		
+
+	// ГЕНЕРАЦИЯ ПОСЛЕДОВАТЕЛЬНЫХ ВЫСТРЕЛОВ
+	int shotCounter = 0;
+	for (int i = 0; i < FIELD_SIZE_Y; i++) {
+		for (int j = 0; j < FIELD_SIZE_X; j++) {
+			//do {
+				//randLetter = rand() % FIELD_SIZE_Y;
+				//randDigit = rand() % FIELD_SIZE_X;
+			//std::cout << ++shotCounter;
+				//std::cout << "--" << i << "-- " << randLetter << ", " << randDigit;
+			//std::cout << std::endl;
+			shotResult = doShot(gamersList[0].field, i, j);
+			//} while (shotResult == shotRepeat);
+			if (shotResult == shotHit) {
+				//isShipKilled(gamersList[0].field, i, j);
+				//showField(gamersList[0].field);
+				//std::cout << std::endl;
+				//std::cout << std::endl;
+			}
+
+
+			/*showField(field1);
+			std::cout << std::endl;
+			std::cout << std::endl;*/
+		}
 	}
-	
-	
 
 	// Удаление массива полей игроков - В ФУНКЦИЮ
 	for (int g = 0; g < GAMERS_AMOUNT; g++) {

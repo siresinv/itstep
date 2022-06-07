@@ -3,10 +3,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <math.h>
-#include <stdio.h>
-#include <conio.h>
 //#include <WinUser.h>
-//#include <Windows.h>
+#include <Windows.h>
 
 
 // - расстановка всегда рандомная. компьютер всегда умный
@@ -95,11 +93,6 @@ const char MENU_ITEM_NAME[MENU_ITEMS_AMOUNT][50] = {
 	"[N]o"
 };
 const char MENU_HOT_KEY[MENU_ITEMS_AMOUNT] = { 'C', 'L', 'S', 'P', 'V', 'T', 'R', 'E', 'Y', 'N' };
-
-const int SEPARATE_LINE_LEN = 45;
-int SEPARATE_LINE_LEN_FOR_DIGIT = 4;
-
-
 
 
 shipType* getShipList() {
@@ -350,14 +343,6 @@ void createRandFleet(int** field) { // создание флота
 }
 
 
-void showSeparateLine(int nDash) {
-	for (int i = 0; i < nDash; i++) {
-		std::cout << "-";
-	}
-	//std::cout << std::endl;
-}
-
-
 // ДОПИЛИВАТЬ - КОМУ ЧТО И В КАКИХ СЛУЧАЯХ ВЫВОДИТЬ
 void showField(int** field) { // вывод поля на экран
 	char firstLetter = 'A';
@@ -368,7 +353,9 @@ void showField(int** field) { // вывод поля на экран
 	
 	std::cout << std::endl;
 	std::cout << "  ";
-	showSeparateLine(FIELD_SIZE_X * SEPARATE_LINE_LEN_FOR_DIGIT);
+	for (int i = 0; i < FIELD_SIZE_X; i++) {
+		std::cout << "----";
+	}
 	std::cout << "-";
 	std::cout << std::endl;
 	for (int i = 0; i < FIELD_SIZE_Y; i++) {
@@ -395,7 +382,9 @@ void showField(int** field) { // вывод поля на экран
 		}
 		std::cout << std::endl;
 		std::cout << "  ";
-		showSeparateLine(FIELD_SIZE_X * SEPARATE_LINE_LEN_FOR_DIGIT);
+		for (int i = 0; i < FIELD_SIZE_X; i++) {
+			std::cout << "----";
+		}
 		std::cout << "-";
 		std::cout << std::endl;
 	}
@@ -530,7 +519,7 @@ menuItem* getMenuList() {
 }
 
 menuItem* getCurrentMenu(menuItem* menuList, menuAction* actionList, int nAction) {
-	menuItem* currentMenu = new menuItem[nAction];
+	menuItem* currentMenu = new menuItem;
 	for (int i = 0; i < MENU_ITEMS_AMOUNT; i++) {
 		for (int j = 0; j < nAction; j++) {
 			if (menuList[i].action == actionList[j]) {
@@ -543,65 +532,32 @@ menuItem* getCurrentMenu(menuItem* menuList, menuAction* actionList, int nAction
 	return currentMenu;
 }
 
-
-void showMessage(char* message) {
-	showSeparateLine(SEPARATE_LINE_LEN);
-	std::cout << std::endl;
-	std::cout << message;
-	std::cout << std::endl;
-	std::cout << std::endl;
-	
-}
-
 void showCurrentMenu(menuItem* currentMenu, int nAction) {
-	
-	char msg[] = "Menu";
-	showMessage(msg);
-
 	for (int i = 0; i < nAction; i++) {
-		std::cout << currentMenu[i].name;
+		std::cout << currentMenu[i].key << " - " << currentMenu[i].name;
 		std::cout << std::endl;
 	}
-	showSeparateLine(SEPARATE_LINE_LEN);
-	std::cout << std::endl;
 }
 
-
-void getMenuChoise(menuItem* currentMenu) {
-	/*do {
-		int a = _getch();
-	} while (true);
-	
-	if (a == 'a') {
-		std::cout << "";
-	}*/
-
-	exit(0);
-}
 
 int main() {
+	
 	menuItem* menuList = getMenuList();
+
+	menuAction actionList[] = {doCreate, doExit, doStart};
+	int nCurrentMenuItem = sizeof(actionList) / sizeof(actionList[0]);
+	//menuItem* currentMenu = getCurrentMenu(menuList, actionList, nCurrentMenuItem);
+	//showCurrentMenu(currentMenu, nCurrentMenuItem);
+
 
 	// delet menuList currentMenu - в соответствующих местах
 
 	srand(time(NULL));
 
-	showIntro();
-	//showSelectGameType();
-	//selectGameType();
-
-	menuAction actionList[] = { doCreate, doExit };
-	int nCurrentMenuItem = sizeof(actionList) / sizeof(actionList[0]);
-	menuItem* currentMenu = getCurrentMenu(menuList, actionList, nCurrentMenuItem);
-	showCurrentMenu(currentMenu, nCurrentMenuItem);
-	getMenuChoise(currentMenu);
-	//exit(0);
-	
-	
-
-
 
 	game currentGame = createEmptyGame(); // создали пустую игру
+	
+
 
 	// выбор типа игры - кто с кем. а если еще и чел-чел
 	
@@ -611,9 +567,13 @@ int main() {
 	// выход
 	// ПРИ ПЕРЕЗАПУСКЕ ПОЛЯ НЕ СТИРАТЬ
 
+	showIntro();
+	showSelectGameType();
+	selectGameType();
+
+
+
 	
-
-
 	currentGame.number = 1; // присвоили игре номер
 	gamer* gamersList = new gamer[GAMERS_AMOUNT]; // создали игроков
 	for (int i = 0; i < GAMERS_AMOUNT; i++) {
