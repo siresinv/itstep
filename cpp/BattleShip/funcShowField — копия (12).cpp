@@ -26,6 +26,9 @@
 
 // ! обстрел рядом с попаданием реализовать - горизонтально/вертикально. потом функцию с возможными положениями клеток
 // !! ПРЕЗЕНТАЦИЮ. БЛОК-СХЕМУ
+// delete menuList currentMenu currentActionList - в соответствующих местах
+
+
 
 
 
@@ -66,7 +69,7 @@ const int SEPARATE_LINE_LEN_FOR_DIGIT = 4;
 
 // КОНСТАНТЫ МЕНЮ
 ///////////////////////////////////////////////////
-const int MENU_ITEMS_AMOUNT = 14;
+const int MENU_ITEMS_AMOUNT = 13;
 const char MENU_ITEM_NAME[MENU_ITEMS_AMOUNT][30] = {
 	"[C]reate game",
 	"Se[L]ect type of game",
@@ -77,10 +80,9 @@ const char MENU_ITEM_NAME[MENU_ITEMS_AMOUNT][30] = {
 	"[R]estart game",
 	"E[X]it",
 	"[M]enu",
-	"Res[U]me game",
+	"Res[U]me",
 	"[1] Human - PC",
-	"[2] PC - PC",
-	"Do moo[V]",
+	"[2] PC - PC"
 	""
 };
 
@@ -141,7 +143,6 @@ enum menuAction { // действия меню
 	doResume,
 	doHUM_PC,
 	doPC_PC,
-	doMove,
 	noAction
 };
 enum gameType{
@@ -506,7 +507,6 @@ void showField(int** field) { // вывод поля на экран
 	}
 }
 
-// сделать норм
 void showGameStatictic(game currentGame) {
 	char msg[] = "Game statistic";
 	showMessage(msg);
@@ -527,19 +527,19 @@ gamer createGamer(int number, gamerType type) {
 	gamer newGamer;
 
 	newGamer.number = number;
-	newGamer.type = type;
+	//strcpy(newGamer.name, name);
+	newGamer.type = type; //HUMAN=0/ PC=1
 	newGamer.field = createEmptyField();
 	newGamer.state = gamerInit;
 	newGamer.moveAmount = 0;
-	newGamer.liveShipsAmount = SHIPS_AMOUNT;
+	newGamer.liveShipsAmount = 10; // 10
 	newGamer.killedShipsAmount = 0;
 	newGamer.hitsAmount = 0;
 
 	return newGamer;
 }
 
-// переделать ее в обнуление игры и подобное с игроками сделать
-game createEmptyGame() { 
+game createEmptyGame() {
 	game newGame;
 
 	newGame.number;
@@ -607,78 +607,60 @@ menuAction getChoiceAction(int pressedKey) { // возвращает назва�
 	case 'с':
 		action = doCreate;
 		break;
-
 	case 'L':
 	case 'l':
 	case 'Д':
 	case 'д':
 		action = doSelect;
 		break;
-
 	case 'S':
 	case 's':
 	case 'Ы':
 	case 'ы':
 		action = doStart;
 		break;
-
 	case 'P':
 	case 'p':
 	case 'З':
 	case 'з':
 		action = doPause;
 		break;
-
 	case 'U':
 	case 'u':
 	case 'Г':
 	case 'г':
 		action = doResume;
 		break;
-
 	case 'D':
 	case 'd':
 	case 'В':
 	case 'в':
 		action = doDelete;
 		break;
-
 	case 'R':
 	case 'r':
 	case 'К':
 	case 'к':
 		action = doRestart;
 		break;
-
 	case 'M':
 	case 'm':
 	case 'Ь':
 	case 'ь':
 		action = doMenu;
 		break;
-
 	case 'X':
 	case 'x':
 	case 'Ч':
 	case 'ч':
 		action = doExit;
 		break;
-
-	case 'V':
-	case 'v':
-	case 'М':
-	case 'м':
-		action = doMove;
-		break;
-
 	case '1':
 		action = doHUM_PC;
 		break;
-
 	case '2':
 		action = doPC_PC;
 		break;
-
 	default:
 		break;
 	}
@@ -704,16 +686,15 @@ int main() {
 	gameType currentGameType = gtHumanPC;
 	currentGame.state = currentGameState;
 	gamer* gamersList = new gamer[GAMERS_AMOUNT]; // создали пустой массив структур игроков
-	int currentGamer = 0;
 
-	menuItem* menuList = getMenuList();
-	menuAction* currentActionList = new menuAction;
+
 	do {
 		showIntro();
 
 		// подготовка меню
+		menuItem* menuList = getMenuList();
+		menuAction* currentActionList = new menuAction;
 		int nCurrentMenuItem;
-
 		switch (currentGameState) { // вывод соответствующих пунктов меню и другие действия в зависимости от статуса игры
 		case gameEmpty:
 			currentGame.number = currentGame_No;
@@ -731,6 +712,7 @@ int main() {
 
 		case gameReady:
 			showGameStatictic(currentGame);
+			
 			nCurrentMenuItem = 3;
 			currentActionList[0] = { doStart };
 			currentActionList[1] = { doDelete };
@@ -738,18 +720,12 @@ int main() {
 			break;
 
 		case gameStart:
-			if (gamersList[currentGamer].state == gamerReady) {
-				nCurrentMenuItem = 2;
-				currentActionList[0] = { doMove };
-				currentActionList[1] = { doMenu };
-			}
-			else {
-				nCurrentMenuItem = 1;
-				currentActionList[0] = { doMenu };
-			}
-			
-			
-			
+			nCurrentMenuItem = 1;
+			currentActionList[0] = { doMenu };
+			// если статус игрока ходит - появляется пунк S[H]ot
+			// и соответственно 
+
+
 			/// ЗДЕСЬ САМЫЙ КРУТЯК С ВЫВОДОМ И Т.Д.
 			for (int i = 0; i < GAMERS_AMOUNT; i++) {
 				char msg[] = "Gamer";
@@ -758,8 +734,10 @@ int main() {
 				std::cout << std::endl;
 				std::cout << std::endl;
 			}
-			break;
 
+
+
+			break;
 
 		case gamePaused:
 			nCurrentMenuItem = 4;
@@ -787,11 +765,11 @@ int main() {
 		default:
 			break;
 		}
-
+		menuItem* currentMenu = getCurrentMenu(menuList, currentActionList, nCurrentMenuItem);
+		showCurrentMenu(currentMenu, nCurrentMenuItem);
+	
 
 		// работа меню
-		menuItem* currentMenu = getCurrentMenu(menuList, currentActionList, nCurrentMenuItem); 
-		showCurrentMenu(currentMenu, nCurrentMenuItem);
 		menuAction correctAction = noAction;
 		do {
 			menuAction choiceAction = getChoiceAction(_getch()); // поймали клавишу
@@ -800,8 +778,6 @@ int main() {
 			switch (correctAction) {
 			case doSelect:
 
-
-				// возможно игроков не здесь создавать и какие-то параметры логичнее им в других местах давать
 				for (int i = 0; i < GAMERS_AMOUNT; i++) { // создали двух игроков - пока оба люди)
 					gamersList[i] = createGamer(i, human);
 				}
@@ -810,6 +786,7 @@ int main() {
 					getField(gamersList[i]); // дали игрокам игровые поля, присвоили игрокам статус ГОТОВ
 					gamersList[i].state = gamerReady;
 				}
+
 				currentGameState = gameSelect;
 				break;
 
@@ -830,33 +807,6 @@ int main() {
 
 			case doExit:
 				exit(0);
-				break;
-
-			case doMove:
-				if (gamersList[currentGamer].type == human) {
-					char msg[] = "Enter your move";
-					showMessage(msg);
-					std::cout << "Example A-J: ";
-					int a = _getch();
-					std::cout << "Example 1-10: ";
-					int b = _getch();
-					/*int b;
-					std::cin >> a;
-					std::cin >> b;*/
-					// функцию хода компьютера с возвратом
-				}
-				else {
-					char msg[] = "Enter your move";
-					showMessage(msg);
-					std::cout << "Example A-J: ";
-					int a = _getch();
-					std::cout << "Example 1-10: ";
-					int b = _getch();
-					/*int b;
-					std::cin >> a;
-					std::cin >> b;*/
-					// функцию хода компьютера с возвратом
-				}
 				break;
 
 			case doMenu:
@@ -884,40 +834,14 @@ int main() {
 			default:
 				break;
 			}
-			
-			
-			
-
-
 
 		} while (correctAction == noAction);
 
 		currentGame.state = currentGameState;
 		currentGame.type = currentGameType;
 	
-
-
-		//////////////DEL
-		//for (int i = 0; i < ; i++) {
-			
-		//}
-
-			
-			/////////////////////////
-			
-			////////////////////////
-			delete[] currentMenu;
-
 		system("cls");
 	} while (true);
-
-
-
-	//////////////DEL
-	delete[] currentActionList; //del - V
-	//for (int i = 0; i < MENU_ITEMS_AMOUNT; i++) {
-	delete[] menuList; //del - V
-	//}
 
 	
 

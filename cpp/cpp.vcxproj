@@ -21,9 +21,6 @@
   <ItemGroup>
     <ClCompile Include="BattleShip\funcShowField.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="BattleShip\Новый текстовый документ.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
