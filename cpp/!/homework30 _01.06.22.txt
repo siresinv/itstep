@@ -1,0 +1,108 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <windows.h>
+using namespace std;
+
+struct book {
+    char name[50];
+    char author[50];
+    char genre[50];
+    int cost;
+};
+
+void edit(book& a) //&a = ?
+{
+    cout << "Введите название: ";
+    gets_s(a.name, 50);
+    cout << "Введите автора: ";
+    gets_s(a.author, 50);
+    cout << "Введите жанр(ы): ";
+    gets_s(a.genre, 50);
+    cout << "Введите стоимость: ";
+    cin >> a.cost;
+}
+
+void print(book a) //a = ?
+{
+    cout << "-----------------\n";
+    cout << "Название: " << a.name << endl;
+    cout << "Автор: " << a.author << endl;
+    cout << "Жанр(ы): " << a.genre << endl;
+    cout << "Стоимость: " << a.cost << endl;
+}
+
+void printall(book* mas)
+{
+    cout << endl;
+    for (int i = 0; i < 10; i++)
+    {
+        print(mas[i]);
+    }
+    cout << "-----------------\n\n";
+}
+
+void search_author(book* mas, char* author)
+{
+    _strlwr(author);
+    for (int i = 0; i < 10; i++)
+    {
+        char copy[50];
+        strcpy(copy, mas[i].author);
+        _strlwr(copy);
+        if (strstr(copy, author))
+        {
+            print(mas[i]);
+        }
+    }
+}
+
+void sort_author(book* mas) //192
+{
+    for (int i = 0; i < 10; i++) //сколько раз выполнится
+    {
+        for (int j = 10 - 1; j > i; j--) //идем с конца
+        {
+            if (strcmp(mas[j - 1].author, mas[j].author) > 0)
+            {
+                book k = mas[j];
+                mas[j] = mas[j - 1];
+                mas[j - 1] = k;
+            }
+        }
+    }
+}
+
+int main()
+{
+    setlocale(0, "");
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    book shop[10] = { {"Мастер и Маргарита", "Михаил Булгаков", "Роман", 690},
+                        {"Преступление и наказание", "Федор Михайлович Достоевский", "Роман", 720},
+                        {"Маленький принц", "Антуан де Сент-Экзюпери", "Сказка, повесть", 440},
+                        {"Собачье сердце", "Михаил Булгаков", "Повесть", 635},
+                        {"Оно", "Стивен Кинг", "Ужасы, фэнтези, драма, детектив", 1050},
+                        {"Над пропастью во ржи", "Джером Сэлинджер", "Роман", 1100},
+                        {"Герой нашего времени", "Михаил Лермонтов", "Психологический роман", 565},
+                        {"Приключения Шерлока Холмса", "Артур Конан Дойл", "Детектив", 1200},
+                        {"Портрет Дориана Грея", "Оскар Уайльд", "Роман", 760},
+                        {"Властелин колец", "Джон Рональд Руэл Толкин", "Роман", 1350}
+    };
+    printall(shop);
+    int x;
+    cout << "Введи номер книги, которую нужно заменить: ";
+    cin >> x;
+    getchar();
+    edit(shop[x - 1]);
+    printall(shop);
+    cout << "Введи номер книги, которую нужно посмотреть: ";
+    cin >> x;
+    getchar();
+    print(shop[x - 1]);
+    char author[50];
+    cout << "\nПо какому автору ищем: ";
+    gets_s(author, 50);
+    search_author(shop, author);
+    sort_author(shop);
+    printall(shop);
+}

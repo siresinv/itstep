@@ -707,7 +707,7 @@ int main() {
 	int currentGamer = 0;
 
 	menuItem* menuList = getMenuList();
-	menuAction* currentActionList = new menuAction;
+	menuAction* currentActionList = new menuAction[4]; // хотя 4 - это максимально возможное количество пунктов меню
 	do {
 		showIntro();
 
@@ -738,7 +738,7 @@ int main() {
 			break;
 
 		case gameStart:
-			if (gamersList[currentGamer].state == gamerReady) {
+			if (gamersList[currentGamer].state == gamerReady) { //////////////////////////
 				nCurrentMenuItem = 2;
 				currentActionList[0] = { doMove };
 				currentActionList[1] = { doMenu };
