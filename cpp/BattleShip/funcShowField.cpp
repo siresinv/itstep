@@ -29,6 +29,16 @@
 
 
 
+
+	// Очередь ходов - пока не нажата клавиша меню, пока один не выиграл. Если попал, то ход не переходит?
+	// ПРИ ИГРЕ КОМПЬЮТЕРОВ ЧТОЫБ ПО НАЖАТИЮ ЛЮБОЙ КЛАВИШИ ХОДИЛИ ИЛИ ЭНТРА
+	// при этом выводится окно состояния игры или результаты
+	// ПРИ ПЕРЕЗАПУСКЕ ПОЛЯ НЕ СТИРАТЬ
+
+
+
+
+
 // КОНСТАНТЫ ПОЛЯ
 // КОНСТАНТЫ ПРОРИСОВКИ
 // КОНСТАНТЫ МЕНЮ
@@ -80,7 +90,7 @@ const char MENU_ITEM_NAME[MENU_ITEMS_AMOUNT][30] = {
 	"Res[U]me game",
 	"[1] Human - PC",
 	"[2] PC - PC",
-	"Do moo[V]",
+	"Do mo[V]e",
 	""
 };
 
@@ -159,6 +169,7 @@ struct gamer { // игрок
 	int number;
 	gamerType type;
 	int** field;
+	int** cleanField;
 	gamerState state;
 	int moveAmount;
 	int liveShipsAmount;
@@ -384,7 +395,7 @@ bool isShipKilled(int** field, int letter, int digit) { // возвращает 
 	return shipKilled;
 }
 
-shotResultType doShot(int** field, int letter, int digit) { // осуществление выстрела
+shotResultType shotToEnemy(int** field, int letter, int digit) { // осуществление выстрела
 	int& shotCell = *(*(field + letter) + digit);
 	shotResultType shotResult = getShotResult(shotCell);
 	if (shotResult != shotRepeat){
@@ -523,11 +534,11 @@ void showGameStatictic(game currentGame) {
 
 // ФУНКЦИИ СОЗДАНИЯ ИГРЫ, ИГРОКА
 ///////////////////////////////////////////////////
-gamer createGamer(int number, gamerType type) {
+gamer createGamer(int number) {
 	gamer newGamer;
 
 	newGamer.number = number;
-	newGamer.type = type;
+	newGamer.type;
 	newGamer.field = createEmptyField();
 	newGamer.state = gamerInit;
 	newGamer.moveAmount = 0;
@@ -552,6 +563,7 @@ game createEmptyGame() {
 void getField(gamer gamer) {
 	fillFieldSee(gamer.field);
 	createRandFleet(gamer.field);
+	gamer.cleanField = gamer.field;
 }
 
 
@@ -694,6 +706,37 @@ menuAction getAction(menuAction* actionList, menuAction choiceAction, int nActio
 
 
 
+
+
+
+char getMoveLetter() { 
+	char letter = 'A';
+	char msg[] = "Enter your move";
+	showMessage(msg);
+	std::cout << "[A-J]: ";
+	do {
+		letter = _getch();
+	} while (!(letter >= 'A' && letter <= 'J'));
+	return letter;
+}
+
+int getMoveDigit() {
+	char digit = '1';
+	std::cout << "[1-0]: ";
+	do {
+		digit = _getch();
+		if (digit == '0') return 10;
+	} while (!(digit >= '0' && digit <= '9'));
+	return int(digit - 48); // 48 - ascii - коды
+}
+
+int covertMoveLetterToDigit(char letter) {
+	return (letter - 64);
+}
+
+
+
+
 int main() {
 	srand(time(NULL));
 
@@ -701,13 +744,13 @@ int main() {
 	game currentGame;
 	int currentGame_No = 1;
 	gameState currentGameState = gameEmpty;
-	gameType currentGameType = gtHumanPC;
 	currentGame.state = currentGameState;
 	gamer* gamersList = new gamer[GAMERS_AMOUNT]; // создали пустой массив структур игроков
-	int currentGamer = 0;
+	int currentGamer;
 
 	menuItem* menuList = getMenuList();
 	menuAction* currentActionList = new menuAction[4]; // хотя 4 - это максимально возможное количество пунктов меню
+	
 	do {
 		showIntro();
 
@@ -730,6 +773,7 @@ int main() {
 			break;
 
 		case gameReady:
+			currentGamer = 0;
 			showGameStatictic(currentGame);
 			nCurrentMenuItem = 3;
 			currentActionList[0] = { doStart };
@@ -738,7 +782,7 @@ int main() {
 			break;
 
 		case gameStart:
-			if (gamersList[currentGamer].state == gamerReady) { //////////////////////////
+			if (gamersList[currentGamer].state == gamerMove) {
 				nCurrentMenuItem = 2;
 				currentActionList[0] = { doMove };
 				currentActionList[1] = { doMenu };
@@ -751,6 +795,9 @@ int main() {
 			
 			
 			/// ЗДЕСЬ САМЫЙ КРУТЯК С ВЫВОДОМ И Т.Д.
+
+			shotToEnemy(gamersList[1].field, rand() % 10, rand() % 10);
+
 			for (int i = 0; i < GAMERS_AMOUNT; i++) {
 				char msg[] = "Gamer";
 				showMessage(msg);
@@ -799,21 +846,14 @@ int main() {
 
 			switch (correctAction) {
 			case doSelect:
-
-
-				// возможно игроков не здесь создавать и какие-то параметры логичнее им в других местах давать
-				for (int i = 0; i < GAMERS_AMOUNT; i++) { // создали двух игроков - пока оба люди)
-					gamersList[i] = createGamer(i, human);
-				}
-				currentGame.gamersList = gamersList; // поместили игроков в игру
-				for (int i = 0; i < GAMERS_AMOUNT; i++) {
-					getField(gamersList[i]); // дали игрокам игровые поля, присвоили игрокам статус ГОТОВ
-					gamersList[i].state = gamerReady;
-				}
 				currentGameState = gameSelect;
+				for (int i = 0; i < GAMERS_AMOUNT; i++) { // создали игроков с пустыми игровыми полями
+					gamersList[i] = createGamer(i);
+				}
 				break;
 
 			case doStart:
+				gamersList[0].state = gamerMove;
 				currentGameState = gameStart;
 				break;
 
@@ -825,7 +865,10 @@ int main() {
 
 			case doRestart:
 				currentGameState = gameReady;
+
 				// обнулить данные игроков кроме статуса
+// /////////////////////////////////////////////////////////////////////////////////
+				//gamersList[1].field = gamersList[1].cleanField;
 				break;
 
 			case doExit:
@@ -834,28 +877,19 @@ int main() {
 
 			case doMove:
 				if (gamersList[currentGamer].type == human) {
-					char msg[] = "Enter your move";
-					showMessage(msg);
-					std::cout << "Example A-J: ";
-					int a = _getch();
-					std::cout << "Example 1-10: ";
-					int b = _getch();
-					/*int b;
-					std::cin >> a;
-					std::cin >> b;*/
-					// функцию хода компьютера с возвратом
+					char moveLetter = getMoveLetter(); 
+					std::cout << moveLetter << std::endl;
+					std::cout << covertMoveLetterToDigit(moveLetter) << std::endl;
+					int moveDigit = getMoveDigit();
+					std::cout << moveDigit << std::endl;
+					std::cout << "Press any key...";
+					_getch();
+					
 				}
 				else {
-					char msg[] = "Enter your move";
-					showMessage(msg);
-					std::cout << "Example A-J: ";
-					int a = _getch();
-					std::cout << "Example 1-10: ";
-					int b = _getch();
-					/*int b;
-					std::cin >> a;
-					std::cin >> b;*/
 					// функцию хода компьютера с возвратом
+					std::cout << "Press any key...";
+					_getch();
 				}
 				break;
 
@@ -868,15 +902,31 @@ int main() {
 				break;
 
 			case doHUM_PC:
-				currentGameType = gtHumanPC;
+
+				// В ФУНКЦИЮ
+				currentGame.gamersList = gamersList; // поместили игроков в игру
+				for (int i = 0; i < GAMERS_AMOUNT; i++) {
+					getField(gamersList[i]); // дали игрокам флоты
+					gamersList[i].state = gamerReady;
+				}
+
+				currentGame.type = gtHumanPC;
 				currentGameState = gameReady;
-				gamersList[0].type = human; // первый игрок - человек
+				gamersList[0].type = human;
 				break;
 
 			case doPC_PC:
-				currentGameType = gtPCPC;
+
+				// В ФУНКЦИЮ
+				currentGame.gamersList = gamersList; // поместили игроков в игру
+				for (int i = 0; i < GAMERS_AMOUNT; i++) {
+					getField(gamersList[i]); // дали игрокам флоты
+					gamersList[i].state = gamerReady;
+				}
+
+				currentGame.type = gtPCPC;
 				currentGameState = gameReady;
-				gamersList[0].type = pc; // первый игрок - ПК
+				gamersList[0].type = pc;
 				break;
 
 			case noAction:
@@ -884,65 +934,18 @@ int main() {
 			default:
 				break;
 			}
-			
-			
-			
-
-
 
 		} while (correctAction == noAction);
 
 		currentGame.state = currentGameState;
-		currentGame.type = currentGameType;
 	
-
-
-		//////////////DEL
-		//for (int i = 0; i < ; i++) {
-			
-		//}
-
-			
-			/////////////////////////
-			
-			////////////////////////
-			delete[] currentMenu;
+		delete[] currentMenu;
 
 		system("cls");
 	} while (true);
 
-
-
-	//////////////DEL
-	delete[] currentActionList; //del - V
-	//for (int i = 0; i < MENU_ITEMS_AMOUNT; i++) {
-	delete[] menuList; //del - V
-	//}
-
-	
-
-	
-	// Очередь ходов - пока не нажата клавиша меню, пока один не выиграл. Если попал, то ход не переходит?
-	// ПРИ ИГРЕ КОМПЬЮТЕРОВ ЧТОЫБ ПО НАЖАТИЮ ЛЮБОЙ КЛАВИШИ ХОДИЛИ ИЛИ ЭНТРА
-	// при этом выводится окно состояния игры или результаты
-	// ПРИ ПЕРЕЗАПУСКЕ ПОЛЯ НЕ СТИРАТЬ
-
-	
-
-
-	
-
-
-
-
-
-
-
-
-
-
-	
-	
+	delete[] currentActionList;
+	delete[] menuList;
 
 	// Удаление массива полей игроков - В ФУНКЦИЮ
 	for (int g = 0; g < GAMERS_AMOUNT; g++) {
