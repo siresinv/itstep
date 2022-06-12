@@ -15,8 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BattleShip\funcShowField.cpp">
+    <ClCompile Include="BattleShip\BattleShip.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="BattleShip\README.txt" />
+    <Text Include="BattleShip\ДОДЕЛКИ КОГДА-НИБУДЬ.txt" />
   </ItemGroup>
 </Project>

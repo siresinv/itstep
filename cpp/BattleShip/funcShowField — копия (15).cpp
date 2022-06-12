@@ -24,7 +24,7 @@
 
 
 // ==========================================================================================================================
-// !! обстрел рядом с попаданием реализовать - горизонтально/вертикально. потом функцию с возможными положениями клеток
+
 // ! ПРЕЗЕНТАЦИЮ. БЛОК-СХЕМУ
 // ПРИ ИГРЕ КОМПЬЮТЕРОВ ЧТОЫБ ПО НАЖАТИЮ ЛЮБОЙ КЛАВИШИ ХОДИЛИ ИЛИ ЭНТРА
 // красивости добить - вывод состояний игры, игроков
@@ -60,7 +60,8 @@ const int GAMERS_AMOUNT = 2;
 const char ICON_SEE = ' ';
 const char ICON_SHIP = 219;
 const char ICON_ABOUT_SHIP = ' ';
-const char ICON_SHOT_MISS = '.';
+const char ICON_ABOUT_KILLED_SHIP = '.';
+const char ICON_SHOT_MISS = '*';
 const char ICON_SHOT_HIT = 'X';
 const int SEPARATE_LINE_LEN = 45;
 const int SEPARATE_LINE_LEN_FOR_DIGIT = 4;
@@ -97,7 +98,8 @@ enum fieldCellType // типы клеток поля
 	cellShip,
 	cellShotMiss,
 	cellShotHit,
-	cellAboutShip
+	cellAboutShip,
+	cellAboutKilledShip
 };
 enum shipType // типы кораблей с соответствующим количеством палуб
 {
@@ -155,6 +157,7 @@ enum gamerType {
 	human,
 	pc
 };
+
 
 // СТРУКТУРЫ
 ///////////////////////////////////////////////////
@@ -237,8 +240,7 @@ void setCell(int* cell, int value) { // установка соответств�
 	*cell = value;
 }
 
-///// допиливать - при потоплении как сверять куда ставить. МОЖНО - КЛЕТКИ ВОКРУГ ПОТОПЛЕННОГО КОРАБЛЯ
-void setRectAboutShip(int** field, int firstLetter, int firstDigit, int nDeck, int direction) { // установка прямоугольника вокруг корабля
+void setRectAboutShip(int** field, int firstLetter, int firstDigit, int nDeck, int direction, fieldCellType cellType) { // установка прямоугольника вокруг корабля
 
 	int* arrCoordRectAboutShip = getCoordRectAboutShip(firstLetter, firstDigit, nDeck, direction);
 	int rectX1 = arrCoordRectAboutShip[0];
@@ -250,7 +252,7 @@ void setRectAboutShip(int** field, int firstLetter, int firstDigit, int nDeck, i
 	for (int i = rectY1; i <= rectY2; i++) {
 		for (int j = rectX1; j <= rectX2; j++) {
 			int& cell = *(*(field + i) + j);
-			if (cell != cellShip) setCell(&cell,cellAboutShip);
+			if (cell != cellShip && cell != cellShotHit && cell != cellShotMiss) setCell(&cell, cellType);
 		}
 	}
 }
@@ -305,7 +307,7 @@ shotResultType getShotResult(int& shotCell) { // возвращение резу
 	if (shotCell == cellSee || shotCell == cellAboutShip) {
 		return shotMiss;
 	}
-	else if (shotCell == cellShotMiss || shotCell == cellShotHit) {
+	else if (shotCell == cellShotMiss || shotCell == cellShotHit || shotCell == cellAboutKilledShip) {
 		return shotRepeat;
 	}
 	else {
@@ -382,9 +384,11 @@ bool isShipKilled(int** field, int letter, int digit) { // возвращает 
 	bool direction = getShipDirection(field, firstLetter, firstDigit);
 	int nDeck = getShipDeckAmount(field, firstLetter, firstDigit, direction);
 	bool shipKilled = scanShipAfterHit(field, firstLetter, firstDigit, direction, nDeck);
-	std::cout << "let:" << firstLetter << " dig:" << firstDigit << " dir:" << direction << " deck:" << nDeck << " killed:" << shipKilled;
-	std::cout << std::endl;
 	delete[] arrShipFirstCell;
+
+	// это лучше убрать отсюда  - кода будет больше, но будет логичнее
+	setRectAboutShip(field, firstLetter, firstDigit, nDeck, direction, cellAboutKilledShip);
+
 	return shipKilled;
 }
 
@@ -398,6 +402,7 @@ shotResultType shotToEnemy(int** field, int letter, int digit) { // осущес
 			break;
 		case shotHit:
 			setCell(&shotCell, cellShotHit);
+			isShipKilled(field, letter, digit); // это не так сделать
 			break;
 		default:
 			break;
@@ -436,7 +441,7 @@ void createRandFleet(int** field) { // создание флота
 		int randLetter = arrRandPosition[0];
 		int randDigit = arrRandPosition[1];
 		setShip(field, randLetter, randDigit, nDeck, direction);
-		setRectAboutShip(field, randLetter, randDigit, nDeck, direction);
+		setRectAboutShip(field, randLetter, randDigit, nDeck, direction, cellAboutShip);
 		delete[] arrRandPosition;
 	}
 	delete[] arrShipList;
@@ -467,8 +472,10 @@ void showMessage(char* message) {
 
 }
 
-// ДОПИЛИВАТЬ - КОМУ ЧТО И В КАКИХ СЛУЧАЯХ ВЫВОДИТЬ
-void showField(int** field) { // вывод поля на экран
+
+
+// ==========================================================================================================================
+void showField(int** field, bool isShowShip) { // вывод поля на экран
 	char firstLetter = 'A';
 	std::cout << "    ";
 	for (int i = 0; i < FIELD_SIZE_X; i++) {
@@ -487,10 +494,14 @@ void showField(int** field) { // вывод поля на экран
 			int cell = *(*(field + i) + j);
 
 			if (cell == cellShip) {
-				std::cout << " " << ICON_SHIP << " |";
+				std::cout << " " << ICON_SHIP << " |"; // для отладки
+				//std::cout << " " << ((isShowShip) ? ICON_SHIP : ICON_SEE) << " |";
 			}
-			else if (cell == cellAboutShip) {
+			/*else if (cell == cellAboutShip) {
 				std::cout << " " << ICON_ABOUT_SHIP << " |";
+			}*/
+			else if (cell == cellAboutKilledShip) {
+				std::cout << " " << ICON_ABOUT_KILLED_SHIP << " |";
 			}
 			else if (cell == cellShotMiss) {
 				std::cout << " " << ICON_SHOT_MISS << " |";
@@ -714,33 +725,68 @@ menuAction getAction(menuAction* actionList, menuAction choiceAction, int nActio
 
 
 
-
-char getMoveLetter() { 
+// ФУНКЦИИ ВВОДА ХОДА
+///////////////////////////////////////////////////
+char getHumanMoveLetter() { 
 	char letter = 'A';
 	char msg[] = "Enter your move";
 	showMessage(msg);
 	std::cout << "[A-J]: ";
 	do {
 		letter = _getch();
-	} while (!(letter >= 'A' && letter <= 'J'));
+	} while (!(letter >= 'A' && letter <= 'J') && !(letter >= 'a' && letter <= 'j'));
 	return letter;
 }
 
-int getMoveDigit() {
+char getHumanMoveDigit() {
 	char digit = '1';
 	std::cout << "[1-0]: ";
 	do {
 		digit = _getch();
-		if (digit == '0') return 10;
 	} while (!(digit >= '0' && digit <= '9'));
-	return int(digit); // -48 - ascii - коды
+	return digit;
 }
 
-int covertMoveLetterToDigit(char letter) {
-	return (letter - 64);
+int convertMoveLetterKeyToDigit(char letter) {
+	return int(letter) - 64; // - ascii - коды
 }
 
+int convertMoveDigitKeyToDigit(char digit) {
+	if (digit == '0') return 10;
+	return int(digit) - 48; // - ascii - коды
+}
 
+//int* getPCMove() {
+//
+//}
+
+// !! обстрел рядом с попаданием реализовать - горизонтально/вертикально. потом функцию с возможными положениями клеток
+
+int* getMovePosition(gamerType gamerType) {
+	int* arrMovePosition = new int[2];
+	char moveLetterKey;
+	char moveDigitKey;
+	int moveLetter;
+	int moveDigit;
+
+	if (gamerType == human) {
+		moveLetterKey = getHumanMoveLetter();
+		moveLetterKey = toupper(moveLetterKey);
+		std::cout << moveLetterKey << std::endl;
+		moveDigitKey = getHumanMoveDigit();
+		moveLetter = convertMoveLetterKeyToDigit(moveLetterKey) - 1;
+		moveDigit = convertMoveDigitKeyToDigit(moveDigitKey);
+		std::cout << moveDigit << std::endl;
+		moveDigit--;
+		arrMovePosition[0] = moveLetter;
+		arrMovePosition[1] = moveDigit;
+	}
+	else {
+
+	}
+		return arrMovePosition;
+	
+}
 
 
 int main() {
@@ -753,14 +799,18 @@ int main() {
 	currentGame.state = currentGameState;
 	gamer* gamersList = new gamer[GAMERS_AMOUNT]; // создали пустой массив структур игроков
 	int currentGamer;
-	char moveLetter;
-	char moveDigit;
+	
+	int moveLetter;
+	int moveDigit;
+	
+	
 	bool isMove = false; // был ли сделан ход
 
 	menuItem* menuList = getMenuList();
 	menuAction* currentActionList = new menuAction[4]; // хотя 4 - это максимально возможное количество пунктов меню
 	
 	do { // тут вся игра включая переходы по меню, пока не произойдет выход из игры
+		int* arrMovePosition;
 		showIntro();
 		int nCurrentMenuItem; // количество пункутов в текущем меню
 
@@ -808,7 +858,7 @@ int main() {
 				shotResultType shotResult;
 				//currentGamer = getCurrentGamer();
 				//nextGamer = getNextGamer();
-				shotResult = shotToEnemy(gamersList[1].field, rand() % 10, rand() % 10);
+				shotResult = shotToEnemy(gamersList[1].field, moveLetter, moveDigit);
 				if (shotResult == shotHit || shotRepeat) {
 					// ход не переходит
 				}
@@ -817,12 +867,15 @@ int main() {
 			}
 
 			
-			// ==========================================================================================================================
 			// ВЫВОД ПОЛЕЙ
 			for (int i = 0; i < GAMERS_AMOUNT; i++) {
+				bool isShowShip = true;
+				if (currentGame.type == gtHumanPC && gamersList[i].type == pc) {
+					isShowShip = false;
+				}
 				char msg[] = "Gamer";
 				showMessage(msg);
-				showField(gamersList[i].field); // здесь добавить параметр в зависимости от типа игры или игрока - кому что когда показывать
+				showField(gamersList[i].field, isShowShip);
 				std::cout << std::endl;
 				std::cout << std::endl;
 			}
@@ -867,6 +920,7 @@ int main() {
 					getField(gamersList[i]); // дали игроку флот
 					gamersList[i].state = gamerReady;
 				}
+				gamersList[1].type = pc; // второй игрок в любом случаем - PC
 				putGamerToGame(currentGame, gamersList);// поместили игроков в игру
 				break;
 
@@ -891,26 +945,15 @@ int main() {
 				exit(0);
 				break;
 
+
 			case doMove:
-				if (gamersList[currentGamer].type == human) {
-					// то что ниже - в функцию
-					moveLetter = getMoveLetter();
-					std::cout << moveLetter << std::endl;
-					std::cout << covertMoveLetterToDigit(moveLetter) << std::endl;
-					moveDigit = getMoveDigit();
-					std::cout << moveDigit << std::endl;
-					std::cout << "Press any key...";
-					_getch();
-					currentGamer = 0;
-				}
-				else {
-					// функцию хода компьютера с возвратом
-					std::cout << "Press any key...";
-					_getch();
-					currentGamer = 0;
-					
-				}
+				arrMovePosition = getMovePosition(gamersList[currentGamer].type);
+				moveLetter = arrMovePosition[0];
+				moveDigit = arrMovePosition[1];
+				std::cout << "Press any key...";
+				_getch();
 				isMove = true;
+				delete[] arrMovePosition;
 				break;
 
 			case doMenu:
