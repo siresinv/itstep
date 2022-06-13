@@ -1,4 +1,4 @@
-﻿// *** BattleShip v1.1 (by SyresinVA) ***
+﻿// *** BattleShip v1.2 (by SyresinVA) ***
 
 #define _CRT_SECURE_NO_WARNINGS
 
