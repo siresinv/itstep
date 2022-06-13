@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="!\ССЫЛКА НА ДИСКОРД С++.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
     <Text Include="BattleShip\README.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>

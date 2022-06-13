@@ -515,7 +515,13 @@ void showField(int** field, bool isShowShip) { // вывод поля на эк�
 	}
 }
 
-// ==========================================================================================================================
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// ==================================== !!! Нормальный вывод статистики игры, игроков
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 void showGameStatictic(game currentGame) { // Вывод статистики игры
 	char msg[] = "Game statistic";
 	showMessage(msg);
@@ -740,8 +746,13 @@ int convertMoveDigitKeyToDigit(char digit) { // Конвертирует ЦИФ�
 	if (digit == '0') return 10;
 	return int(digit) - 48; // - ascii - коды
 }
-
-// ==========================================================================================================================
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// ==================================== !!! УМНУЮ СТРЕЛЬБУ КОМПЬЮТЕРА
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 int* getPCMove() { // Возвращает массив (строка, столбец / буква,цифра) хода компьютера
 // !! обстрел рядом с попаданием реализовать - горизонтально/вертикально. потом функцию с возможными положениями клеток
 	int* arrMovePosition = new int[2]{rand() % 10, rand() % 10};
@@ -788,6 +799,7 @@ int main() {
 	currentGame.state = currentGameState;
 	gamer* gamersList = new gamer[GAMERS_AMOUNT]; // объявили массив структур игроков
 	int currentGamer;
+	int nextGamer;
 	int moveLetter;
 	int moveDigit;
 	bool isMove = false; // был ли сделан ход
@@ -843,21 +855,28 @@ int main() {
 				// isGamerWin
 				// Проверка статуса игроков - кому ходить и не закончилась ли игра
 				shotResultType shotResult;
-				//currentGamer = getCurrentGamer();
-				//nextGamer = getNextGamer();
 				
-				gamersList[1].moveAmount++;
-				shotResult = shotToEnemy(gamersList[1].field, moveLetter, moveDigit);
+				// сначала просто циркуляция по номера игроков
+				// а далее уже выяснение - давать ему ход или нет
+
+			
+				gamersList[currentGamer].moveAmount++;
+				nextGamer = ((currentGamer + 1) % GAMERS_AMOUNT); // Вычисление следующего игрока
+
+				shotResult = shotToEnemy(gamersList[nextGamer].field, moveLetter, moveDigit);
 				if (shotResult == shotHit) {
 					gamersList[1].hitsAmount++;
-					if (isShipKilled(gamersList[1].field, moveLetter, moveDigit)) {
-						gamersList[1].killedShipsAmount++;
+					if (isShipKilled(gamersList[nextGamer].field, moveLetter, moveDigit)) {
+						gamersList[currentGamer].killedShipsAmount++;
 					}
 				}
 				if (shotResult == shotHit || shotResult == shotRepeat) {
 					// ход не переходит
 				}
 
+				gamersList[currentGamer].state = gamerWait;
+				currentGamer = nextGamer;
+				gamersList[currentGamer].state = gamerMove;
 				isMove = false;
 			}
 
@@ -947,8 +966,8 @@ int main() {
 				arrMovePosition = getMovePosition(gamersList[currentGamer].type);
 				moveLetter = arrMovePosition[0];
 				moveDigit = arrMovePosition[1];
-				std::cout << "Press any key...";
-				_getch();
+				//std::cout << "Press any key...";
+				//_getch();
 				isMove = true;
 				delete[] arrMovePosition;
 				break;

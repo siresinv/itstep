@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="!\ССЫЛКА НА ДИСКОРД С++.txt" />
     <Text Include="BattleShip\README.txt" />
   </ItemGroup>
   <ItemGroup>
