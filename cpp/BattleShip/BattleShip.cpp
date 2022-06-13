@@ -40,7 +40,7 @@ const int GAMERS_AMOUNT = 2;
 const char ICON_SEE = ' ';
 const char ICON_SHIP = 219;
 const char ICON_ABOUT_SHIP = ' ';
-const char ICON_ABOUT_KILLED_SHIP = '.';
+const char ICON_ABOUT_KILLED_SHIP = 22; //'.';
 const char ICON_SHOT_MISS = '*';
 const char ICON_SHOT_HIT = 'X';
 const int SEPARATE_LINE_LEN = 45;
@@ -848,18 +848,15 @@ int main() {
 				currentActionList[0] = { doMenu };
 			}
 			
+
+			// Проверка статуса игроков - кому ходить и не закончилась ли игра
+			// Это раньше проверять, чем проверка - был ли сделан ход  ???
+
 			if (isMove) {
-				// ==========================================================================================================================
-				// // ПРИ ИГРЕ КОМПЬЮТЕРОВ ЧТОЫБ ПО НАЖАТИЮ ЛЮБОЙ КЛАВИШИ ХОДИЛИ ИЛИ ЭНТРА
-				// СТРЕЛЬБА. ПЕРЕХОД ХОДА
-				// isGamerWin
-				// Проверка статуса игроков - кому ходить и не закончилась ли игра
+				// ==================================== !!! СТРЕЛЬБА. ПЕРЕХОД ХОДА.	
+				
 				shotResultType shotResult;
 				
-				// сначала просто циркуляция по номера игроков
-				// а далее уже выяснение - давать ему ход или нет
-
-			
 				gamersList[currentGamer].moveAmount++;
 				nextGamer = ((currentGamer + 1) % GAMERS_AMOUNT); // Вычисление следующего игрока
 
@@ -870,13 +867,15 @@ int main() {
 						gamersList[currentGamer].killedShipsAmount++;
 					}
 				}
-				if (shotResult == shotHit || shotResult == shotRepeat) {
-					// ход не переходит
-				}
 
+				// переделать эту связку
 				gamersList[currentGamer].state = gamerWait;
-				currentGamer = nextGamer;
+				if (!(shotResult == shotHit || shotResult == shotRepeat /* или следующий игрок уже выиграл*/)) {
+					currentGamer = nextGamer;
+				}
 				gamersList[currentGamer].state = gamerMove;
+				// переделать эту связку
+				
 				isMove = false;
 			}
 

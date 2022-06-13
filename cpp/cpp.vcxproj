@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="BattleShip\README.txt" />
+    <ClCompile Include="BattleShip\BattleShip.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BattleShip\BattleShip.cpp" />
+    <Text Include="BattleShip\README.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
