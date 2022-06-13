@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <math.h>
+#include <stdlib.h>
 #include <conio.h>
 
 
@@ -21,8 +22,11 @@
 // main()
 
 
+
+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // КОНСТАНТЫ ПОЛЯ
-///////////////////////////////////////////////////
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 const int FIELD_SIZE_X = 10;
 const int FIELD_SIZE_Y = 10;
 const int SHIPS_AMOUNT = 10;
@@ -30,8 +34,9 @@ const int GAMERS_AMOUNT = 2;
 
 
 
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // КОНСТАНТЫ ПРОРИСОВКИ
-///////////////////////////////////////////////////
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 const char ICON_SEE = ' ';
 const char ICON_SHIP = 219;
 const char ICON_ABOUT_SHIP = ' ';
@@ -43,9 +48,11 @@ const int SEPARATE_LINE_LEN_FOR_DIGIT = 4;
 
 
 
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // КОНСТАНТЫ МЕНЮ
-///////////////////////////////////////////////////
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 const int MENU_ITEMS_AMOUNT = 14;
+
 const char MENU_ITEM_NAME[MENU_ITEMS_AMOUNT][30] = {
 	"[C]reate game",
 	"Se[L]ect type of game",
@@ -65,8 +72,9 @@ const char MENU_ITEM_NAME[MENU_ITEMS_AMOUNT][30] = {
 
 
 
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // ПЕРЕЧИСЛИМЫЕ ТИПЫ
-///////////////////////////////////////////////////
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 enum fieldCellType // типы клеток поля
 {
 	cellSee,
@@ -76,6 +84,7 @@ enum fieldCellType // типы клеток поля
 	cellAboutShip,
 	cellAboutKilledShip
 };
+
 enum shipType // типы кораблей с соответствующим количеством палуб
 {
 	shipBoat = 1,
@@ -83,12 +92,14 @@ enum shipType // типы кораблей с соответствующим к�
 	shipCruiser,
 	shipLincor
 };
+
 enum shotResultType // результаты выстрелов
 {
 	shotRepeat,
 	shotMiss,
 	shotHit
 }; 
+
 enum gamerState // состояния игрока
 {
 	gamerInit,
@@ -98,6 +109,7 @@ enum gamerState // состояния игрока
 	gamerWin,
 	gamerLose
 };
+
 enum gameState{ // статусы игры
 	gameNotIs,
 	gameSelect,
@@ -108,6 +120,7 @@ enum gameState{ // статусы игры
 	gameEnd,
 	gameStop
 };
+
 enum menuAction { // действия меню
 	doCreate,
 	doSelect,
@@ -124,18 +137,22 @@ enum menuAction { // действия меню
 	doMove,
 	noAction
 };
+
 enum gameType{
 	gtHumanPC,
 	gtPCPC,
 };
+
 enum gamerType {
 	human,
 	pc
 };
 
 
+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // СТРУКТУРЫ
-///////////////////////////////////////////////////
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 struct gamer { // игрок
 	int number;
 	gamerType type;
@@ -147,12 +164,14 @@ struct gamer { // игрок
 	int killedShipsAmount;
 	int hitsAmount;
 };
+
 struct game { // игра
 	int number;
 	gameState state;
 	gameType type;
 	gamer* gamersList;
 };
+
 struct menuItem { // меню
 	menuAction action;
 	char name[50];
@@ -160,8 +179,9 @@ struct menuItem { // меню
 
 
 
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // ФУНКЦИИ ПРОЦЕССА ИГРЫ - РАССТАНОВКА, СТРЕЛЬБА
-///////////////////////////////////////////////////
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 shipType* getShipList() { // получение списка кораблей
 	shipType* arrShipList = new shipType[SHIPS_AMOUNT] {shipLincor, shipCruiser, shipCruiser, shipDestroyer, shipDestroyer, shipDestroyer, shipBoat, shipBoat, shipBoat, shipBoat};
 	return arrShipList;
@@ -389,8 +409,9 @@ shotResultType shotToEnemy(int** field, int letter, int digit) { // осущес
 
 
 
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // ФУНКЦИИ СОЗДАНИЯ ПОЛЯ
-///////////////////////////////////////////////////
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 int** createEmptyField() { // создание пустого поля
 	int** field = new int* [FIELD_SIZE_Y];
 	for (int i = 0; i < FIELD_SIZE_Y; i++) {
@@ -426,21 +447,22 @@ void createRandFleet(int** field) { // создание флота
 
 
 
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // ФУНКЦИИ ВЫВОДА НА ЭКРАН
-///////////////////////////////////////////////////
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 void showSeparateLine(int nDash) { // вывод разделительной линии
 	for (int i = 0; i < nDash; i++) {
 		std::cout << "-";
 	}
 }
 
-void showIntro() {
+void showIntro() { // Вывод интро
 	std::cout << "---------------------------------------------" << std::endl;
 	std::cout << "   *** BattleShip v1.1 (by SyresinVA) ***" << std::endl;
 	std::cout << "---------------------------------------------" << std::endl;
 }
 
-void showMessage(char* message, int number = NULL) {
+void showMessage(char* message, int number = NULL) { // Показ сообщения
 	showSeparateLine(SEPARATE_LINE_LEN);
 	std::cout << std::endl;
 	std::cout << message;
@@ -494,7 +516,7 @@ void showField(int** field, bool isShowShip) { // вывод поля на эк�
 }
 
 // ==========================================================================================================================
-void showGameStatictic(game currentGame) {
+void showGameStatictic(game currentGame) { // Вывод статистики игры
 	char msg[] = "Game statistic";
 	showMessage(msg);
 	std::cout << "N: " << currentGame.number << " ";
@@ -509,9 +531,11 @@ void showGamerStatistic(gamer currentGamer) {
 }
 
 
+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // ФУНКЦИИ СОЗДАНИЯ ИГРЫ, ИГРОКА
-///////////////////////////////////////////////////
-gamer createGamer(int number) {
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+gamer createGamer(int number) { // Создание структуры игрока с начальными параметрами
 	gamer newGamer;
 
 	newGamer.number = number;
@@ -527,7 +551,7 @@ gamer createGamer(int number) {
 	return newGamer;
 }
 
-void copyField(int** field1, int** field2) {
+void copyField(int** field1, int** field2) { // Копирование игровых полей. Для функционала РЕСТАРТ
 	for (int i = 0; i < FIELD_SIZE_Y; i++) {
 		for (int j = 0; j < FIELD_SIZE_X; j++) {
 			*(*(field1 + i) + j) = *(*(field2 + i) + j);
@@ -535,21 +559,22 @@ void copyField(int** field1, int** field2) {
 	}
 }
 
-void getField(gamer gamer) {
+void getField(gamer gamer) { // Предоставление игрогого поля игроку
 	fillFieldSee(gamer.field);
 	createRandFleet(gamer.field);
 	copyField(gamer.cleanField, gamer.field);
 }
 
-void putGamerToGame(game currentGame, gamer* gamersList) {
+void putGamerToGame(game currentGame, gamer* gamersList) { // Помещение массива структур игроков в структуру игра
 	currentGame.gamersList = gamersList;
 }
 
 
 
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // ФУНКЦИИ РАБОТЫ С МЕНЮ
-///////////////////////////////////////////////////
-menuItem* getMenuList() {
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+menuItem* getMenuList() { // Создание массива структур с пунктами МЕНЮ
 	menuItem* menuList = new menuItem[MENU_ITEMS_AMOUNT];
 	for (int i = 0; i < MENU_ITEMS_AMOUNT; i++) {
 		menuList[i].action = menuAction(i);
@@ -558,7 +583,7 @@ menuItem* getMenuList() {
 	return menuList;
 }
 
-menuItem* getCurrentMenu(menuItem* menuList, menuAction* actionList, int nAction) {
+menuItem* getCurrentMenu(menuItem* menuList, menuAction* actionList, int nAction) { // Возвращает массив структур с пунктами ТЕКУЩЕГО МЕНЮ
 	menuItem* currentMenu = new menuItem[nAction];
 	for (int i = 0; i < MENU_ITEMS_AMOUNT; i++) {
 		for (int j = 0; j < nAction; j++) {
@@ -572,7 +597,7 @@ menuItem* getCurrentMenu(menuItem* menuList, menuAction* actionList, int nAction
 	return currentMenu;
 }
 
-void showCurrentMenu(menuItem* currentMenu, int nAction) {
+void showCurrentMenu(menuItem* currentMenu, int nAction) { // Вывод на экран ТЕКУЩЕГО МЕНЮ
 	
 	char msg[] = "Menu";
 	showMessage(msg);
@@ -675,7 +700,7 @@ menuAction getChoiceAction(int pressedKey) { // возвращает назва�
 	return action;
 }
 
-menuAction getAction(menuAction* actionList, menuAction choiceAction, int nAction) {
+menuAction getAction(menuAction* actionList, menuAction choiceAction, int nAction) { // Возвращает действие корректного выбора в МЕНЮ
 	for (int i = 0; i < nAction; i++) {
 		if (actionList[i] == choiceAction) return choiceAction;
 	}
@@ -684,9 +709,10 @@ menuAction getAction(menuAction* actionList, menuAction choiceAction, int nActio
 
 
 
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // ФУНКЦИИ ВВОДА ХОДА
-///////////////////////////////////////////////////
-char getHumanMoveLetter() { 
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+char getHumanMoveLetter() { // Возвращет корректную БУКВУ ХОДА
 	char letter = 'A';
 	char msg[] = "Enter your move";
 	showMessage(msg);
@@ -697,7 +723,7 @@ char getHumanMoveLetter() {
 	return letter;
 }
 
-char getHumanMoveDigit() {
+char getHumanMoveDigit() { // Возвращает корректную цифру хода
 	char digit = '1';
 	std::cout << "[1-0]: ";
 	do {
@@ -706,23 +732,23 @@ char getHumanMoveDigit() {
 	return digit;
 }
 
-int convertMoveLetterKeyToDigit(char letter) {
+int convertMoveLetterKeyToDigit(char letter) { // Конвертирует БУКВУ ХОДА в ЦИФРУ("индекс" массива)
 	return int(letter) - 64; // - ascii - коды
 }
 
-int convertMoveDigitKeyToDigit(char digit) {
+int convertMoveDigitKeyToDigit(char digit) { // Конвертирует ЦИФРУ ХОДА в ЦИФРУ("индекс" массива)
 	if (digit == '0') return 10;
 	return int(digit) - 48; // - ascii - коды
 }
 
 // ==========================================================================================================================
-int* getPCMove() {
+int* getPCMove() { // Возвращает массив (строка, столбец / буква,цифра) хода компьютера
 // !! обстрел рядом с попаданием реализовать - горизонтально/вертикально. потом функцию с возможными положениями клеток
 	int* arrMovePosition = new int[2]{rand() % 10, rand() % 10};
 	return arrMovePosition;
 }
 
-int* getMovePosition(gamerType gamerType) {
+int* getMovePosition(gamerType gamerType) { // Возвращает массив (строка, столбец / буква,цифра) с позицией хода
 	int* arrMovePosition = new int[2];
 	char moveLetterKey;
 	char moveDigitKey;
@@ -748,8 +774,10 @@ int* getMovePosition(gamerType gamerType) {
 }
 
 
-// main()
-///////////////////////////////////////////////////
+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// ФУНКЦИЯ main()
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 int main() {
 	srand(time(NULL));
 

@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BattleShip\BattleShip.cpp" />
+    <Text Include="!\ССЫЛКА НА ДИСКОРД С++.txt" />
+    <Text Include="BattleShip\README.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="BattleShip\README.txt" />
-    <Text Include="BattleShip\ДОДЕЛКИ КОГДА-НИБУДЬ.txt" />
+    <ClCompile Include="BattleShip\BattleShip.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
