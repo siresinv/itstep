@@ -1,4 +1,4 @@
-﻿// *** BattleShip v1.4 (by SyresinVA) ***
+﻿// *** BattleShip v1.2 (by SyresinVA) ***
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -6,7 +6,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <conio.h>
-#include <Windows.h>
 
 
 // КОНСТАНТЫ ПОЛЯ
@@ -38,7 +37,6 @@ const int GAMERS_AMOUNT = 2;
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // КОНСТАНТЫ ПРОРИСОВКИ
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-const double GAME_VERSION = 1.4;
 const char ICON_SEE = ' ';
 const char ICON_SHIP = 219;
 const char ICON_ABOUT_SHIP = ' ';
@@ -53,7 +51,7 @@ const int SEPARATE_LINE_LEN_FOR_DIGIT = 4;
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // КОНСТАНТЫ МЕНЮ
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-const int MENU_ITEMS_AMOUNT = 15;
+const int MENU_ITEMS_AMOUNT = 14;
 
 const char MENU_ITEM_NAME[MENU_ITEMS_AMOUNT][30] = {
 	"[C]reate game",
@@ -68,7 +66,6 @@ const char MENU_ITEM_NAME[MENU_ITEMS_AMOUNT][30] = {
 	"Res[U]me game",
 	"[1] Human - PC",
 	"[2] PC - PC",
-	"[3] Human - Human",
 	"Do mo[V]e",
 	""
 };
@@ -101,7 +98,7 @@ enum shotResultType // результаты выстрелов
 	shotRepeat,
 	shotMiss,
 	shotHit
-};
+}; 
 
 enum gamerState // состояния игрока
 {
@@ -137,7 +134,6 @@ enum menuAction { // действия меню
 	doResume,
 	doHUM_PC,
 	doPC_PC,
-	doHUM_HUM,
 	doMove,
 	noAction
 };
@@ -145,7 +141,6 @@ enum menuAction { // действия меню
 enum gameType{
 	gtHumanPC,
 	gtPCPC,
-	gtHumanHuman,
 };
 
 enum gamerType {
@@ -248,7 +243,6 @@ void setRectAboutShip(int** field, int firstLetter, int firstDigit, int nDeck, i
 	int rectX2 = arrCoordRectAboutShip[2];
 	int rectY2 = arrCoordRectAboutShip[3];
 	delete[]arrCoordRectAboutShip;
-	arrCoordRectAboutShip = nullptr;
 
 	for (int i = rectY1; i <= rectY2; i++) {
 		for (int j = rectX1; j <= rectX2; j++) {
@@ -386,13 +380,11 @@ bool isShipKilled(int** field, int letter, int digit) { // возвращает 
 	int nDeck = getShipDeckAmount(field, firstLetter, firstDigit, direction);
 	bool shipKilled = scanShipAfterHit(field, firstLetter, firstDigit, direction, nDeck);
 	delete[] arrShipFirstCell;
-	arrShipFirstCell = nullptr;
 
 	// это лучше убрать отсюда  - кода будет больше, но будет логичнее
 	if (shipKilled) {
 		setRectAboutShip(field, firstLetter, firstDigit, nDeck, direction, cellAboutKilledShip);
 	}
-	// это лучше убрать отсюда  - кода будет больше, но будет логичнее
 
 	return shipKilled;
 }
@@ -449,10 +441,8 @@ void createRandFleet(int** field) { // создание флота
 		setShip(field, randLetter, randDigit, nDeck, direction);
 		setRectAboutShip(field, randLetter, randDigit, nDeck, direction, cellAboutShip);
 		delete[] arrRandPosition;
-		arrRandPosition = nullptr;
 	}
 	delete[] arrShipList;
-	arrShipList = nullptr;
 }
 
 
@@ -468,7 +458,7 @@ void showSeparateLine(int nDash) { // вывод разделительной л
 
 void showIntro() { // Вывод интро
 	std::cout << "---------------------------------------------" << std::endl;
-	std::cout << "   *** BattleShip v" << GAME_VERSION <<" (by SyresinVA) ***" << std::endl;
+	std::cout << "   *** BattleShip v1.1 (by SyresinVA) ***" << std::endl;
 	std::cout << "---------------------------------------------" << std::endl;
 }
 
@@ -501,8 +491,8 @@ void showField(int** field, bool isShowShip) { // вывод поля на эк�
 			int cell = *(*(field + i) + j);
 
 			if (cell == cellShip) {
-				//std::cout << " " << ICON_SHIP << " |"; // для отладки
-				std::cout << " " << ((isShowShip) ? ICON_SHIP : ICON_SEE) << " |";
+				std::cout << " " << ICON_SHIP << " |"; // для отладки
+				//std::cout << " " << ((isShowShip) ? ICON_SHIP : ICON_SEE) << " |";
 			}
 			else if (cell == cellAboutKilledShip) {
 				std::cout << " " << ICON_ABOUT_KILLED_SHIP << " |";
@@ -525,8 +515,12 @@ void showField(int** field, bool isShowShip) { // вывод поля на эк�
 	}
 }
 
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-// ==================================== !!! СДЕЛАТЬ нормальный вывод статистики игры, игроков
+// //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// ==================================== !!! Нормальный вывод статистики игры, игроков
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 void showGameStatictic(game currentGame) { // Вывод статистики игры
 	char msg[] = "Game statistic";
@@ -551,8 +545,7 @@ gamer createGamer(int number) { // Создание структуры игро�
 	gamer newGamer;
 
 	newGamer.number = number;
-	newGamer.type = pc; // здесь сразу все игроки - ПК. - Это для игры с количеством игроков более ДВУХ
-						// Далее типы игроков меняются в зависимости от выбранного варианта игры
+	newGamer.type;
 	newGamer.field = createEmptyField();
 	newGamer.cleanField = createEmptyField();
 	newGamer.state = gamerInit;
@@ -707,10 +700,6 @@ menuAction getChoiceAction(int pressedKey) { // возвращает назва�
 		action = doPC_PC;
 		break;
 
-	case '3':
-		action = doHUM_HUM;
-		break;
-
 	default:
 		break;
 	}
@@ -730,30 +719,22 @@ menuAction getAction(menuAction* actionList, menuAction choiceAction, int nActio
 // ФУНКЦИИ ВВОДА ХОДА
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 char getHumanMoveLetter() { // Возвращет корректную БУКВУ ХОДА
-	char maxUPKey = FIELD_SIZE_Y + 64; // - ascii - коды
-	char maxLWKey = FIELD_SIZE_Y + 96; // - ascii - коды
-	char letter;
+	char letter = 'A';
+	char msg[] = "Enter your move";
+	showMessage(msg);
 	std::cout << "[A-J]: ";
 	do {
 		letter = _getch();
-	} while (!(letter >= 'A' && letter <= maxUPKey) && !(letter >= 'a' && letter <= maxLWKey));
+	} while (!(letter >= 'A' && letter <= 'J') && !(letter >= 'a' && letter <= 'j'));
 	return letter;
 }
 
 char getHumanMoveDigit() { // Возвращает корректную цифру хода
-	char maxDigitKey = FIELD_SIZE_X + 48; // - ascii - коды
-	char minDigitKey;
-	if (FIELD_SIZE_X < 10) {
-		minDigitKey = '1';
-	}
-	else {
-		minDigitKey = '0';
-	}
 	char digit = '1';
 	std::cout << "[1-0]: ";
 	do {
 		digit = _getch();
-	} while (!(digit >= minDigitKey && digit <= maxDigitKey));
+	} while (!(digit >= '0' && digit <= '9'));
 	return digit;
 }
 
@@ -765,27 +746,25 @@ int convertMoveDigitKeyToDigit(char digit) { // Конвертирует ЦИФ�
 	if (digit == '0') return 10;
 	return int(digit) - 48; // - ascii - коды
 }
-
-
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-// ==================================== !!! СДЕЛАТЬ УМНУЮ СТРЕЛЬБУ КОМПЬЮТЕРА
+// //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// ==================================== !!! УМНУЮ СТРЕЛЬБУ КОМПЬЮТЕРА
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 int* getPCMove() { // Возвращает массив (строка, столбец / буква,цифра) хода компьютера
-				   // !! обстрел рядом с попаданием реализовать - горизонтально/вертикально. 
-				   // Потом функцию с возможными положениями клеток
-	int* arrMovePosition = new int[2]{rand() % FIELD_SIZE_Y, rand() % FIELD_SIZE_X};
+// !! обстрел рядом с попаданием реализовать - горизонтально/вертикально. потом функцию с возможными положениями клеток
+	int* arrMovePosition = new int[2]{rand() % 10, rand() % 10};
 	return arrMovePosition;
 }
 
-int* getMovePosition(gamerType gamerType, int currentGamer) { // Возвращает массив (строка, столбец / буква,цифра) с позицией хода
+int* getMovePosition(gamerType gamerType) { // Возвращает массив (строка, столбец / буква,цифра) с позицией хода
 	int* arrMovePosition = new int[2];
 	char moveLetterKey;
 	char moveDigitKey;
 	int moveLetter;
 	int moveDigit;
-
-	char msg[] = "Enter your move, gamer";
-	showMessage(msg, currentGamer + 1);
 
 	if (gamerType == human) {
 		moveLetterKey = getHumanMoveLetter();
@@ -800,7 +779,6 @@ int* getMovePosition(gamerType gamerType, int currentGamer) { // Возвращ�
 		arrMovePosition[1] = moveDigit;
 	}
 	else {
-		Sleep(500);
 		arrMovePosition = getPCMove();
 	}
 		return arrMovePosition;
@@ -815,31 +793,26 @@ int main() {
 	srand(time(NULL));
 
 	// начальные данные игры
-	game currentGame; // Создали структуру ИГРА
-	int currentGame_No = 1; // Начальный номер игры
-	gameState currentGameState = gameEmpty; // Начальный статус игры - ПУСТАЯ ИГРА
-	currentGame.state = currentGameState; // Присвоили начальный статус игре - ПУСТАЯ ИГРА
+	game currentGame;
+	int currentGame_No = 1;
+	gameState currentGameState = gameEmpty;
+	currentGame.state = currentGameState;
 	gamer* gamersList = new gamer[GAMERS_AMOUNT]; // объявили массив структур игроков
-	int currentGamer;  // Текущий игрок в очереди - обычно он осуществляет ход
-	int nextGamer; // Следующий игрок, который будет ходить
-	int enemyGamer; // противник - т.е. игрок, чьё поле обстреливает текущий игрок(currentGamer)
-					// такое разделение - следующий и игрок-противник - предусмотрено для следующих ситуаций:
-					// один игрок уже выиграл, а второй доигрывает или игроков более двух
-	int moveLetter; // Буква хода
-	int moveDigit; // Цифра хода
-	bool isMove; // Проверка, был ли сделан ход
-	int nGamersWin; // Количество выигрывших игроков - нужно для определения закончилась игра или нет
+	int currentGamer;
+	int nextGamer;
+	int moveLetter;
+	int moveDigit;
+	bool isMove = false; // был ли сделан ход
 
 	menuItem* menuList = getMenuList(); // создали массив структур ПУНКТОВ МЕНЮ
 	menuAction* currentActionList = new menuAction[4]; // объявили массив возможных в данный момент действий хотя 4 - это максимально возможное количество пунктов меню
 	
-
 	do { // тут вся игра включая переходы по меню, пока не произойдет выход из игры
 		int* arrMovePosition;
 		showIntro();
-		int nCurrentMenuItem; // количество пунктов в текущем меню
+		int nCurrentMenuItem; // количество пункутов в текущем меню
 
-		switch (currentGameState) { // вывод соответствующих пунктов меню и другие действия в зависимости от СТАТУСА ИГРЫ
+		switch (currentGameState) { // вывод соответствующих пунктов меню и другие действия в зависимости от статуса игры
 		case gameEmpty:
 			currentGame.number = currentGame_No;
 			nCurrentMenuItem = 2;
@@ -848,17 +821,14 @@ int main() {
 			break;
 
 		case gameSelect:
-			nCurrentMenuItem = 4;
+			nCurrentMenuItem = 3;
 			currentActionList[0] = { doHUM_PC };
 			currentActionList[1] = { doPC_PC };
-			currentActionList[2] = { doHUM_HUM };
-			currentActionList[3] = { doExit };
+			currentActionList[2] = { doExit };
 			break;
 
 		case gameReady:
-			isMove = false;
 			currentGamer = 0;
-			nGamersWin = 0;
 			gamersList[currentGamer].state = gamerMove;
 			showGameStatictic(currentGame);
 			nCurrentMenuItem = 3;
@@ -868,74 +838,55 @@ int main() {
 			break;
 
 		case gameStart:
+			if (gamersList[currentGamer].state == gamerMove) {
 				nCurrentMenuItem = 2;
 				currentActionList[0] = { doMove };
 				currentActionList[1] = { doMenu };
+			}
+			else {
+				nCurrentMenuItem = 1;
+				currentActionList[0] = { doMenu };
+			}
+			
 
-			if (isMove) { // Если были введены координаты выстрела -
-						  // - осуществляется Стрельба. Проверка/изменение параметров игры/игроков. Переход хода.
+			// Проверка статуса игроков - кому ходить и не закончилась ли игра
+			// Это раньше проверять, чем проверка - был ли сделан ход  ???
 
-				// Осуществили выстрел. Сравнили, изменили и записали необходимые параметры текущего игрока и игрока-противника
+			if (isMove) {
+				// ==================================== !!! СТРЕЛЬБА. ПЕРЕХОД ХОДА.	
+				
 				shotResultType shotResult;
-				enemyGamer = ((currentGamer + 1) % GAMERS_AMOUNT); // Вычисление игрока-противника
-				shotResult = shotToEnemy(gamersList[enemyGamer].field, moveLetter, moveDigit);
-				if (shotResult != shotRepeat) {
-					gamersList[currentGamer].moveAmount++;
-				}
+				
+				gamersList[currentGamer].moveAmount++;
+				nextGamer = ((currentGamer + 1) % GAMERS_AMOUNT); // Вычисление следующего игрока
+
+				shotResult = shotToEnemy(gamersList[nextGamer].field, moveLetter, moveDigit);
 				if (shotResult == shotHit) {
-					gamersList[currentGamer].hitsAmount++;
-					if (isShipKilled(gamersList[enemyGamer].field, moveLetter, moveDigit)) {
+					gamersList[1].hitsAmount++;
+					if (isShipKilled(gamersList[nextGamer].field, moveLetter, moveDigit)) {
 						gamersList[currentGamer].killedShipsAmount++;
-						if (gamersList[currentGamer].killedShipsAmount == SHIPS_AMOUNT) {
-							gamersList[currentGamer].state = gamerWin;
-						}
-						gamersList[enemyGamer].liveShipsAmount--;
-						if (gamersList[enemyGamer].liveShipsAmount == 0) {
-							// gamersList[enemyGamer].state = gamerLose; // закомментируем, чтобы второй игрок доигрывал
-						}
 					}
 				}
-				// Осуществили выстрел. Сравнили и записали необходимые параметры текущего игрока и игрока-противника
 
-				if (shotResult != shotRepeat) {
-					// Проверка - остались ли игроки в игре
-					nGamersWin = 0;
-					for (int i = 0; i < GAMERS_AMOUNT; i++) {
-						if (gamersList[i].state == gamerWin) {
-							nGamersWin++;
-						}
-					}
-					if (nGamersWin == GAMERS_AMOUNT) {
-						currentGameState = gameEnd;
-						currentGame.state = currentGameState;
-					}
-					// Проверка - остались ли игроки в игре
-
-					if (currentGame.state != gameEnd) {
-						if (shotResult != shotHit || gamersList[currentGamer].state == gamerWin) {
-							if (gamersList[currentGamer].state != gamerWin) {
-								gamersList[currentGamer].state = gamerWait;
-							}
-							// Вычисление следующего игрока
-							nextGamer = currentGamer;
-							do {
-								nextGamer = ((nextGamer + 1) % GAMERS_AMOUNT);
-							} while (gamersList[nextGamer].state != gamerWait);
-							// Вычисление следующего игрока
-							currentGamer = nextGamer;
-							gamersList[currentGamer].state = gamerMove;
-						}
-					}
+				// переделать эту связку
+				gamersList[currentGamer].state = gamerWait;
+				if (!(shotResult == shotHit || shotResult == shotRepeat /* или следующий игрок уже выиграл*/)) {
+					currentGamer = nextGamer;
 				}
+				gamersList[currentGamer].state = gamerMove;
+				// переделать эту связку
+				
 				isMove = false;
 			}
 
-			for (int i = 0; i < GAMERS_AMOUNT; i++) { // Вывод полей
+			
+			// ВЫВОД ПОЛЕЙ
+			for (int i = 0; i < GAMERS_AMOUNT; i++) {
 				bool isShowShip = true;
-				if ((currentGame.type == gtHumanPC && gamersList[i].type == pc) || currentGame.type == gtHumanHuman) { // При каких условиях НЕ показывать поле полностью с кораблями
+				if (currentGame.type == gtHumanPC && gamersList[i].type == pc) {
 					isShowShip = false;
 				}
-				char msg[] = "Gamer";
+				char msg[] = "Gamer N: ";
 				showMessage(msg, i + 1);
 				showField(gamersList[i].field, isShowShip);
 				std::cout << std::endl;
@@ -952,19 +903,16 @@ int main() {
 			currentActionList[3] = { doExit };
 			break;
 
+		case gameEnd:
+			showGameStatictic(currentGame);
+			nCurrentMenuItem = 2;
+			currentActionList[0] = { doSelect };
+			currentActionList[1] = { doExit };
+			break;
+
 		default:
 			break;
 		}
-
-
-		if (currentGameState == gameEnd) { // Вынесено из SWITCH отдельно для корректного отображения меню при завершении игры
-			showGameStatictic(currentGame);
-			nCurrentMenuItem = 3;
-			currentActionList[0] = { doRestart };
-			currentActionList[1] = { doDelete };
-			currentActionList[2] = { doExit };
-		}
-			
 
 
 		// работа меню
@@ -981,9 +929,10 @@ int main() {
 				for (int i = 0; i < GAMERS_AMOUNT; i++) { 
 					gamersList[i] = createGamer(i); // создали игрока с пустым игровым полем
 					getField(gamersList[i]); // дали игроку флот
-					gamersList[i].state = gamerWait;
+					gamersList[i].state = gamerReady;
 				}
-				putGamerToGame(currentGame, gamersList); // поместили игроков в игру
+				gamersList[1].type = pc; // второй игрок в любом случаем - PC
+				putGamerToGame(currentGame, gamersList);// поместили игроков в игру
 				break;
 
 			case doStart:
@@ -1003,7 +952,7 @@ int main() {
 					gamersList[i].killedShipsAmount = 0;
 					gamersList[i].liveShipsAmount = SHIPS_AMOUNT;
 					gamersList[i].moveAmount = 0;
-					gamersList[i].state = gamerWait;
+					gamersList[i].state = gamerReady;
 				}
 				break;
 
@@ -1011,15 +960,15 @@ int main() {
 				exit(0);
 				break;
 
+
 			case doMove:
-				if (gamersList[currentGamer].state == gamerMove) { // Это проверка просто для исключения ошибки, т.к. currentGamer.state всегда ДОЛЖЕН = gamerMove
-					arrMovePosition = getMovePosition(gamersList[currentGamer].type, currentGamer);
-					moveLetter = arrMovePosition[0];
-					moveDigit = arrMovePosition[1];
-					delete[] arrMovePosition;
-					arrMovePosition = nullptr;
-				}
+				arrMovePosition = getMovePosition(gamersList[currentGamer].type);
+				moveLetter = arrMovePosition[0];
+				moveDigit = arrMovePosition[1];
+				//std::cout << "Press any key...";
+				//_getch();
 				isMove = true;
+				delete[] arrMovePosition;
 				break;
 
 			case doMenu:
@@ -1034,21 +983,12 @@ int main() {
 				currentGame.type = gtHumanPC;
 				currentGameState = gameReady;
 				gamersList[0].type = human;
-				gamersList[1].type = pc;
 				break;
 
 			case doPC_PC:
 				currentGame.type = gtPCPC;
 				currentGameState = gameReady;
 				gamersList[0].type = pc;
-				gamersList[1].type = pc;
-				break;
-
-			case doHUM_HUM:
-				currentGame.type = gtHumanHuman;
-				currentGameState = gameReady;
-				gamersList[0].type = human;
-				gamersList[1].type = human;
 				break;
 
 			case noAction:
@@ -1062,26 +1002,20 @@ int main() {
 		currentGame.state = currentGameState;
 	
 		delete[] currentMenu;
-		currentMenu = nullptr;
 
 		system("cls");
 	} while (true);
 
 	delete[] currentActionList;
-	currentActionList = nullptr;
 	delete[] menuList;
-	menuList = nullptr;
 
-	// Удаление массива полей игроков
+	// Удаление массива полей игроков - В ФУНКЦИЮ
 	for (int g = 0; g < GAMERS_AMOUNT; g++) {
 		for (int i = 0; i < FIELD_SIZE_Y; i++) {
 			delete[] gamersList[g].field[i];
-			gamersList[g].field[i] = nullptr;
 		}
 		delete[] gamersList[g].field;
-		gamersList[g].field = nullptr;
 	}
 	
 	delete[] gamersList;
-	gamersList = nullptr;
 }
