@@ -19,11 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="classwork33 _15.06.22.cpp" />
-    <ClCompile Include="Student.cpp" />
+    <ClCompile Include="BattleShip\BattleShip.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Student.h" />
+    <Text Include="BattleShip\README.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

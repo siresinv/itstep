@@ -31,9 +31,7 @@
 const int FIELD_SIZE_X = 10;
 const int FIELD_SIZE_Y = 10;
 const int SHIPS_AMOUNT = 10;
-const int GAMERS_AMOUNT = 1;
-const int MAX_TRY_AMOUNT_SET_SHIP = 1000; // Максимальное количество попыток рандомно установить корабль
-const int MAX_TRY_AMOUNT_CREATE_FIELD = 1000; // Максимальное количество попыток создать рандомный флот
+const int GAMERS_AMOUNT = 2;
 
 
 
@@ -190,13 +188,7 @@ struct menuItem { // меню
 // ФУНКЦИИ ПРОЦЕССА ИГРЫ - РАССТАНОВКА, СТРЕЛЬБА
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 shipType* getShipList() { // получение списка кораблей
-	shipType* arrShipList = new shipType[SHIPS_AMOUNT] {shipLincor, shipCruiser, shipCruiser, shipDestroyer, shipDestroyer, shipDestroyer, shipBoat, shipBoat, shipBoat, shipBoat
-	 };
-	/*shipType* arrShipList = new shipType[SHIPS_AMOUNT]{ shipLincor, shipLincor, shipLincor, shipLincor, shipLincor,shipLincor, shipLincor, shipLincor, shipLincor, shipLincor,
-		shipLincor, shipLincor, shipLincor, shipLincor, shipLincor,shipLincor, shipLincor, shipLincor, shipLincor, shipLincor,
-		shipLincor, shipLincor, shipLincor, shipLincor, shipLincor,shipLincor, shipLincor, shipLincor, shipLincor, shipLincor,
-		shipLincor,shipLincor,shipLincor,shipLincor,shipLincor,shipLincor,shipLincor,shipLincor
-	};*/
+	shipType* arrShipList = new shipType[SHIPS_AMOUNT] {shipLincor, shipCruiser, shipCruiser, shipDestroyer, shipDestroyer, shipDestroyer, shipBoat, shipBoat, shipBoat, shipBoat};
 	return arrShipList;
 }
 
@@ -295,42 +287,22 @@ void setShip(int** field, int letter, int digit, int nDeck, bool direction) { //
 	}
 }
 
+int* getRandPosition(int** field, int nDeck, bool direction) { // выбор случайной позиции корабля для установки
+	int randLetter;
+	int randDigit;
+	do {
+		do {
+			randLetter = rand() % FIELD_SIZE_Y;
+			randDigit = rand() % FIELD_SIZE_X;
+		} while (!isShipOnField(randLetter, randDigit, nDeck, direction));
+	} while (!isSetableShip(field, randLetter, randDigit, nDeck, direction));
+	int* arrRandPosition = new int[2]{ randLetter, randDigit };
+	return arrRandPosition;
+}
 
 bool getRandDirection() { // случайный выбор направления для установки корабля - горизонтально, вертикально
 	return ((rand() % 2) % 2 == 0) ? true : false;
 }
-
-
-int* getRandPosition(int** field, int nDeck) { // выбор случайной позиции корабля для установки
-	int randLetter;
-	int randDigit;
-	bool direction; // Но передается в интовом массиве
-	int nTry = MAX_TRY_AMOUNT_SET_SHIP;
-
-	bool f = false;
-	bool s = false;
-
-	do {
-		do {
-			nTry--;
-			randLetter = rand() % FIELD_SIZE_Y;
-			randDigit = rand() % FIELD_SIZE_X;
-			direction = getRandDirection();
-			f = isShipOnField(randLetter, randDigit, nDeck, direction);
-		} while (!f && nTry != 0);
-		if (!f) break;
-		s = isSetableShip(field, randLetter, randDigit, nDeck, direction);
-	} while (!s && nTry != 0);
-
-	if (!f || !s) {
-		randLetter = -1;
-	}
-
-	int* arrRandPosition = new int[3]{ randLetter, randDigit, direction };
-	return arrRandPosition;
-}
-
-
 
 shotResultType getShotResult(int& shotCell) { // возвращение результата выстрела
 	if (shotCell == cellSee || shotCell == cellAboutShip) {
@@ -465,34 +437,22 @@ void fillFieldSee(int** field) { // заполнение поля морем
 	}
 }
 
-bool createRandFleet(int** field) { // создание флота
+void createRandFleet(int** field) { // создание флота
 	shipType* arrShipList = getShipList();
-	bool isFleetCreate = true;
 
 	for (int i = 0; i < SHIPS_AMOUNT; i++) {
 		int nDeck = arrShipList[i];
-
-		
-		
-		int* arrRandPosition = getRandPosition(field, nDeck);
+		int direction = getRandDirection();
+		int* arrRandPosition = getRandPosition(field, nDeck, direction);
 		int randLetter = arrRandPosition[0];
 		int randDigit = arrRandPosition[1];
-		bool direction = ((arrRandPosition[2] == 1) ? true : false);
-		if (randLetter != -1) {
-			setShip(field, randLetter, randDigit, nDeck, direction);
-			setRectAboutShip(field, randLetter, randDigit, nDeck, direction, cellAboutShip);
-		}
-		else {
-			isFleetCreate = false;
-		}
-		
-		
+		setShip(field, randLetter, randDigit, nDeck, direction);
+		setRectAboutShip(field, randLetter, randDigit, nDeck, direction, cellAboutShip);
 		delete[] arrRandPosition;
 		arrRandPosition = nullptr;
 	}
 	delete[] arrShipList;
 	arrShipList = nullptr;
-	return isFleetCreate;
 }
 
 
@@ -612,19 +572,10 @@ void copyField(int** field1, int** field2) { // Копирование игро�
 	}
 }
 
-bool getField(gamer gamer) { // Предоставление игрогого поля игроку
+void getField(gamer gamer) { // Предоставление игрогого поля игроку
 	fillFieldSee(gamer.field);
-	int nTry = MAX_TRY_AMOUNT_CREATE_FIELD;
-	bool isFleetCreate;
-
-	do {
-		nTry--;
-		isFleetCreate = createRandFleet(gamer.field);
-		if (!isFleetCreate) fillFieldSee(gamer.field);
-	} while (!isFleetCreate && nTry != 0);
-
-	if (isFleetCreate) copyField(gamer.cleanField, gamer.field);
-	return isFleetCreate;
+	createRandFleet(gamer.field);
+	copyField(gamer.cleanField, gamer.field);
 }
 
 void putGamerToGame(game currentGame, gamer* gamersList) { // Помещение массива структур игроков в структуру игра
@@ -782,7 +733,7 @@ char getHumanMoveLetter() { // Возвращет корректную БУКВ�
 	char maxUPKey = FIELD_SIZE_Y + 64; // - ascii - коды
 	char maxLWKey = FIELD_SIZE_Y + 96; // - ascii - коды
 	char letter;
-	std::cout << "[A-" << maxUPKey << "]: ";
+	std::cout << "[A-J]: ";
 	do {
 		letter = _getch();
 	} while (!(letter >= 'A' && letter <= maxUPKey) && !(letter >= 'a' && letter <= maxLWKey));
@@ -843,24 +794,6 @@ int* getMovePosition(gamerType gamerType, int currentGamer) { // Возвращ�
 		moveDigitKey = getHumanMoveDigit();
 		moveLetter = convertMoveLetterKeyToDigit(moveLetterKey) - 1;
 		moveDigit = convertMoveDigitKeyToDigit(moveDigitKey);
-
-
-		///// ДЛЯ ВВОДА ЧИСЛА КОГДА РАЗМЕР ПОЛЯ > 10
-		//// getHumanMoveDigit() - надо переделывать
-		//if (FIELD_SIZE_X > 10) {
-		//	int moveDigit2;
-		//	moveDigitKey = getHumanMoveDigit();
-		//	moveDigit2 = convertMoveDigitKeyToDigit(moveDigitKey);
-		//	if (moveDigit2 == 10) moveDigit2 = 0;
-		//	if (moveDigit < 0) {
-		//		moveDigit = moveDigit * 10 + moveDigit2;
-		//	}
-
-		//	moveDigit =  
-		//}
-		///// ДЛЯ ВВОДА ЧИСЛА КОГДА РАЗМЕР ПОЛЯ > 10
-
-
 		std::cout << moveDigit << std::endl;
 		moveDigit--;
 		arrMovePosition[0] = moveLetter;
@@ -1047,12 +980,7 @@ int main() {
 				currentGameState = gameSelect;
 				for (int i = 0; i < GAMERS_AMOUNT; i++) { 
 					gamersList[i] = createGamer(i); // создали игрока с пустым игровым полем
-					if (!getField(gamersList[i])) { // дали игроку флот
-						std::cout << std::endl;
-						std::cout << "***** !!! INCORRECT FIELD_SIZE / SHIPS_AMOUNT / SHIP SET. GAME EXIT !!! *****";
-						std::cout << std::endl;
-						exit(-1);
-					}; 
+					getField(gamersList[i]); // дали игроку флот
 					gamersList[i].state = gamerWait;
 				}
 				putGamerToGame(currentGame, gamersList); // поместили игроков в игру

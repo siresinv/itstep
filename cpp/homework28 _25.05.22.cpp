@@ -182,9 +182,9 @@ int converStrToNum(char* str) {
 
 
 
-char* converNumToStr(int number) {
-
-}
+//char* converNumToStr(int number) {
+//
+//}
 
 int main() {
 	setlocale(0, "");
@@ -193,7 +193,7 @@ int main() {
 	int number;
 	int str;
 
-	/*do {
+	do {
 		char* str = new char[250];
 		std::cout << "Введите число строкой(ноль - выход): ";
 		gets_s(str, 250);
@@ -202,10 +202,10 @@ int main() {
 		std::cout << std::endl;
 		std::cout << std::endl;
 		delete[]str;
-	} while (number > 0);*/
+	} while (number > 0);
 	
 
-	do {
+	/*do {
 		char* str = new char[250];
 		std::cout << "Введите число цифрами(ноль - выход): ";
 		std::cout >> number;
@@ -214,7 +214,7 @@ int main() {
 		std::cout << std::endl;
 		std::cout << std::endl;
 		delete[]str;
-	} while (number > 0);
+	} while (number > 0);*/
 
 
 	return 0;
