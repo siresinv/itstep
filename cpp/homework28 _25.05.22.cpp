@@ -182,9 +182,36 @@ int converStrToNum(char* str) {
 
 
 
-//char* converNumToStr(int number) {
-//
-//}
+char/***/ converNumToStr(int number) {
+	int nBillion;
+	int nMillion;
+	int nThousand;
+	int nHundred;
+	int nDec;
+	int nOne;
+
+	nBillion = number / 1000000000;
+	number %= (nBillion * 1000000000);
+
+	nMillion = number / 1000000;
+	number %= (nMillion * 1000000);
+
+	nThousand = number / 1000;
+	number %= (nThousand * 1000);
+
+	nHundred = number / 100;
+	number %= (nHundred * 100);
+
+	nDec = number / 10;
+	number %= (nDec * 10);
+
+	nOne = number;
+	
+
+	std::cout << nBillion << " " << nMillion << " " << nThousand << " " << nHundred << " " << nDec << " " << nOne;
+
+	return '0';
+}
 
 int main() {
 	setlocale(0, "");
@@ -193,16 +220,16 @@ int main() {
 	int number;
 	int str;
 
-	do {
-		char* str = new char[250];
-		std::cout << "Введите число строкой(ноль - выход): ";
-		gets_s(str, 250);
-		number = converStrToNum(str);
-		std::cout << number;
-		std::cout << std::endl;
-		std::cout << std::endl;
-		delete[]str;
-	} while (number > 0);
+	//do {
+	//	char* str = new char[250];
+	//	std::cout << "Введите число строкой(ноль - выход): ";
+	//	gets_s(str, 250);
+	//	number = converStrToNum(str);
+	//	std::cout << number;
+	//	std::cout << std::endl;
+	//	std::cout << std::endl;
+	//	delete[]str;
+	//} while (number > 0);
 	
 
 	/*do {
@@ -216,6 +243,8 @@ int main() {
 		delete[]str;
 	} while (number > 0);*/
 
+
+	converNumToStr(1234567817);
 
 	return 0;
 }

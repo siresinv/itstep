@@ -9,7 +9,6 @@
 #include <Windows.h>
 
 
-
 // КОНСТАНТЫ ПОЛЯ
 // КОНСТАНТЫ ПРОРИСОВКИ
 // КОНСТАНТЫ МЕНЮ
@@ -29,10 +28,10 @@
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // КОНСТАНТЫ ПОЛЯ
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-const int FIELD_SIZE_X = 10;
-const int FIELD_SIZE_Y = 10;
+const int FIELD_SIZE_X = 7;
+const int FIELD_SIZE_Y = 7;
 const int SHIPS_AMOUNT = 10;
-const int GAMERS_AMOUNT = 3;
+const int GAMERS_AMOUNT = 2;
 const int MAX_TRY_AMOUNT_SET_SHIP = 10000; // Максимальное количество попыток рандомно установить корабль
 const int MAX_TRY_AMOUNT_CREATE_FIELD = 10000; // Максимальное количество попыток создать рандомный флот
 
@@ -47,7 +46,7 @@ const char ICON_SHIP = 219;
 const char ICON_ABOUT_SHIP = ' ';
 const char ICON_ABOUT_KILLED_SHIP = 22; //'.';
 const char ICON_SHOT_MISS = '*';
-const char ICON_SHOT_HIT = 177; //'X';
+const char ICON_SHOT_HIT = 'X';
 const int SEPARATE_LINE_LEN = 45;
 const int SEPARATE_LINE_LEN_FOR_DIGIT = 4;
 
@@ -56,7 +55,7 @@ const int SEPARATE_LINE_LEN_FOR_DIGIT = 4;
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // КОНСТАНТЫ МЕНЮ
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-const int MENU_ITEMS_AMOUNT = 16;
+const int MENU_ITEMS_AMOUNT = 15;
 
 const char MENU_ITEM_NAME[MENU_ITEMS_AMOUNT][30] = {
 	"[C]reate game",
@@ -73,7 +72,6 @@ const char MENU_ITEM_NAME[MENU_ITEMS_AMOUNT][30] = {
 	"[2] PC - PC",
 	"[3] Human - Human",
 	"Do mo[V]e",
-	"Vie[W]/Hide all fields",
 	""
 };
 
@@ -143,7 +141,6 @@ enum menuAction { // действия меню
 	doPC_PC,
 	doHUM_HUM,
 	doMove,
-	doViewAll,
 	noAction
 };
 
@@ -200,12 +197,6 @@ shipType* getShipList() { // получение списка кораблей
 		shipLincor, shipLincor, shipLincor, shipLincor, shipLincor,shipLincor, shipLincor, shipLincor, shipLincor, shipLincor,
 		shipLincor,shipLincor,shipLincor,shipLincor,shipLincor,shipLincor,shipLincor,shipLincor
 	};*/
-	/*shipType* arrShipList = new shipType[SHIPS_AMOUNT]{ shipDestroyer, shipBoat
-	};*/
-
-	/*shipType* arrShipList = new shipType[SHIPS_AMOUNT]{ shipDestroyer, shipBoat,shipDestroyer, shipBoat,shipDestroyer, shipBoat,shipDestroyer, shipBoat,shipDestroyer, shipBoat
-	};*/
-
 	return arrShipList;
 }
 
@@ -516,40 +507,16 @@ void showSeparateLine(int nDash) { // вывод разделительной л
 }
 
 void showIntro() { // Вывод интро
-
 	std::cout << "---------------------------------------------" << std::endl;
-	HANDLE hConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsoleHandle, FOREGROUND_INTENSITY | FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 	std::cout << "   *** BattleShip v" << GAME_VERSION <<" (by SyresinVA) ***" << std::endl;
-	SetConsoleTextAttribute(hConsoleHandle, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 	std::cout << "---------------------------------------------" << std::endl;
 }
 
-void showMessage(const char* message, int number = NULL) { // Показ сообщения
+void showMessage(char* message, int number = NULL) { // Показ сообщения
 	showSeparateLine(SEPARATE_LINE_LEN);
 	std::cout << std::endl;
-	HANDLE hConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-	if (strstr(message, "M E N U")) {
-		SetConsoleTextAttribute(hConsoleHandle, BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
-		std::cout << "                   " << message << "                   ";
-	}
-	else if (strstr(message, "MOVE, GAMER[")) {
-		SetConsoleTextAttribute(hConsoleHandle, BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
-		std::cout << message << number << "]";
-		for (int i = 0; i < (SEPARATE_LINE_LEN - strlen(message) - 2) / 2; i++) {
-			std::cout << " .";
-			Sleep(1);
-		}
-	}
-	else if (strstr(message, "GAMER[")) {
-		std::cout << message << number << "]";
-	}
-	else {
-		std::cout << message;
-	}
-	
-	
-	SetConsoleTextAttribute(hConsoleHandle, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+	std::cout << message;
+	if (number)	std::cout << number;
 	std::cout << std::endl;
 	std::cout << std::endl;
 
@@ -559,7 +526,7 @@ void showField(int** field, bool isShowShip) { // вывод поля на эк�
 	char firstLetter = 'A';
 	std::cout << "    ";
 	for (int i = 0; i < FIELD_SIZE_X; i++) {
-		std::cout << i + 1 << ((i < 9) ? "   " : "  ");
+		std::cout << i + 1 << "   ";
 	}
 
 	std::cout << std::endl;
@@ -602,7 +569,8 @@ void showField(int** field, bool isShowShip) { // вывод поля на эк�
 // ==================================== !!! СДЕЛАТЬ нормальный вывод статистики игры, игроков
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 void showGameStatictic(game currentGame) { // Вывод статистики игры
-	showMessage("Game statistic");
+	char msg[] = "Game statistic";
+	showMessage(msg);
 	std::cout << "N: " << currentGame.number << " ";
 	std::cout << "Type: " << currentGame.type << " ";
 	std::cout << "State: " << currentGame.state << " ";
@@ -693,24 +661,11 @@ menuItem* getCurrentMenu(menuItem* menuList, menuAction* actionList, int nAction
 
 void showCurrentMenu(menuItem* currentMenu, int nAction) { // Вывод на экран ТЕКУЩЕГО МЕНЮ
 	
-	
-	showMessage("M E N U");
-	char symbStr;
+	char msg[] = "Menu";
+	showMessage(msg);
 
 	for (int i = 0; i < nAction; i++) {
-		for (int s = 0; s < strlen(currentMenu[i].name); s++) {
-			symbStr = currentMenu[i].name[s];
-			HANDLE hConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-			if (symbStr == '[') {
-				SetConsoleTextAttribute(hConsoleHandle, FOREGROUND_INTENSITY | FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED );
-			}
-			std::cout << symbStr;
-			if (symbStr == ']') {
-				SetConsoleTextAttribute(hConsoleHandle, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
-			}
-		}
-		
-		//std::cout << std::endl;
+		std::cout << currentMenu[i].name;
 		std::cout << std::endl;
 	}
 	showSeparateLine(SEPARATE_LINE_LEN);
@@ -791,13 +746,6 @@ menuAction getChoiceAction(int pressedKey) { // возвращает назва�
 	case 'М':
 	case 'м':
 		action = doMove;
-		break;
-
-	case 'W':
-	case 'w':
-	case 'Ц':
-	case 'ц':
-		action = doViewAll;
 		break;
 
 	case '1':
@@ -885,9 +833,9 @@ int* getMovePosition(gamerType gamerType, int currentGamer) { // Возвращ�
 	int moveLetter;
 	int moveDigit;
 
+	char msg[] = "Enter your move, gamer";
+	showMessage(msg, currentGamer + 1);
 
-	
-	showMessage("MOVE, GAMER[", currentGamer + 1);
 	if (gamerType == human) {
 		moveLetterKey = getHumanMoveLetter();
 		moveLetterKey = toupper(moveLetterKey);
@@ -919,7 +867,7 @@ int* getMovePosition(gamerType gamerType, int currentGamer) { // Возвращ�
 		arrMovePosition[1] = moveDigit;
 	}
 	else {
-		// Sleep(500);
+		Sleep(500);
 		arrMovePosition = getPCMove();
 	}
 		return arrMovePosition;
@@ -932,9 +880,6 @@ int* getMovePosition(gamerType gamerType, int currentGamer) { // Возвращ�
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 int main() {
 	srand(time(NULL));
-	//setlocale(0, "");
-	//SetConsoleCP(1251);
-	//SetConsoleOutputCP(1251);
 
 	// начальные данные игры
 	game currentGame; // Создали структуру ИГРА
@@ -951,10 +896,9 @@ int main() {
 	int moveDigit; // Цифра хода
 	bool isMove; // Проверка, был ли сделан ход
 	int nGamersWin; // Количество выигрывших игроков - нужно для определения закончилась игра или нет
-	bool isViewAll = false; // Проверка, установлен ли режим просмотр кораблей противника
 
 	menuItem* menuList = getMenuList(); // создали массив структур ПУНКТОВ МЕНЮ
-	menuAction* currentActionList = new menuAction[5]; // объявили массив возможных в данный момент действий хотя 4 - это максимально возможное количество пунктов меню
+	menuAction* currentActionList = new menuAction[4]; // объявили массив возможных в данный момент действий хотя 4 - это максимально возможное количество пунктов меню
 	
 
 	do { // тут вся игра включая переходы по меню, пока не произойдет выход из игры
@@ -988,28 +932,12 @@ int main() {
 			currentActionList[0] = { doStart };
 			currentActionList[1] = { doDelete };
 			currentActionList[2] = { doExit }; 
-
-
-			for (int i = 0; i < GAMERS_AMOUNT; i++) { // Вывод полей
-				bool isShowShip = true;
-				if ((currentGame.type == gtHumanPC && gamersList[i].type == pc) || currentGame.type == gtHumanHuman) { // При каких условиях НЕ показывать поле полностью с кораблями
-					isShowShip = false;
-				}
-				showMessage("GAMER[", i + 1);
-				showField(gamersList[i].field, isShowShip);
-				std::cout << std::endl;
-				std::cout << std::endl;
-			}
-
-
 			break;
 
 		case gameStart:
-			isViewAll = false;
-
-			nCurrentMenuItem = 2;
-			currentActionList[0] = { doMove };
-			currentActionList[1] = { doMenu };
+				nCurrentMenuItem = 2;
+				currentActionList[0] = { doMove };
+				currentActionList[1] = { doMenu };
 
 			if (isMove) { // Если были введены координаты выстрела -
 						  // - осуществляется Стрельба. Проверка/изменение параметров игры/игроков. Переход хода.
@@ -1069,64 +997,26 @@ int main() {
 				isMove = false;
 			}
 
-
-			if (gamersList[currentGamer].type == pc) {
-				keybd_event(86, 0, 0, 0);
-				keybd_event(86, 0, KEYEVENTF_KEYUP, 0);
-			}
-
 			for (int i = 0; i < GAMERS_AMOUNT; i++) { // Вывод полей
 				bool isShowShip = true;
 				if ((currentGame.type == gtHumanPC && gamersList[i].type == pc) || currentGame.type == gtHumanHuman) { // При каких условиях НЕ показывать поле полностью с кораблями
 					isShowShip = false;
 				}
-				showMessage("GAMER[", i + 1);
+				char msg[] = "Gamer";
+				showMessage(msg, i + 1);
 				showField(gamersList[i].field, isShowShip);
 				std::cout << std::endl;
 				std::cout << std::endl;
 			}
-
 			break;
 
-
 		case gamePaused:
-
-			for (int i = 0; i < GAMERS_AMOUNT; i++) { // Вывод полей
-				bool isShowShip = true;
-				if (!isViewAll) {
-					if ((currentGame.type == gtHumanPC && gamersList[i].type == pc) || currentGame.type == gtHumanHuman) { // При каких условиях НЕ показывать поле полностью с кораблями
-						isShowShip = false;
-					}
-				}
-				
-				showMessage("GAMER[", i + 1);
-				showField(gamersList[i].field, isShowShip);
-				std::cout << std::endl;
-				std::cout << std::endl;
-			}
-
-			
-
-
-			if (currentGame.type == gtPCPC) {
-				nCurrentMenuItem = 4;
-				showGameStatictic(currentGame);
-				currentActionList[0] = { doDelete };
-				currentActionList[1] = { doRestart };
-				currentActionList[2] = { doResume };
-				currentActionList[3] = { doExit };
-			}
-			else {
-				nCurrentMenuItem = 5;
-				showGameStatictic(currentGame);
-				currentActionList[0] = { doDelete };
-				currentActionList[1] = { doRestart };
-				currentActionList[2] = { doResume };
-				currentActionList[3] = { doViewAll };
-				currentActionList[4] = { doExit };
-			}
-
-			
+			nCurrentMenuItem = 4;
+			showGameStatictic(currentGame);
+			currentActionList[0] = { doDelete };
+			currentActionList[1] = { doRestart };
+			currentActionList[2] = { doResume };
+			currentActionList[3] = { doExit };
 			break;
 
 		default:
@@ -1187,10 +1077,6 @@ int main() {
 					gamersList[i].moveAmount = 0;
 					gamersList[i].state = gamerWait;
 				}
-				break;
-
-			case doViewAll:
-				isViewAll = (isViewAll) ? false : true;
 				break;
 
 			case doExit:
