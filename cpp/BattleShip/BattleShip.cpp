@@ -32,7 +32,7 @@
 const int FIELD_SIZE_X = 10;
 const int FIELD_SIZE_Y = 10;
 const int SHIPS_AMOUNT = 10;
-const int GAMERS_AMOUNT = 3;
+const int GAMERS_AMOUNT = 2;
 const int MAX_TRY_AMOUNT_SET_SHIP = 10000; // Максимальное количество попыток рандомно установить корабль
 const int MAX_TRY_AMOUNT_CREATE_FIELD = 10000; // Максимальное количество попыток создать рандомный флот
 
