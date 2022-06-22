@@ -32,7 +32,7 @@
 int main() {
 
 	int sizeArr;
-	std::cout << "";
+	std::cout << "Enter array size of int number: ";
 	std::cin >> sizeArr;
 
 	int* arrNum = new int[sizeArr];
