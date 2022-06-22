@@ -7,7 +7,7 @@
 // https://github.com/siresinv/itstep/blob/master/cpp/BattleShip/BattleShip.cpp
 //
 // ƒ¿ÕÕ€… ‘¿…À README.TXT
-// https://github.com/siresinv/itstep/blob/master/cpp/BattleShip/README.TXT
+// https://github.com/siresinv/itstep/blob/master/cpp/BattleShip/README.txt
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
