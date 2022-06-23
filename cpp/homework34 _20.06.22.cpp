@@ -6,13 +6,18 @@
 
 
 #include <iostream>
-#include "hw34_student.h"
+#include "hw34_subscribe.h"
 
 
 int main()
 {
 
-	hw34_student subs1;
+	hw34_subscribe subs1("Ivanov", "Ivan", "Ivanovich");
+	hw34_subscribe subs2("Petrov", "Petr", "Petrovich", 834211122, "Good_Man");
+
+	subs1.printSubs();
+	std::cout << std::endl;
+	subs2.printSubs();
 
 	return 0;
 }

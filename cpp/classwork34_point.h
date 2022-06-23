@@ -25,11 +25,12 @@ public:
 
 
 	~classwork34_point() {
+		// но это только при динамическом выделении
 		std::cout << "Destructor worked";
 	};
 
 	void printPoint() {
-		// но это только при динамическом выделении
+		
 		std::cout << " x: " << x << " y:" << y;
 	}
 

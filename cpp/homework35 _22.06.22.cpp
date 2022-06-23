@@ -1,4 +1,4 @@
-﻿// STEP _CPP _classwork35 _22.06.22
+﻿// STEP _CPP _homework35 _22.06.22
 /*
 ООП НАЧАЛО
 
