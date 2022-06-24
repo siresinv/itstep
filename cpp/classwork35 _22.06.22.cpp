@@ -10,31 +10,31 @@
 #include <iostream>
 #include <math.h>
 
-class Point{
+class Point {
 private:
 	int x, y;
 
 public:
 	Point(int ux, int uy) : x{ ux }, y{ uy }{};
 	Point() : Point{ 0,0 } {};
-	Point(int ux) : Point{ux , 0} {};
-	
+	Point(int ux) : Point{ ux , 0 } {};
+
 
 	void print() {
 		std::cout << x << " " << y;
 	}
 };
 
-class Rect 
+class Rect
 {
 	int h;
 	int w;
 	Point leftDown;
 
 public:
-	Rect() : h{ 10 }, w{ 10 }{};
-	Rect( int uh, int uw, int p ) : h{ uh }, w{ uw }, leftDown{ p }{};
-	Rect( int uh, int uw, int p1, int p2 ) : h{ uh }, w{ uw }, leftDown{ p1, p2 }{};
+	Rect() : h{ 10 }, w{ 10 }{};  //Point() : Point{ 0,0 } {}; ??????
+	Rect(int uh, int uw, int p) : h{ uh }, w{ uw }, leftDown{ p }{};
+	Rect(int uh, int uw, int p1, int p2) : h{ uh }, w{ uw }, leftDown{ p1, p2 }{};
 
 
 private:
@@ -47,21 +47,12 @@ class Man {
 	int age;
 
 public:
-	Man(const char* nameU, int ageU) : name{nameU? new char[strlen(nameU) + 1]:nullptr }, age{ ageU }{ // +1
-		if (name) {
-			strcpy_s(name, strlen(nameU) + 1, nameU); // +1
-		}
+	Man(const char* nameU, int ageU) : name{ nameU ? new char[strlen(nameU) + 1] : nullptr }, age{ ageU }{ // +1
+		if (name) strcpy_s(name, strlen(nameU) + 1, nameU);
 	};
-
-	Man() : Man(nullptr, 0){};
-
-	//Man(char* nameU) : name{ new char[strlen(nameU) + 1] }, age{ 0 } { // +1
-	//	strcpy_s(name, strlen(nameU) + 1, nameU); // +1
-	//};
-
-	//Man(int ageU) : Man(nullptr,ageU) {};
-	
-
+	Man() : Man(nullptr, 0) {};
+	Man(const char* nameU) : Man(nameU, 0) {};
+	Man(int ageU) : Man(nullptr, ageU) {};
 
 	void setName(char* nameU) {
 		name = new char[strlen(nameU)];
@@ -115,7 +106,7 @@ public:
 		return group;
 	}
 
-	//~Student();
+	//~Student(); // тут статика - удалятор не нужен
 
 
 };
@@ -180,28 +171,34 @@ int main()
 	Point p3;
 	p3.print();*/
 
-	char name[] = "Ivan";
-	//Man man1 (name, 10);
-	/*Man man1;
 
-	man1.setAge(50);
 
+
+	/*Man man1 ("Ivan");
+	//Man man1;
+	//man1.setAge(50);
 	man1.print();
+	std::cout << std::endl << std::endl;*/
 
-	Student s1("Mary");
+
+
+
+	/*Student s1("Mary");
 	Student s2("Ann");
-
 	s1.print();
 	s2.print();
 	s1.setGroup(222);
-	Student::getGroup();
+	std::cout << " ++" << Student::getGroup() << "++ ";
 	s1.print();
 	s2.print();*/
+
+
+
 
 	std::cout << "AllBEGIN: " << Storage::getMemory();
 	std::cout << std::endl;
 
-	Storage pool[3]{ rand() % 5+1, rand() % 5+1, rand() % 5+1};
+	Storage pool[3]{ rand() % 5 + 1, rand() % 5 + 1, rand() % 5 + 1 };
 
 	for (int i = 0; i < 3; i++) {
 		pool[i].print();
