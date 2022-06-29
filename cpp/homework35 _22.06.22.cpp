@@ -28,10 +28,11 @@ public:
 	String() : String("\0", 21) {};
 
 	~String() {
-		//if (str) {
-			--strAmount;
+		if (str) {
 			delete[] str;
-		//}
+			std::cout << "Worked DESTRUCTOR for string " << strAmount << std::endl;
+			--strAmount;
+		}
 	}
 
 	void setStr() {
