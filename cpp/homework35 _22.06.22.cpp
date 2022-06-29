@@ -8,6 +8,8 @@
 
 
 #include <iostream>
+#include <cstdio>
+#include <stdio.h>
 
 class String {
 	char* str;
@@ -25,7 +27,7 @@ public:
 
 	String(const char* uStr) : String(uStr, strlen(uStr) + 1) {};
 	String(int uLenStr) : String("\0", uLenStr + 1) {};
-	String() : String("\0", 21) {};
+	String() : String("\0", 81) {};
 
 	~String() {
 		if (str) {
@@ -37,18 +39,18 @@ public:
 
 	void setStr() {
 		std::cout << "Enter string lenght " << nChar - 1 << ": ";
-		gets_s(str, nChar - 1);
+		gets_s(str, nChar);
 	}
 
 	void printStr() {
-		std::cout << str << " - lenght of this string/char_array: " << strlen(str) << "/" << nChar;
+		std::cout << "\"" << str << "\"" << " - lenght of this string/char_array: " << strlen(str) << "/" << nChar;
+		std::cout << std::endl;
 		std::cout << std::endl;
 	}
 
 	static int getStrAmount() {
 		return strAmount;
 	}
-
 };
 
 
