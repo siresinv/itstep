@@ -51,7 +51,6 @@ public:
 	static void setNumZero() {
 		num = 0;
 	}
-
 };
 
 
@@ -62,21 +61,9 @@ class Flat {
 
 public:
 	Flat() : humans{ new Human[nHuman = rand() % 5 + 1]{"John"}} {
-		std::cout << "Worked CONSTRUCTOR for " << "[Flat] " << ++num << std::endl;
+		std::cout << "Worked CONSTRUCTOR for " << "|Flat| " << ++num << std::endl;
 		Human::setNumZero();
 	};
-
-
-	Flat(const Flat* obj): nHuman{obj->nHuman}
-	
-	{ 
-		num = obj->num;
-		std::cout << "Worked COPY_CONSTRUCTOR for " << "[Flat] " << ++num << std::endl;
-		/*: humans{new Human[nHuman = rand() % 5 + 1]{"John"}} {
-		std::cout << "Worked CONSTRUCTOR for " << "[Flat] " << ++num << std::endl;
-		Human::setNumZero();*/
-	};
-
 
 	~Flat() {
 		if (humans) delete[] humans;
@@ -84,7 +71,7 @@ public:
 	}
 
 	static void setNumZero() {
-		num = 0; //{ 0 };
+		num = 0;
 	}
 
 	int getNum() {
@@ -110,52 +97,24 @@ class House {
 	static int num;
 	int nFlat;
 	Flat* flats;
-	int nHumans;
 
 public:
 	House(int nFlat) : flats{ new Flat[nFlat]} {
-		std::cout << "Worked CONSTRUCTOR for " << "[[House]] " << ++num << std::endl;
+		std::cout << "Worked CONSTRUCTOR for " << "/\\House/\\ " << ++num << std::endl;
 		this->nFlat = nFlat;
 		Flat::setNumZero();
-		//либо можно сюда подсчет жильцов дома
 	};
 
 
-	House(const House& obj) : 
-							nFlat{ obj.nFlat }
-							
-	{
-		this->num = obj.num + 1;
-		
-
-
-		flats = new Flat[obj.nFlat]{ obj.flats[0], obj.flats[1], obj.flats[2]};
-
-
-		for (Flat * flat = obj.flats, flat_new = flats; flat < obj.flats + obj.nFlat; flat++, flats++) {
-			int i = 0;
-			//flats[i].setNum(flat->getNum());
-			//flats[i].setN_Human(flat->getN_Human());
-			//flats[i] = obj.flats[i];
-			//i++;
-			//Flat flats{flat};
-			//flat_new = flat;
-			//flats++;
-
-		}
-
-
-		//for (int i = 0; i < nFlat; i++) {
-		//	//flats[i]{ obj.flats[i]};
-		//	Flat flats[1]{ obj.flats[i] };
-		//}
-
-		std::cout << "Worked COPY_CONSTRUCTOR for " << "[[House]] " << num << std::endl;
+	House(const House& obj) : nFlat{obj.nFlat}, flats { new Flat[obj.nFlat] } {
+		num = obj.num + 1;
+		std::cout << "Worked COPY_CONSTRUCTOR for " << "/\\House/\\ " << num << std::endl;
+		//копирование квартир с людьми???
 	}
-
 
 	~House() {
 		if (flats) delete[] flats;
+		flats = nullptr;
 	}
 
 	House* getN() {
@@ -169,8 +128,7 @@ public:
 	}
 
 	House* getN_Human() {
-		// это для проверки возможностей
-		nHumans = 0;
+		int nHumans = 0;
 		for (Flat* flat = flats; flat < flats + nFlat; flat++) {
 			nHumans += flat->getN_Human();
 		}
@@ -190,13 +148,13 @@ int main()
 {
 	srand(time(NULL));
 
-	House h1(5);
+	House h1(3);
 	std::cout << std::endl;
 	h1.getN()->getN_Human();
 	std::cout << std::endl;
 	std::cout << std::endl;
 
-	House h2(3);
+	House h2(2);
 	std::cout << std::endl;
 	h2.getN()->getN_Flat()->getN_Human();
 	std::cout << std::endl;
