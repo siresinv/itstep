@@ -30,4 +30,12 @@ public:
 	// - 2 - перегрузка оперторов друж
 	//friend Point operator-(const Point& point);
 
+	//// - 3 - перегрузка оперторов через метод класса
+//Point operator+(const Point& point) {
+//	return Point(x + point.x, y+point.y);
+//}
+
+	Point operator-() {
+		return Point(-x, -y);
+	}
 };
