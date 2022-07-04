@@ -29,4 +29,5 @@ public:
 
 	// - 2 - перегрузка оперторов друж
 	//friend Point operator-(const Point& point);
-		
+
+};

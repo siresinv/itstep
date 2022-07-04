@@ -78,9 +78,9 @@ public:
 //};
 
 // - 1 - обычная перегрузка оперторов
-//Point operator-(const Point& point1) {
-//	return Point(-point1.getX(), -point1.getY());
-//};
+Point operator-(const Point& point1) {
+	return Point(-point1.getX(), -point1.getY());
+};
 
 
 
@@ -99,9 +99,9 @@ public:
 //	return Point(x + point.x, y+point.y);
 //}
 
-Point operator-() {
-	return Point(-x, -y);
-}
+//Point operator-() {
+//	return Point(-x, -y);
+//}
 
 int main()
 {
@@ -142,7 +142,7 @@ int main()
 	std::cout << std::endl;
 
 	Point p4{ 5,5 };
-	p4.display();
+	(-p4).display();
 
 	//p1+p2+p3
 
