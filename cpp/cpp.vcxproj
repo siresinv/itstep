@@ -19,11 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="classwork37 _29.06.22.cpp" />
-    <ClCompile Include="cw37_Point.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="cw37_Point.h" />
+    <ClCompile Include="classwork38 _04.07.22_2.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

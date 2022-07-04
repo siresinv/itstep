@@ -1,75 +1,16 @@
-﻿// STEP _CPP _classwork37 _29.06.22
+﻿// STEP _CPP _classwork38 _04.07.22
 /*
 ООП НАЧАЛО
 
 
-БУДЕТ НА СЛЕД УРОКЕ
-константные методы
-иксплисит констр
-перегруз операт
 */
 
 
 #include <iostream>
-#include <math.h>
-#include "cw37_Point.h"
-
-class DynArr {
-	int sizeArr;
-	int* arr;
-
-public:
-	explicit DynArr(int uSizeArr = 10) :sizeArr{ uSizeArr }, arr{ new int[uSizeArr] }{};
-	// explicit - защита от неявных преобразований
-	~DynArr() {
-		if (arr) delete[] arr;
-	};
-
-	void print(int index) const{
-		std::cout << arr[index] << " ";
-	}
-
-	int getSize() const {
-		return sizeArr;
-	}
-};
+//#include <math.h>
+#include "cw38_Point.h"
 
 
-void print(const DynArr& obj) {
-	for (int i = 0; i < obj.getSize(); i++) {
-		obj.print(i);
-	}
-}
-
-
-class Date {
-	int day, month, year;
-
-public:
-	Date() : day{ 1 }, month{ 10 }, year{ 2000 }{};
-	void setDay(int day) {
-		this->day = day;
-	}
-	void setMonth(int month) {
-		this->month = month;
-	}
-	void setYear(int year) {
-		this->year = year;
-	}
-
-	int getDay() const {
-		return day;
-	}
-	int getMonth() const {
-		return month;
-	}
-	int getYear() const {
-		return year;
-	}
-	void print() const {
-		std::cout << day << " " << month << " " << year << std::endl;
-	}
-};
 
 
 
@@ -94,6 +35,29 @@ public:
 //	return Point(-point.x, -point.y);
 //};
 
+
+
+bool operator==(const Point& point1, const Point& point2) {
+	return (point1.x == point2.x && point1.y == point2.y);
+}
+
+
+//bool operator!=(const Point& point1, const Point& point2) {
+//	return !(point1 == point2);
+//}
+
+
+
+std::ostream& operator<<(std::ostream& out, const Point& point) {
+	std::cout << point.x << " " << point.y << std::endl;
+	return out;
+}
+
+
+std::istream& operator>>(std::istream& in, Point& point) {
+	std::cin >> point.x >> point.y;
+	return in;
+}
 
 
 
@@ -140,6 +104,10 @@ int main()
 	(-p4).display();
 
 	//p1+p2+p3
+
+	std::cout << p2++;
+	std::cout << p2;
+	std::cout << ++p2;
 
 	return 0;
 }
