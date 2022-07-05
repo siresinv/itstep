@@ -66,7 +66,6 @@ public:
 			setCharArr(secondName, obj.secondName);
 		}
 		return *this;
-		
 	};
 
 };

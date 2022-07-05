@@ -42,9 +42,9 @@ bool operator==(const Point& point1, const Point& point2) {
 }
 
 
-//bool operator!=(const Point& point1, const Point& point2) {
-//	return !(point1 == point2);
-//}
+bool operator!=(const Point& point1, const Point& point2) {
+	return !(point1 == point2);
+}
 
 
 
@@ -108,6 +108,17 @@ int main()
 	std::cout << p2++;
 	std::cout << p2;
 	std::cout << ++p2;
+
+	std::cin >> p2;
+
+	std::cout << p2;
+
+	if (p1 != p2) {
+		std::cout << "Objects is not equal";
+	}
+	else {
+		std::cout << "Objects is equal";
+	}
 
 	return 0;
 }
