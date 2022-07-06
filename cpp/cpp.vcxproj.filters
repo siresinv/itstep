@@ -15,16 +15,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="classwork38 _04.07.22.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="cw38_Point.cpp">
+    <ClCompile Include="classwork39 _06.07.22_2.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cw38_Point.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
+    <Text Include="!\!.txt" />
   </ItemGroup>
 </Project>

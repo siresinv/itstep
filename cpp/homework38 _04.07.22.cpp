@@ -1,4 +1,4 @@
-﻿// STEP _CPP _classwork38 _04.07.22
+﻿// STEP _CPP _homework38 _04.07.22
 /*
 ООП НАЧАЛО
 
@@ -8,55 +8,123 @@
 
 #include <iostream>
 //#include <math.h>
-#include "cw38_Point.h"
 
 
+class Human {
+private:
+	char* name;
+
+	void setHuman(const char* name) {
+		this->name = new char[strlen(name) + 1];
+		strcpy_s(this->name, strlen(name) + 1, name);
+		std::cout << "Constructor Human" << std::endl;
+	}
+
+	void remove() {
+		if (name) {
+			delete[]name;
+			name = nullptr;
+			std::cout << "Destructor Human" << std::endl;
+		}
+	}
+
+public:
+	Human(const char* name) {
+		setHuman(name);
+	}
+	Human() :Human{ "NoName" } {};
+
+	~Human() {
+		remove();
+	}
+
+	Human operator=(const Human& obj);
+
+};
 
 
+class Flat {
+private:
+	int nHuman;
+	Human* humans;
 
-// - 1 - обычная перегрузка оперторов
-//Point operator+(const Point& point1, const Point& point2) {
-//	return Point(point1.getX() + point2.getX(), point1.getY() + point2.getY());
-//};
+	void setFlat(int nHuman) {
+		humans = new Human[nHuman];
+		std::cout << "Constructor Flat" << std::endl;
+	}
 
-//// - 1 - обычная перегрузка оперторов
-//Point operator-(const Point& point1) {
-//	return Point(-point1.getX(), -point1.getY());
-//};
+	void remove() {
+		if (humans) {
+			delete[]humans;
+			humans = nullptr;
+			std::cout << "Destructor Flat" << std::endl;
+		}
+	}
+
+public:
+	Flat(int nHuman) {
+		setFlat(nHuman);
+	}
+
+	Flat() :Flat{ 3 }{};
+
+	~Flat() {
+		remove();
+	}
+
+	Flat operator=(const Flat& obj);
+
+};
 
 
+class House {
+private:
+	int nFlat;
+	Flat* flats;
 
-// - 2 - перегрузка оперторов друж
-//Point operator+(const Point& point1, const Point& point2) {
-//	return Point(point1.x + point2.x, point1.y + point2.y);
-//};
+	void setHouse(int nFlat) {
+		flats = new Flat[nFlat];
+		std::cout << "Constructor House" << std::endl;
+	}
 
-//Point operator-(const Point& point) {
-//	return Point(-point.x, -point.y);
-//};
+	void remove() {
+		if (flats) {
+			delete[] flats;
+			flats = nullptr;
+			std::cout << "Destructor House" << std::endl;
+		}
+	};
+
+public:
+	House(int nFlat) {
+		setHouse(nFlat);
+	}
+
+	~House() {
+		remove();
+	}
+
+	House operator=(const House& obj);
+};
 
 
-
-bool operator==(const Point& point1, const Point& point2) {
-	return (point1.x == point2.x && point1.y == point2.y);
+Human Human::operator=(const Human& obj) {
+	return *this;
 }
 
 
-bool operator!=(const Point& point1, const Point& point2) {
-	return !(point1 == point2);
+Flat Flat::operator=(const Flat& obj) {
+	return *this;
 }
 
 
+House House::operator=(const House& obj) {
+	// проверку, что объект приравнивается не сам себе
 
-std::ostream& operator<<(std::ostream& out, const Point& point) {
-	std::cout << point.x << " " << point.y << std::endl;
-	return out;
-}
+	remove();
+	setHouse(obj.nFlat);
 
-
-std::istream& operator>>(std::istream& in, Point& point) {
-	std::cin >> point.x >> point.y;
-	return in;
+	return *this;
 }
 
 
@@ -64,61 +132,10 @@ std::istream& operator>>(std::istream& in, Point& point) {
 int main()
 {
 	srand(time(NULL));
-/*
-	Date d1;
-	d1.setDay(22);
-	d1.print();
 
-	const Date d2;
-	d2.print();
-
-
-	DynArr da{ 5 };
-	//print(da);
-
-	// print(3); // c explicit нельзя
-	print(DynArr{ 3 }); // c explicit нельзя
-
-*/
-
-	Point p1{ 1, 2 };
-	Point p2{ 1, 3 };
-
-	p1.display();
-	p2.display();
-
-	std::cout << Point::isEqual(p1, p2);
-	std::cout << std::endl;
-	Point::add(p1, p2).display();
-	std::cout << std::endl;
-	Point::mult(p1, 3).display();
-	std::cout << std::endl;
-
-	//Point p3{ p1 + p2 };
-	//Point p3 = p1 + p2;
-	// Point p3{Point{1,2} + Point{3,4}}; - Для примера что Point в фигурных скобках нужен обязательно
-	//p3.display();
-	std::cout << std::endl;
-
-	Point p4{ 5,5 };
-	(-p4).display();
-
-	//p1+p2+p3
-
-	std::cout << p2++;
-	std::cout << p2;
-	std::cout << ++p2;
-
-	std::cin >> p2;
-
-	std::cout << p2;
-
-	if (p1 != p2) {
-		std::cout << "Objects is not equal";
-	}
-	else {
-		std::cout << "Objects is equal";
-	}
+	House h1{2};
+	House h2{2};
+	h2 = h1;
 
 	return 0;
 }
