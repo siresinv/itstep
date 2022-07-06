@@ -4,6 +4,8 @@
 
 Перегрузить
 + - * / ==
+
+
 */
 
 
@@ -19,9 +21,7 @@ public:
 	Fract(int num, int denom) :num{ num }, denom{ denom }{};
 	Fract() :Fract(1, 1) {};
 	~Fract() {}; // не обязательно
-
-	// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	Fract(const Fract& obj) {};
+	Fract(const Fract& obj) :num{obj.num}, denom{obj.denom} {};
 	
 
 
@@ -43,8 +43,8 @@ public:
 		std::cout << std::endl;
 	}
 
-	// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	//static Fract read;
+	//void changeFract();
+	static void changeFract(Fract&);
 	
 
 	// 2 - friend way
@@ -57,20 +57,23 @@ public:
 	friend Fract& operator/(const Fract& f1, const Fract& f2);
 
 	// 3 - class method way
-	bool operator==(const Fract& f2) { 
-		// если без & - то видимо срабатывает конструктор копирования по-умолчанию
+	bool operator==(const Fract& f2) const {
+		//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		// Q1: // если без & - то видимо срабатывает конструктор копирования по-умолчанию
 		// и данное условие правильно не отрабатывает
+		//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		return (num*f2.denom == denom*f2.num);
 	}
 };
 
-// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//Fract Fract::read;
+
 
 // 2 - friend way
 Fract& operator+(const Fract& f1, const Fract& f2) {
-	// здесь & нужен видимо из-за того, что у объекта есть имя
+	//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	// Q2: // здесь & нужен видимо из-за того, что у объекта есть имя
 	// но он все равно уничтожится после отрабатывания функции ???
+	//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	Fract f3;
 	f3.num = f1.num * f2.denom + f1.denom * f2.num;
 	f3.denom = f1.denom * f2.denom;
@@ -79,8 +82,6 @@ Fract& operator+(const Fract& f1, const Fract& f2) {
 
 // 2 - friend way
 Fract& operator*(const Fract& f1, const Fract& f2) {
-	// здесь & нужен видимо из-за того, что у объекта есть имя
-	// но он все равно уничтожится после отрабатывания функции ???
 	Fract f3;
 	f3.num = f1.num * f2.num;
 	f3.denom = f1.denom * f2.denom;
@@ -90,8 +91,6 @@ Fract& operator*(const Fract& f1, const Fract& f2) {
 
 // 2 - friend way
 Fract& operator/(const Fract& f1, const Fract& f2) {
-	// здесь & нужен видимо из-за того, что у объекта есть имя
-	// но он все равно уничтожится после отрабатывания функции ???
 	Fract f3;
 	f3.num = f1.num * f2.denom;
 	f3.denom = f1.denom * f2.num;
@@ -101,18 +100,42 @@ Fract& operator/(const Fract& f1, const Fract& f2) {
 
 
 // 1 common way
-Fract operator-(const Fract f1, const Fract f2) { 
-	// здесь & не нужен видимо из-за того, что у объекта нет имени и ...
+Fract operator-(const Fract f1, const Fract f2) {
+	//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	// Q3: // здесь & не нужен видимо из-за того, что у объекта нет имени и ...
+	//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 	return Fract{ f1.getNum() * f2.getDenom() - f1.getDenom() * f2.getNum(), f1.getDenom() * f2.getDenom()};
 }
 
+//// not static
+//void Fract::changeFract() {
+//	std::cout << "Enter numerator and denominator of fraction: ";
+//	std::cin >> num >> denom;
+//}
+
+
+// static
+void Fract::changeFract(Fract& obj) {
+	std::cout << "Enter numerator and denominator of fraction: ";
+	std::cin >> obj.num >> obj.denom;
+}
+
+
+void showFract(const Fract& obj) {
+	obj.showFract();
+}
+
 int main() {
-	// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	// ПОКА ЕСТЬ 3 ВОПРОСА - ЗАПИСАНЫ В КОММЕНТАРИЯХ
+
+	//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	// 3 ВОПРОСА - ЗАПИСАНЫ В КОММЕНТАРИЯХ
+	//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 	Fract{ 1,2 }.showFract();
+	std::cout << std::endl;std::cout << "------------------------------------";
 	std::cout << std::endl;
 	std::cout << std::endl;
+
 
 	std::cout << "Fract1 =";
 	std::cout << std::endl;
@@ -156,32 +179,64 @@ int main() {
 	std::cout << "Fract1 / Fract2 = ";
 	std::cout << std::endl;
 	f5.showFract();
+	std::cout << std::endl;
+
+	std::cout << "------------------------------------";
+	std::cout << std::endl;
+
+	std::cout << "Fract6 = ";
+	std::cout << std::endl;
+	Fract f6{ 5,6 };
+	f6.showFract();
+	std::cout << "Fract7 = ";
+	std::cout << std::endl;
+	Fract f7{ f6 };
+	f7.showFract();
+
+	if (f6 == f7) {
+		std::cout << "Fracts is equal";
+	}
+	else {
+		std::cout << "Fracts is not equal";
+	}
+	std::cout << std::endl;
+	std::cout << std::endl;
+
+
+	std::cout << "------------------------------------";
+	std::cout << std::endl;
+	std::cout << "Fract6 = ";
+	std::cout << std::endl;
+	f6.showFract();
+	std::cout << std::endl;
+	// f7.changeFract(); // not static
+	Fract::changeFract(f7); // static
+	std::cout << "Fract7 = ";
+	std::cout << std::endl;
+	f7.showFract();
+
+	if (f6 == f7) {
+		std::cout << "Fracts is equal";
+	}
+	else {
+		std::cout << "Fracts is not equal";
+	}
+	std::cout << std::endl;
+	std::cout << std::endl;
+
+
+
+	std::cout << "------------------------------------";
+	std::cout << std::endl;
+
+	std::cout << "Fract6 = ";
+	std::cout << std::endl;
+	showFract(f6);
+	std::cout << "Fract7 = ";
+	std::cout << std::endl;
+	showFract(f7);
+	std::cout << std::endl;
+	std::cout << std::endl;
 
 	return 0;
 }
-
-
-
-// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//void Point::read() {
-//
-//	std::cout << "enter x: ";
-//	std::cin >> x;
-//	this->x = x;
-//
-//	std::cout << "enter y: ";
-//	std::cin >> y;
-//	this->y = y;
-//
-//	// можно std::cin >> x >> y; // и всё !!! - ПОПРОБОВАТЬ РЕАД ИСПОЛЬЗОВАТЬ
-//
-//};
-
-
-
-// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//void print(const DynArr& obj) {
-//	for (int i = 0; i < obj.getSize(); i++) {
-//		obj.print(i);
-//	}
-//}

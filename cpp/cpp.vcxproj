@@ -19,10 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="homework37 _29.06.22.cpp" />
+    <ClCompile Include="classwork38 _04.07.22.cpp" />
+    <ClCompile Include="cw38_Point.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="homework37 _29.06.22.png" />
+    <ClInclude Include="cw38_Point.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
