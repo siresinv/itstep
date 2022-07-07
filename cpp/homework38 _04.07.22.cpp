@@ -104,7 +104,7 @@ public:
 		remove();
 	}
 
-	House operator=(const House& obj);
+	House& operator=(const House& obj);
 };
 
 
@@ -118,8 +118,9 @@ Flat Flat::operator=(const Flat& obj) {
 }
 
 
-House House::operator=(const House& obj) {
+House& House::operator=(const House& obj) {
 	// проверку, что объект приравнивается не сам себе
+
 
 	remove();
 	setHouse(obj.nFlat);
@@ -133,7 +134,7 @@ int main()
 {
 	srand(time(NULL));
 
-	House h1{2};
+	House h1{1};
 	House h2{2};
 	h2 = h1;
 
@@ -141,3 +142,27 @@ int main()
 }
 
 
+/*
+
+void setCharArr(char*& dest, const char* source) {
+	dest = new char[strlen(source) + 1];
+	strcpy_s(dest, strlen(source) + 1, source);
+}
+void remove() {
+	if (firstName) delete[]firstName;
+	if (secondName) delete[]secondName;
+}
+
+
+
+
+Human& operator=(const Human& obj) {
+	if (this != &obj) {
+		remove();
+		setCharArr(firstName, obj.firstName);
+		setCharArr(secondName, obj.secondName);
+	}
+	return *this;
+};
+
+*/

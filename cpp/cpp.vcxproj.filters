@@ -15,11 +15,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="classwork39 _06.07.22_2.cpp">
+    <ClCompile Include="homework38 _04.07.22.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="classwork38 _04.07.22_2.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="!\!.txt" />
+    <Text Include="homework38 _04.07.22.txt" />
   </ItemGroup>
 </Project>
