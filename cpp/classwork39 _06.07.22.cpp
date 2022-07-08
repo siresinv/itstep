@@ -100,18 +100,26 @@ public:
     }
 
 
-    //// ДОБИИИТЬ - В СКРИНШОТЕ
-    //DynMas& operator=(const DynMas& obj) {
-
-    //    return *this;
-    //}
+    DynMas& operator=(const DynMas& obj) {
+        if (this != &obj) {
+            if (size != obj.size) {
+                delete[] arr;
+                arr = new int[obj.size];
+                size = obj.size;
+            }
+            for (int i = 0; i < size; i++) {
+                arr[i] = obj.arr[i];
+            }
+        }
+        return *this;
+    }
 
 
     int operator[] (int id) const {
         return arr[id];
     }
 
-    int& operator[] (int id) { // запись
+    int& operator[] (int id) {
         return arr[id];
     }
 
@@ -164,13 +172,22 @@ int main()
     d4.print();
     
     d1 = std::move(d4);
+    std::cout << "d1 - after move from d4: ";
     d1.print();
+    std::cout << "d4 - after move to d1: ";
+    d4.print();
+
+    std::cout << std::endl;
+    d4 = d1;
+    std::cout << "d4 - after d4 = d1: ";
     d4.print();
 
     d1[1] = 10;
     d1.print();
     std::cout << std::endl;
     std::cout << d1[5];
+    std::cout << std::endl;
+    std::cout << std::endl;
 
 
     return 0;

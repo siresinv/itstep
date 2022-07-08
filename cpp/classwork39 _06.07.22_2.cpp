@@ -23,9 +23,9 @@ class MedalRow {
 
 public:
     MedalRow(const char* uCountry, int* uMedals) {
-        strcpy(country, uCountry);
+        //strcpy(country, uCountry);
 
-        uCountry ? strcpy(country, uCountry) : strcpy(country, "NON");
+        uCountry? strcpy(country, uCountry) : strcpy(country, "NON");
 
         for (int i = 0; i < 3; i++) {
             medals[i] = uMedals ? uMedals[i] : 0;
@@ -37,6 +37,7 @@ public:
     MedalRow() : MedalRow{ nullptr, nullptr } {};
 
     void print() const{
+        std::cout << country << " ";
 
         for (int i = 0; i < 3; i++) {
             std::cout << medals[i] << " ";
@@ -48,6 +49,14 @@ public:
 
 
     //перегрузить []
+
+    int operator[](int i) const {
+        return medals[i];
+    }
+
+    int& operator[](int i) {
+        return medals[i];
+    }
 
 };
 
