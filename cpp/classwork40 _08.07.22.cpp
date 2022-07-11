@@ -165,7 +165,9 @@ public:
 
     friend bool operator<(const Date& date1, const Date& date2);
 
-    friend std::ostream& operator<<(const Date& date);
+    friend std::ostream& operator<<(std::ostream& out, const Date& date);
+
+    friend std::istream& operator>>(std::istream& in, Date& date);
 
 };
 
@@ -217,11 +219,18 @@ bool operator<(const Date& date1, const Date& date2) {
 }
 
 
-///////////////
+
 std::ostream& operator<<(std::ostream& out, const Date& date) {
     out << date.day << " " << date.month << date.year;
     return out;
 }
+
+
+std::istream& operator>>(std::istream& in, Date& date) {
+    std::cin >> date.day >> date.month >> date.year;
+    return in;
+}
+
 
 
 /*
@@ -256,7 +265,8 @@ int main()
     d1();
     d1.print();
 
-
+    std::cin >> d1;
+    d1.print();
 
     return 0;
 }

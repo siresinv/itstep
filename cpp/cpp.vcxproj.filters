@@ -18,11 +18,19 @@
     <ClCompile Include="classwork40 _08.07.22.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="classwork39 _06.07.22.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="classwork39 _06.07.22_2.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="!\!!!!!!!!!!! Новый точечный рисунок.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="!\q1.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="!\q2.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="!\!.txt" />
   </ItemGroup>
 </Project>

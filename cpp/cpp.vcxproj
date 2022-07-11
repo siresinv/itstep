@@ -19,9 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="classwork39 _06.07.22.cpp" />
-    <ClCompile Include="classwork39 _06.07.22_2.cpp" />
     <ClCompile Include="classwork40 _08.07.22.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="!\!!!!!!!!!!! Новый точечный рисунок.bmp" />
+    <Image Include="!\q1.bmp" />
+    <Image Include="!\q2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="!\!.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
