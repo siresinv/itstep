@@ -15,16 +15,16 @@ private:
 	char* name;
 
 	void setHuman(const char* name) {
-		this->name = new char[strlen(name) + 1];
+		this->name = new char[strlen(name) + 1]; //////////////////////////////
 		strcpy_s(this->name, strlen(name) + 1, name);
-		std::cout << "Constructor Human" << std::endl;
+		//std::cout << "Constructor Human" << std::endl;
 	}
 
 	void remove() {
 		if (name) {
 			delete[]name;
 			name = nullptr;
-			std::cout << "Destructor Human" << std::endl;
+			//std::cout << "Destructor Human" << std::endl;
 		}
 	}
 
@@ -38,7 +38,18 @@ public:
 		remove();
 	}
 
-	Human operator=(const Human& obj);
+
+	Human& operator=(const Human& obj) {
+		if (this != &obj) {
+			remove();
+			setHuman(obj.name);
+		}
+		return *this;
+	}
+
+	char* getName() {
+		return name;
+	}
 
 };
 
@@ -49,15 +60,17 @@ private:
 	Human* humans;
 
 	void setFlat(int nHuman) {
+		this->nHuman = nHuman;
 		humans = new Human[nHuman];
-		std::cout << "Constructor Flat" << std::endl;
+		//std::cout << "Constructor Flat" << std::endl;
 	}
 
 	void remove() {
 		if (humans) {
 			delete[]humans;
 			humans = nullptr;
-			std::cout << "Destructor Flat" << std::endl;
+			//std::cout << "Destructor Flat" << std::endl;
+			
 		}
 	}
 
@@ -66,13 +79,36 @@ public:
 		setFlat(nHuman);
 	}
 
-	Flat() :Flat{ 3 }{};
+	//Flat() : humans{ new Human[nHuman = rand() % 5 + 1]{"John"} } {};
+
+	Flat() : Flat{ rand() % 5 + 1 } {};
 
 	~Flat() {
 		remove();
 	}
 
-	Flat operator=(const Flat& obj);
+	Flat& operator=(const Flat& obj) {
+		if (this != &obj) {
+			remove();
+			setFlat(obj.nHuman);
+			for (int i = 0; i < obj.nHuman; i++) {
+				humans[i] = obj.humans[i];
+			}
+		}
+		return *this;
+	}
+
+	char** getHumans() {
+		char** humanList = new char* [nHuman];
+		for (int i = 0; i < nHuman; i++) {
+			humanList[i] = humans[i].getName();
+		}
+		return humanList;
+	}
+
+	int getN_Humans() {
+		return nHuman;
+	}
 
 };
 
@@ -83,15 +119,16 @@ private:
 	Flat* flats;
 
 	void setHouse(int nFlat) {
+		this->nFlat = nFlat;
 		flats = new Flat[nFlat];
-		std::cout << "Constructor House" << std::endl;
+		//std::cout << "Constructor House" << std::endl;
 	}
 
 	void remove() {
 		if (flats) {
 			delete[] flats;
 			flats = nullptr;
-			std::cout << "Destructor House" << std::endl;
+			//std::cout << "Destructor House" << std::endl;
 		}
 	};
 
@@ -100,33 +137,38 @@ public:
 		setHouse(nFlat);
 	}
 
+	House() :House(0){};
+
 	~House() {
 		remove();
 	}
 
-	House& operator=(const House& obj);
+	House& operator=(const House& obj) {
+
+		if (this != &obj) {
+			remove();
+			setHouse(obj.nFlat);
+			for (int i = 0; i < nFlat; i++) {
+				flats[i] = obj.flats[i];
+			}
+		}
+		return *this;
+	}
+
+
+	void showHouse() {
+		std::cout << "House N: Flat amount: " << nFlat << std::endl;
+		
+		int nHuman;
+		for (int f = 0; f < nFlat; f++) {
+			nHuman = flats[f].getN_Humans();
+			std::cout << "Flat N: " << f + 1 << " Humans amount: " << nHuman << std::endl;
+			for (int h = 0; h < nHuman; h++) {
+				std::cout << "Human N:" << h+1 << " - " << flats[f].getHumans()[h] << std::endl;
+			}
+		}
+	}
 };
-
-
-Human Human::operator=(const Human& obj) {
-	return *this;
-}
-
-
-Flat Flat::operator=(const Flat& obj) {
-	return *this;
-}
-
-
-House& House::operator=(const House& obj) {
-	// проверку, что объект приравнивается не сам себе
-
-
-	remove();
-	setHouse(obj.nFlat);
-
-	return *this;
-}
 
 
 
@@ -134,35 +176,17 @@ int main()
 {
 	srand(time(NULL));
 
-	House h1{1};
-	House h2{2};
+	int a = rand() % 5 + 1;
+
+	House h1{3};
+	House h2;
 	h2 = h1;
+
+	std::cout << std::endl;
+	std::cout << std::endl;
+	h2.showHouse();
+	std::cout << std::endl;
+	std::cout << std::endl;
 
 	return 0;
 }
-
-
-/*
-
-void setCharArr(char*& dest, const char* source) {
-	dest = new char[strlen(source) + 1];
-	strcpy_s(dest, strlen(source) + 1, source);
-}
-void remove() {
-	if (firstName) delete[]firstName;
-	if (secondName) delete[]secondName;
-}
-
-
-
-
-Human& operator=(const Human& obj) {
-	if (this != &obj) {
-		remove();
-		setCharArr(firstName, obj.firstName);
-		setCharArr(secondName, obj.secondName);
-	}
-	return *this;
-};
-
-*/

@@ -32,23 +32,27 @@ public:
 
 	String(String&& obj) {
 		if (this != &obj) {
-			str = obj.str;
+			if (str) {
+				delete[]str;
+				str = nullptr;
+			}
+			str = new char[strlen(obj.str) + 1];
+			strcpy_s(str, strlen(obj.str) + 1, obj.str);
 			nChar = obj.nChar;
+			delete[]obj.str;
 			obj.str = nullptr;
 			obj.nChar = 0;
 		}
 	}
 
-	String& operator=(String&& obj) {
+	String& operator=(const String& obj) {
 		if (this != &obj) {
 			if (str) {
 				delete[]str;
 				str = nullptr;
 			}
-			str = obj.str;
-			nChar = obj.nChar;
-			obj.str = nullptr;
-			obj.nChar = 0;
+			str = new char[strlen(obj.str) + 1];
+			strcpy_s(str, strlen(obj.str) + 1, obj.str);
 		}
 		return *this;
 	}
@@ -77,7 +81,17 @@ public:
 	static int getStrAmount() {
 		return strAmount;
 	}
+
+	char operator[](int id) const{
+		return str[id];
+	}
+
+	char& operator[](int id) {
+		return str[id];
+	}
 };
+
+
 
 
 int String::strAmount{ 0 };
@@ -116,14 +130,27 @@ int main()
 	std::cout << std::endl;
 
 	//String str4{ std::move(str1) };
-	String str4; /// ВЫПОЛНЯЕТСЯ НО С ОШИБКОЙ !!!! /////////////////
+	String str4;
 	str4 = std::move(str1);
 	std::cout << "str4 after move from - ";
 	str4.printStr();
 	std::cout << std::endl;
-	std::cout << "str1 after move to str4- ";
-	str1.printStr();
+	//std::cout << "str1 after move to str4- ";
+	//str1.printStr();
 
+	String str5;
+	str5 = str2;
+	std::cout << "str5 after copy from - ";
+
+	str5.printStr();
+	std::cout << std::endl;
+
+	std::cout << str5[1];
+	std::cout << std::endl;
+
+	str5[1] = 'K';
+	str5.printStr();
+	std::cout << std::endl;
 
 	return 0;
 }

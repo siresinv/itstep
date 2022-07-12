@@ -1,4 +1,4 @@
-﻿// STEP _CPP _classwork41 _11.07.22_2
+﻿// STEP _CPP _homework41 _11.07.22
 /*
 ООП НАЧАЛО
 
@@ -16,8 +16,8 @@
 
 */
 
-
-#include <string>
+#include <algorithm>
+//#include <string>
 #include <iostream>
 
 
@@ -45,8 +45,11 @@ std::string toLowerCase(std::string str) {
 
 int* findAll(std::string where, std::string what, int& count) {
 
-    where = toLowerCase(where);
-    what = toLowerCase(what);
+    std::transform(where.begin(), where.end(), where.begin(), tolower);
+    std::transform(what.begin(), what.end(), what.begin(), tolower);
+
+    /*where = toLowerCase(where);
+    what = toLowerCase(what);*/
 
     count = countAll(where, what);
     if (count == 0) {
@@ -74,54 +77,6 @@ void display(int* items, int size) {
 
 int main()
 {
-    
-    char mas[20]{ "123" };
-    char* mas2 = new char[10]{ "456" };
-
-   
-
-    /*if (mas == mas2) {
-
-    }*/ // так нельзя
-
-    std::string q1{ "Hello, World!" };
-
-    std::cout << q1 << std::endl;
-
-    std::string  q2( 10, '*' );
-    std::cout << q2 << std::endl;
-
-    char s1[]{ 'a', 'b', 'c', '\0', 'd', 'e' };
-    std::string s2{ 'a', 'b', 'c', '\0', 'd', 'e' };
-    std::cout << s1 << std::endl;
-    std::cout << s2 << std::endl;
-
-
-
-    std::cout << s2.length() << std::endl;
-    std::cout << s2.size() << std::endl;
-    std::cout << s2[2] << std::endl;
-
-    //std::cin >> s2;
-    getline(std::cin, s2);
-    std::cout << s2 << std::endl;
-
-    std::cout << (s1 < s2) << std::endl;
-    q2 = s2;
-    q2 += s2;
-    std::cout << q2 << std::endl;
-
-    std::cout << q2.find("*bn") << std::endl;
-
-
-    std::string q3{ "qwerty 1232345 dfghdfgh ewrtwert" };
-    std::string q4;
-    q4.append(q3, 2, 10);
-    std::cout << q4 << std::endl;
-
-
-   
-
     std::string word;
     std::string text{ "Jingle bells, jingle bells,\n\
             Jingle all the way.\n\
@@ -141,8 +96,9 @@ int main()
     int count;
     int* pos = findAll(text, word, count);
     display(pos, count);
+    std::cout << std::endl;
 
-    std::cout << "In text: \n\n" << text << std::endl;
+    std::cout << "Original text: \n\n" << text << std::endl;
 
     return 0;
 }
