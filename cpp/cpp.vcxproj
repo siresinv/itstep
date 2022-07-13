@@ -21,6 +21,9 @@
   <ItemGroup>
     <Text Include="!\!.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="classwork42 _13.07.22.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

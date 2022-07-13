@@ -17,4 +17,9 @@
   <ItemGroup>
     <Text Include="!\!.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="classwork42 _13.07.22.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>
