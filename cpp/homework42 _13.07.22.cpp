@@ -117,6 +117,7 @@ int Queue::popPrior() {
         real--;
         return temp;
     }
+    return -1;
 }
 
 
@@ -166,7 +167,7 @@ int main()
 
     Queue q1{ 20 };
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 1; i++) {
         q1.pushPrior(rand() % 100 + 1, rand() % 100 + 1);
     }
     q1.print();

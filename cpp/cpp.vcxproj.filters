@@ -15,10 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="!\!.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="homework42 _13.07.22.cpp">
+    <ClCompile Include="classwork43 _15.07.22.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
