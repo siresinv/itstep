@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClCompile Include="classwork44 _18.07.22.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="classwork44 _18.07.22 __ .bmp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
