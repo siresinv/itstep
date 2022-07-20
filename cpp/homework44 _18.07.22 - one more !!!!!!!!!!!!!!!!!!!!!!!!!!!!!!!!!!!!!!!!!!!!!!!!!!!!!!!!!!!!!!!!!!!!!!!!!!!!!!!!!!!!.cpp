@@ -41,10 +41,19 @@ public:
 };
 
 List::List(const List& obj) {
+	Node* temp = obj.head;
+	count = 0;
+	while (temp != nullptr) {
+		add(temp->val);
+		temp = temp->next;
+	}
 
 }
 
 List::List(){
+	head = nullptr;
+	tail = nullptr;
+	count = 0;
 }
 
 List::~List(){
@@ -60,7 +69,7 @@ void List::delAll(){
 }
 
 int List::getCount(){
-	return 0;
+	return count;
 }
 
 void List::print(){
