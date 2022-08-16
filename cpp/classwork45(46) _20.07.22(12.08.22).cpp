@@ -28,9 +28,9 @@ public:
     void delTail();
     void addHead(int x);
     void delHead();
-    void del(int id); //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    void del(int id);
     void delAll();
-    void insert(int value, int id); //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    void insert(int value, int id);
     void printHead();
     void printTail();
     void print(int id);
@@ -39,20 +39,17 @@ public:
     List2 operator+ (const List2& l);
     bool operator== (const List2& l);
     bool operator!= (const List2& l);
-    /*bool operator< (const List2& l);
+    bool operator< (const List2& l);
     bool operator> (const List2& l);
     bool operator<= (const List2& l);
     bool operator>= (const List2& l);
-    bool operator- (const List2& l);*/ //ВЕРНУТЬ ПЕРЕВЕРНУТУЮ КОПИЮ, А МОЖЕТ!!! ??? В КАЖДОМ ЭЛЕМЕНТЕ ПОМЕНЯТЬ МЕСТАМИ ХЕАД И ТЕЙЛ )))
+    List2 operator- ();
 
-
-
-    friend List2 operator* (const List2 obj1, const List2 obj2); //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     Node& operator[] (int id);
 
 };
 
-// эти функции допилить  и операторы перегружать + * []
+
 
 int main()
 {
@@ -157,6 +154,22 @@ int main()
     l2.printHead();
     std::cout << std::endl;
 
+    (-l2).printHead();
+    std::cout << std::endl;
+    l2.printHead();
+    std::cout << std::endl;
+
+    l2.del(4);
+    l2.del(2);
+    l2.del(0);
+    l2.printHead();
+    std::cout << std::endl;
+
+    l2.insert(55, 1);
+    l2.insert(66, 1);
+    l2.insert(77, 0);
+    l2.printHead();
+    std::cout << std::endl;
 
     return 0;
 
@@ -256,9 +269,39 @@ void List2::delHead(){
 }
 
 
-//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 void List2::del(int id){
+    if (id == 0) {
+        delHead();
+    }
+    else if (id == count -1) {
+        delTail();
+    }
+    else {
 
+        Node* temp;
+
+        if (id < count / 2) {
+            temp = head;
+            for (int i = 0; i < id; i++) {
+                temp = temp->next;
+            }
+        }
+        else {
+            temp = tail;
+            for (int i = count - 1; i > id; i--) {
+                temp = temp->prev;
+            }
+        }
+
+        Node* NEXT = temp->next;
+        Node* PREV = temp->prev;
+
+        NEXT->prev = PREV;
+        PREV->next = NEXT;
+
+        delete[] temp;
+        count--;
+    }
 }
 
 void List2::delAll(){
@@ -267,10 +310,45 @@ void List2::delAll(){
     }
 }
 
-//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-void List2::insert(int value, int id){
 
+void List2::insert(int value, int id){
+    if (id == 0) {
+        addHead(value);
+    }
+    else if (id == count - 1) {
+        addTail(value);
+    }
+    else {
+
+        Node* temp;
+
+        if (id < count / 2) {
+            temp = head;
+            for (int i = 0; i < id; i++) {
+                temp = temp->next;
+            }
+        }
+        else {
+            temp = tail;
+            for (int i = count - 1; i > id; i--) {
+                temp = temp->prev;
+            }
+        }
+
+        Node* NEXT = temp->next;
+        Node* PREV = temp->prev;
+
+        Node* newNode = new Node;
+        newNode->val = value;
+        newNode->next = temp;
+        newNode->prev = PREV;
+        PREV->next = newNode;
+        temp->prev = newNode;
+
+        count++;
+    }
 }
+
 
 void List2::printHead(){
     Node* temp = head;
@@ -358,6 +436,44 @@ bool List2::operator!=(const List2& l)
     return !(*this == l);
 }
 
+bool List2::operator<(const List2& l)
+{
+    return count < l.count;
+}
+
+bool List2::operator>(const List2& l)
+{
+    return count > l.count;
+}
+
+bool List2::operator<=(const List2& l)
+{
+    return (*this < l || *this == l);
+}
+
+bool List2::operator>=(const List2& l)
+{
+    return (*this > l || *this == l);
+}
+
+List2 List2::operator-()
+{
+    List2 l2;
+    /*l2.count = 0;
+    l2.head = nullptr;
+    l2.tail = nullptr;*/
+
+    Node* temp;
+    temp = head;
+    while (temp != nullptr) {
+        l2.addHead(temp->val);
+        temp = temp->next;
+    }
+    return l2;
+}
+
+
+
 
 Node& List2::operator[](int id)
 {
@@ -370,18 +486,6 @@ Node& List2::operator[](int id)
         id_count++;
         temp = temp->next;
     }
-}
-
-
-
-
-
-
-
-//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-List2 operator*(const List2 obj1, const List2 obj2)
-{
-    return List2();
 }
 
 
