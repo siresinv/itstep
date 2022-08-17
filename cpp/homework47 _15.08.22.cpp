@@ -87,6 +87,12 @@ int main()
     tree1.print(tree1.getRoot());
     std::cout << std::endl;
 
+
+    tree1.del();
+    tree1.print(tree1.getRoot());
+    std::cout << "Del All";
+    std::cout << std::endl;
+
     return 0;
 }
 
