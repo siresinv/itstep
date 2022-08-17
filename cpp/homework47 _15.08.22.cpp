@@ -1,4 +1,4 @@
-﻿// STEP _CPP _classwork47 _15.08.22
+﻿// STEP _CPP _homework47 _15.08.22
 /*
 ООП
 Бинарные деревья
@@ -82,6 +82,10 @@ int main()
     std::cout << tree1.getRoot()->value;
     std::cout << std::endl;
 
+
+    tree1.del(tree1.getRoot());
+    tree1.print(tree1.getRoot());
+    std::cout << std::endl;
 
     return 0;
 }
