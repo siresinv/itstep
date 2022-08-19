@@ -58,7 +58,7 @@ void searchFiles() {
     int count = 0;
     while (next_done != -1) {
         count++;
-        std::cout << fileinfo->name << std::endl;
+        std::cout << fileinfo->name << "\t" << fileinfo->attrib << std::endl;
         next_done = _findnext(done, fileinfo);
     }
     std::cout << "count: " << count << std::endl;
