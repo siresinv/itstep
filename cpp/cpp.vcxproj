@@ -19,10 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="classwork48 _17.08.22_2.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cw48html.html" />
+    <ClCompile Include="classwork49 _19.08.22_2.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
