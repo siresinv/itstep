@@ -109,9 +109,13 @@ public:
         x = ux;
         y = uy;
     }
+
     void print() {
         std::cout << "(" << x << ";" << y << ")\n";
     }
+
+    /*int getX() { return x; }
+    int getY() { return y; }*/
 };
 
 
@@ -119,19 +123,48 @@ class Figure {
     Point* arrP;
     int nP;
 public:
-    Figure(int nP = 5) : arrP{ new Point[nP] }, nP{nP} {
+    Figure(int nP = 5) : arrP{ new Point[nP] }, nP{ nP } {
         for (int i = 0; i < nP; i++) {
             arrP[i].setPoint(rand() % 10, rand() % 10);
         }
     }
 
+    //////////////
+    void setFigure(int nP) {
+        for (int i = 0; i < nP; i++) {
+            //this->arrP[i].setPoint(arrP[i].getX(), arrP[i].getY());
+            this->arrP[i].setPoint(rand() % 10, rand() % 10);
+        }
+        this->nP = nP;
+    }
+
     void print() {
-        std::cout << "";
+        std::cout << "Figure coord: \n";
         for (int i = 0; i < nP; i++) {
             arrP[i].print();
         }
     }
 
+};
+
+
+class Pict {
+    Figure* arrF;
+    int nF;
+public:
+    Pict(int nF = 3): arrF{ new Figure[nF] }, nF{ nF }{
+        for (int i = 0; i < nF; i++) {
+            ///////////////////
+            arrF[i].setFigure(rand() % 5);
+        }
+    }
+
+    void print() {
+        std::cout << "Figure list: \n";
+        for (int i = 0; i < nF; i++) {
+            arrF[i].print();
+        }
+    }
 };
 
 // НА ДОМ - КЛАСС - РИСУНОК - МАССИВ ФИГУР
@@ -152,8 +185,11 @@ int main()
     //std::cin >> c.y;
 
 
-    Figure f;
-    f.print();
+    //Figure f1;
+    //f1.print();
+
+    Pict p1{10};
+    p1.print();
 
     return 0;
 }
