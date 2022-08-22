@@ -92,8 +92,8 @@ public:
         std::cout << "\t";
 
         while (!BFSque.isEmpty()) {
-            std::cout << "\t";
-            std::cout << "\t";
+            
+            
 
             Node* elem = BFSque.getFirst();
             BFSque.pop();
@@ -123,7 +123,9 @@ public:
             std::cout << "(" << elem->value << ")";
             nNodeThisLevel--;
 
+
             
+
 
             if (elem->parent) {
                 if (elem == elem->parent->left) {
@@ -135,6 +137,11 @@ public:
                 BFSque.push(elem->right);
                 nNodeNextLevel++;
                 std::cout << char(191);// << "\t";
+            }
+
+
+            for (int i = 0; i < 20 / (nNodeNextLevel + 3); i++) {
+                //std::cout << "\t";
             }
 
 

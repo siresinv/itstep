@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="homework47 _15.08.22 _ BFS.cpp">
+    <ClCompile Include="classwork50 _22.08.22.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
