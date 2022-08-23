@@ -135,6 +135,8 @@ public:
 };
 
 
+
+//-+-+-+-
 class Student {
 protected:
     std::string name;
@@ -147,25 +149,43 @@ public:
     }
 };
 
-//////////////////////////////////////////// АГРЕГИРОВАНИЕМ СДЕЛАТЬ
+
+/*
 class Aspirant : public Student{
     std::string nameWork;
     bool readyWork;
     
 public:
-    Aspirant(std::string uName = "Ivan Ivanovich", int uAge = 30, std::string uNameWork = "Work1", bool isReadyWork = 0) : nameWork{ uNameWork }, readyWork{ isReadyWork } {
-        Student::name = uName;
-        Student::age = uAge;
+    Aspirant(std::string uName = "Ivan Ivanovich", int uAge = 30, std::string uNameWork = "Work1", bool isReadyWork = 0) :
+        Student{uName, uAge}, nameWork { uNameWork }, readyWork{ isReadyWork } {
+
+        //Student::name = uName;
+        //Student::age = uAge;
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        /*Aspirant2(string name, int num, string utitle, bool udone) :
-            Student{ name , num }, title{ utitle }, done{ udone }{};*/
+        //Aspirant2(string name, int num, string utitle, bool udone) :
+            //Student{ name , num }, title{ utitle }, done{ udone }{};
         
     };
 
     void print() {
         std::cout << "Student name: " << name << " age: " << age << " work: " << nameWork << " " << readyWork << std::endl;
+    }
+};
+*/
+
+class Aspirant {
+    Student stud;
+    std::string title;
+    bool done;
+public:
+    Aspirant(std::string name, int age, std::string title, bool done) :
+        stud{ name, age }, title{ title }, done{ done } {};
+
+    void print() {
+        stud.print();
+        std::cout << " work: " << title << " " << ((done) ? "done" : "not done");
     }
 };
 
@@ -180,8 +200,8 @@ public:
         l = 2 * 3.14 * r;
     }
 
-    void print() {
-
+    void print_c() {
+        std::cout << "circle with radius " << r << "and length " << l << std::endl;
     }
 };
 
@@ -192,20 +212,17 @@ protected:
 public:
     Square(double ux = 1) : x{ ux } {};
 
-    void print() {
-
+    void print_s() {
+        std::cout << "square with side " << x  << std::endl;
     }
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////
 class CircleInSquare : public Circle, public Square {
-    
 public:
-    CircleInSquare(double x) : Square{ x }, Circle{ x / 2 } {};
+    CircleInSquare(double x = 1) : Square{ x }, Circle{ x / 2 } {};
     void print() {
-        std::cout << "В квадрат стороной " << x << " вписана окружность длиной " << l << std::endl;
+        std::cout << "To square with side " << x << " inscribed circle of length " << l << std::endl;
     }
-
 };
 
 int main()
@@ -225,11 +242,17 @@ int main()
     /*Elk elk1("ELK1");
     elk1.print();*/
 
-    /*Aspirant asp1("John", 35, "SuperWork", 1);
-    asp1.print();*/
+    Aspirant asp1("John", 35, "SuperWork", 1);
+    asp1.print();
 
-    CircleInSquare cis1;
+
+
+    /*CircleInSquare cis1;
     cis1.print();
+    CircleInSquare cis2(2);
+    cis2.print();
+    cis2.print_c();
+    cis2.print_s();*/
 
     return 0;
 }
@@ -242,7 +265,6 @@ int main()
 // }
 
 /*
-//////////////////////////////////////////// АГРЕГИРОВАНИЕМ СДЕЛАТЬ
 Создайте класс Student, который будет содержать
 информацию о студенте. С помощью механизма наследования, реализуйте класс Aspirant (аспирант —
 студент, который готовится к защите кандидатской
@@ -257,10 +279,12 @@ int main()
 результат: в квадрат стороной Х вписана окружность диной L
 */
 
+
 /* НА ДОМ
-Задание №2
+Задание №1
 Используя механизм множественного наследования разработайте класс “Автомобиль”. Должны быть классы “Колеса», «Двигатель», «Двери» и т.д.
 
-
+Задание 2
+Животные
 
 */
