@@ -11,6 +11,8 @@
 #include <iostream>
 
 
+//-+-+-+-+ Car
+
 class Wheel {
 protected:
     int radius;
@@ -68,10 +70,13 @@ public:
 };
 
 
-//-+-+-+-+
 
+
+//-+-+-+-+ Animal
+
+/*
 class Animal {
-protected:
+public:
     std::string classAnimal; // класс // млекопит птицы
     std::string group; // отряд // хищные попугаеобразные
     std::string family; // семейство // кошачьи псовые попугаевые
@@ -93,9 +98,9 @@ public:
         std::cout << ": " << classAnimal << std::endl;
     }
 };
+*/
 
-
-class Pet :public Animal {
+class Pet {
 protected:
     std::string nickname;
     std::string breed;
@@ -103,41 +108,77 @@ protected:
     int age;
 
 public:
-    //Pet()
-    void print() {
-        std::cout << "This is a typical pet: " << std::endl;
-        //
-        //
+    Pet(std::string nic = "Bethoven", std::string br = "serbernar", std::string hN = "John", int age = 2) :
+        nickname{ nic }, breed{ br }, hostName{ hN }, age{ age }{};
+
+
+    void eat() {};
+    void drink() {};
+    void sleep() {};
+
+    void print_p() {
+        //std::cout << "This is a typical pet: " << std::endl;
+        std::cout << "Nickname: " << nickname << std::endl;
+        std::cout << "Breed: " << breed << std::endl;
+        std::cout << "Hostname: " << hostName << std::endl;
+        std::cout << "Pet age: " << age << std::endl;
     }
 };
 
 
-class Dog : public Pet, public Animal { ////////////////////////
+class Dog : public Pet {
     bool trained;
-    int nCommand; //
+    int nCommand;
 public:
-    ///////////////////////////////////////////////////////////////////////////////
-    Dog(bool train = false, int nCom = 0) :
-        Pet{}, Animal{}, trained{ train }, nCommand{ nCom }{};
+    Dog(std::string nic = "Bethoven", std::string br = "serbernar", std::string hN = "John", int age = 2, bool train = false, int nCom = 0) :
+        Pet{nic, br, hN, age}, trained{ train }, nCommand{ ((trained) ? nCom : 0) }{};
 
     void print() {
+        std::cout << "A DOG" << std::endl;
+        print_p();
+        std::cout << ((trained) ? "trained" : "not trained") << std::endl;
+        std::cout << "Known command amount: " << nCommand << std::endl;
+        std::cout << std::endl;
+    }
+};
 
+
+class Cat : public Pet {
+    int sleepHours;
+public:
+    Cat(std::string nic = "Tom", std::string br = "russian blue", std::string hN = "John", int age = 2, int sH = 18) :
+        Pet{ nic, br, hN, age }, sleepHours{ sH }{};
+
+    void print() {
+        std::cout << "A CAT" << std::endl;
+        print_p();
+        std::cout << "Sleep hours by day: " << sleepHours << std::endl;
+        std::cout << std::endl;
     }
 };
 
 int main()
 {
 
-    /*Car car1{ 16, 113, "type1" };
+    Car car1{ 16, 113, "type1" };
     car1.print();
     std::cout << std::endl;
     Car car2{ 21, 500, "type2", "BMW", "crossover", "black"};
     car2.print();
-    std::cout << std::endl;*/
+    std::cout << std::endl;
 
 
+    Dog dog1;
+    dog1.print();
 
+    Dog dog2("Balto", "siberian husky","Gan", 5, true, 10);
+    dog2.print();
 
+    Cat cat1;
+    cat1.print();
+
+    Cat cat2("Bob", "street");
+    cat2.print();
 
     return 0;
 }
