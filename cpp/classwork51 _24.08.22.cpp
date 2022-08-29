@@ -162,6 +162,9 @@ public:
 };
 
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class Employer {
 protected:
     char* name;
@@ -173,6 +176,8 @@ public:
     virtual ~Employer() { 
         // здесь !!!нужен!!! виртуальный деструктор т.к. чтобы он по указателям в массиве в мейне
         // динамичски проходился по деструкторам объектов созданный с помощью NEW
+        std::cout << "delete employer " << name << "\n";
+
         delete[] name;
     };
 };
@@ -269,12 +274,17 @@ int main()
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ПРОВЕРИТЬ РАБОТУ ДЕСТРУКТОРОВ !!!
 
-    Employer* employers[2] = {new Worker{"vJohn", "SuperWorker"}, new Worker{"vJohn2", "SuperWorker2"} };
+    Employer* employers[3] = {new Worker{"vJohn", "SuperWorker"}, new Worker{"vJohn2", "SuperWorker2"}, new Manager{ "vJohn4", "SuperWorker4" } };
     employers[0]->print();
     employers[1]->print();
+    employers[2]->print();
+    delete employers[0];
+    delete employers[1];
+    delete employers[2];
 
     Employer* emp3 = new Manager{ "vJohn3", "SuperWorker3" };
     emp3->print();
+    delete emp3;
 
     Manager m1("Manager1", "SuperManager");
     m1.print();
