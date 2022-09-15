@@ -25,8 +25,18 @@ int main()
     std::ifstream inf("cw57.txt", std::ios::in);
     std::string word;
 
-    while (!inf.eof()) {
+    if (inf.is_open()) {
+        std::cout << "Open";
+    }
+    else {
+        std::cout << "NOT Open";
+    }
 
+    int num;
+
+    while (!inf.eof()) {
+        inf >> num;
+        std::cout << num;
     }
 
     return 0;

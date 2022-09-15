@@ -15,7 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="classwork60 _14.09.22 - last.cpp">
+    <None Include="BattleShip OOP\field2.f" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BattleShip OOP\bs_oop.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
