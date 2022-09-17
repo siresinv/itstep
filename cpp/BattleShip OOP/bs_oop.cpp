@@ -5,7 +5,6 @@
 #include <list>
 #include <algorithm>
 #include <vector>
-#include <queue>
 
 
 // использовать
@@ -22,6 +21,7 @@
 // ромбовидное наследование?
 
 
+const bool IS_SEE_CONST = true;
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // КОНСТАНТЫ ИГРЫ
@@ -72,8 +72,8 @@ enum SHOT_RESULT
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // КОНСТАНТЫ ПРОРИСОВКИ
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-const double GAME_VERSION = 1.0;
-const char ICON_SEE = '.';
+const double GAME_VERSION = 1.1;
+const char ICON_SEE = ' ';
 const char ICON_SHIP = 219;
 const char ICON_SHOT_MISS = '*';
 const char ICON_SHOT_HIT = 177;
@@ -128,7 +128,7 @@ public:
 	Field(int uField_No = 1, bool uVisible = true) :
 		w{ F_SIZE_W }, h{ F_SIZE_H }, field_No{ uField_No }, field{ new CELL_TYPE * [F_SIZE_H] }, shipCells{ 0 } { // через одномерный массив сделать и вообще вектором например
 
-		std::cout << "Field\n";
+		if(IS_SEE_CONST) std::cout << "Field\n";
 
 		for (int i = 0; i < h; i++) {
 			field[i] = new CELL_TYPE[w];
@@ -146,14 +146,26 @@ public:
 		}
 	};
 
+	Field(const Field& obj) {
+		this->w = obj.w;
+		this->h = obj.h;
+		this->field_No = obj.field_No;
+		
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < w; j++) {
+				
+				this->field[i][j] = obj.field[i][j];
+			}
+		}
+	}
 	
 
 	void fShow(bool fVisible) {
-		std::cout << "   1 2 3 4 5 6 7 8 9 10" << std::endl;
-		std::cout << "   -------------------" << std::endl;
+		std::cout << "   1   2   3   4   5   6   7   8   9   10" << std::endl;
+		std::cout << "  |---------------------------------------|" << std::endl;
 		CELL_TYPE cell;
 		for (int i = 0; i < h; i++) {
-			std::cout << char(65+i) << " " << "|"; //8
+			std::cout << char(65+i) << " " << "|";
 			for (int j = 0; j < w; j++) {
 				cell = field[i][j];
 
@@ -163,27 +175,28 @@ public:
 
 				switch (cell) {
 				case C_SHIP:
-					std::cout << ((fVisible) ? ICON_SHIP : ICON_SEE) << " ";
+					std::cout << " " << ((fVisible) ? ICON_SHIP : ICON_SEE) << " |";
 					break;
 				case C_HIT:
-					std::cout << ICON_SHOT_HIT << " ";
+					std::cout << " " << ICON_SHOT_HIT << " |";
 					break;
 				case C_MISS:
-					std::cout << ICON_SHOT_MISS << " ";
+					std::cout << " " << ICON_SHOT_MISS << " |";
 					break;
 				default:
-					std::cout << ICON_SEE << " ";
+					std::cout << " " << ICON_SEE << " |";
 					break;
 				}
 			}
 			std::cout << std::endl;
+			std::cout << "  |---------------------------------------|" << std::endl;
+
 		}
 		std::cout << "    ------------------------------" << std::endl;
 	}
 
 	~Field() {
-		std::cout << "DE_Field\n";
-
+		if (IS_SEE_CONST) std::cout << "DE_Field\n";
 		/*for (int i = 0; i < F_SIZE_H; i++) {
 			delete[] field[i];
 			field[i] = nullptr;
@@ -200,11 +213,11 @@ protected:
 	GAMER_STATE state;
 public:
 	GamerState() :state{ _WAIT } {
-		std::cout << "GamerState\n";
+		//std::cout << "GamerState\n";
 	};
 
 	~GamerState() {
-		std::cout << "DE_GamerState\n";
+		if (IS_SEE_CONST) std::cout << "DE_GamerState\n";
 	}
 };
 
@@ -215,7 +228,7 @@ protected:
 	SHOT_RESULT shotResult;
 public:
 	Move() :shotResult{ SHOT_NOT }, GamerState{} {
-		std::cout << "Move\n";
+		//std::cout << "Move\n";
 	}; //
 
 
@@ -223,44 +236,30 @@ public:
 
 		switch (cell) {
 		case C_SHIP:
-			std::cout << "hit\n";
-			shotResult = SHOT_HIT;
-			//cell = C_HIT;
 			return SHOT_HIT;
+			shotResult = SHOT_HIT; // чтобы из поля результата брался, а не возвращался
 			break;
 		case C_HIT:
-			std::cout << "repeat\n";
-			shotResult = SHOT_REPEAT;
 			return SHOT_REPEAT;
 			break;
 		case C_MISS:
-			std::cout << "repeat\n";
-			shotResult = SHOT_REPEAT;
 			return SHOT_REPEAT;
 			break;
 		default:
-			std::cout << "miss\n";
-			shotResult = SHOT_MISS;
-			//cell = C_MISS;
 			return SHOT_MISS;
 			break;
 		}
 	}
 
-
-	
-
-
-
 	~Move() {
-		std::cout << "DE_Move\n";
+		if (IS_SEE_CONST) std::cout << "DE_Move\n";
 	}
 };
 
 
 
 
-class Gamer : public Field, public Move {
+class Gamer : public virtual Field, public Move {
 protected:
 	GAMER_TYPE type;
 	std::string gamerName;
@@ -273,12 +272,22 @@ public:
 	Gamer(GAMER_TYPE uType = _HUMAN, std::string uGamerName = "John", int uField_No = 1, bool visible = true) :
 		type{ uType }, gamerName{ uGamerName }, fVisible{ visible }, nShot{ 0 }, nHit{ 0 }, field_No{ uField_No },
 		Field(uField_No, visible), Move{}{
-		std::cout << "Gamer\n";
+		if (IS_SEE_CONST)  std::cout << "Gamer" << this << "\n";
 	};
 
-	void gamerShow(int id) {
+	Gamer(const Gamer& obj){
+		this->type = obj.type;
+		this->gamerName = obj.gamerName;
+		this->field_No = obj.field_No;
+		this->fVisible = obj.fVisible;
+		this->nShot = obj.nShot;
+		this->nHit = obj.nHit;
+		Field(field);
+	}
+
+	void gamerShow() {
 			std::cout << "    ------------------------------" << std::endl;
-			std::cout << "    GAMER " << gamerName << " - " << ((type == _HUMAN) ? "Human" : "PC") << " - " << GAMER_STATE_NAME[state] << std::endl;
+			std::cout << "    " << char(2) << " GAMER " << gamerName << " - " << ((type == _HUMAN) ? "Human" : "PC") << " - " << GAMER_STATE_NAME[state] << std::endl;
 			std::cout << "    ------------------------------" << std::endl;
 
 			fShow(fVisible);
@@ -292,7 +301,7 @@ public:
 
 	void MovePrompt() {
 		std::cout << "    ------------------------------" << std::endl;
-		std::cout << "    GAMER " << gamerName << " - " << GAMER_STATE_NAME[state] << std::endl;
+		std::cout << "    " << char(16) << " GAMER " << gamerName << " - " << GAMER_STATE_NAME[state] << std::endl;
 		std::cout << "    ------------------------------" << std::endl;
 	}
 
@@ -320,19 +329,15 @@ public:
 	}
 
 
-	/*
-	C_SEE,
-	C_SHIP,
-	C_HIT,
-	C_MISS
-	*/
-
-	void writeMoveToArr(CELL_TYPE& cell, SHOT_RESULT shotResult) {
+	void writeMove(CELL_TYPE& cell, SHOT_RESULT shotResult) {
+		this->nShot += 1;
+		state = _MOVE;
 		switch (shotResult) {
 		case SHOT_MISS:
 			cell = C_MISS;
 			break;
 		case SHOT_HIT:
+			nHit += 1;
 			cell = C_HIT;
 			break;
 		default:
@@ -341,8 +346,9 @@ public:
 		
 	}
 
+
 	~Gamer() {
-		std::cout << "DE_Gamer\n";
+		if (IS_SEE_CONST) std::cout << "DE_Gamer\n";
 	};
 };
 
@@ -351,15 +357,14 @@ public:
 class GameState {
 protected:
 	GAME_STATE state;
-	std::list<Gamer>::iterator itCurrentGamer; // итератор текущего игрока, т.е. тот кто ходит
-	std::list<Gamer>::iterator itEnemyGamer; // итератор противника, т.е. под кого ходит текущий игрок
+
 public:
 	GameState() : state{ G_START } {
-		std::cout << "GameState\n";
+		if (IS_SEE_CONST) std::cout << "GameState\n";
 	};
 
 	~GameState() {
-		std::cout << "DE_GameState\n";
+		if (IS_SEE_CONST) std::cout << "DE_GameState\n";
 	}
 };
 
@@ -373,70 +378,60 @@ class Game : public GameState, public Intro, public Exit {
 protected:
 	int nGamer;
 	Gamer* gamers;
+	std::list<Gamer> GamerQueue;
+	std::list<Gamer>::iterator itCurrentGamer; // итератор текущего игрока, т.е. тот кто ходит
+	std::list<Gamer>::iterator itEnemyGamer; // итератор противника, т.е. под кого ходит текущий игрок
 public:
-	Game() : nGamer{ 2 }, gamers{ new Gamer[2]{ {_HUMAN, "Bill", 1, true}, {_PC, "IBM", 2, false}} }, GameState{} {
-		std::cout << "Game\n";
-	};
+	Game() : nGamer{ 2 }, gamers{ new Gamer[2]{ {_HUMAN, "Bill", 1, true}, {_PC, "IBM", 2, false}/*, {_PC, "IBM2", 2, true}*/ }}, GameState{} {
+		if (IS_SEE_CONST) std::cout << "Game\n";
 
-	void begin() {
-
-		// добавили в "ОЧЕРЕДЬ" игроков. Задали текущего игрока и игрока противника
-		std::list<Gamer> GamerQueue;
+		// добавили в "ОЧЕРЕДЬ" игроков. ОНИ СКОПИРОВАЛИСЬ. А ОРИГИНАЛЫ ПУСТЬ ОСТАНУТСЯ ДЛЯ ПЕРЕЗАПУСКА ИГРЫ В ДАЛЬНЕЙШЕМ
 		for (int i = 0; i < nGamer; i++) {
 			GamerQueue.push_back(gamers[i]);
 		}
-		itCurrentGamer = GamerQueue.begin();
-		itEnemyGamer = itCurrentGamer;
-		itEnemyGamer++;
+	};
+
+
+	void begin() {
+
+				
 
 		do {
-			// тут очередь будет переходить??? - !!!ИЛИ В МУВЕ!!!, т.е. где-то там
+			// Задали текущего игрока и игрока противника
+			itCurrentGamer = GamerQueue.begin();
+			itEnemyGamer = itCurrentGamer;
+			itEnemyGamer++; // ???
 
 			iShow();
-			std::cout << "    GAME STATE: " << GAME_STATE_NAME[state] << "  GAMERS AMOUNT: " << nGamer << std::endl;
+			std::cout << "  GAME STATE: " << GAME_STATE_NAME[state] << "  GAMERS AMOUNT: " << nGamer << std::endl;
 			std::cout << "---------------------------------------" << std::endl << std::endl << std::endl;
-			for (int i = 0; i < nGamer; i++) gamers[i].gamerShow(i);
+			for (auto gamer = GamerQueue.begin(); gamer != GamerQueue.end(); ++gamer) gamer->gamerShow();
 
 
-			/*if (itCurrentGamer == GamerQueue.end()) {
-				itEnemyGamer = GamerQueue.begin();
+			SHOT_RESULT shotResult;
+			if (state != G_END) {
+				itCurrentGamer->MovePrompt();
+				CELL_TYPE& cell = itCurrentGamer->doShot(itEnemyGamer);
+				shotResult = itCurrentGamer->getShotResult(cell);
+				itCurrentGamer->writeMove(cell, shotResult);
 			}
-			else {
-				itEnemyGamer++;
-			}*/
-
-			if (state) {
-
-			}
-
-			itCurrentGamer->MovePrompt();
-			CELL_TYPE& cell = itCurrentGamer->doShot(itEnemyGamer); // itEnemyGamer можно в функции вычислять по итератору itCurrentGamer
-			SHOT_RESULT shotResult = itCurrentGamer->getShotResult(cell);
-			itEnemyGamer->writeMoveToArr(cell, shotResult);
-			
-			// запись хода в поле
-
 			
 
-			//changeStates(itCurrentGamer); // функтором пусть будет. да еще какие-то классы можно так сделать
-
-			if (shotResult == SHOT_HIT) {
-				// переход хода
-				// проверка смена статусов
-				// и т.д.
+			if (shotResult != SHOT_HIT) {
+				GamerQueue.push_back(*itCurrentGamer);
+				GamerQueue.pop_front();
 			}
-
-
-			if (state != G_EXIT) system("cls");
+			
+			//if (state != G_EXIT) system("cls");
 		} while (state != G_EXIT);
 		eShow();
 	}
 
 
 	~Game() {
-		std::cout << "DE_Game\n";
-		/*delete[] gamers;
-		gamers = nullptr;*/
+		if (IS_SEE_CONST) std::cout << "DE_Game\n";
+		delete[] gamers;
+		gamers = nullptr;
 	};
 };
 
