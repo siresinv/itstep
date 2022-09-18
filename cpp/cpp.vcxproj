@@ -19,10 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="BattleShip OOP\field2.f" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="BattleShip OOP\bs_oop.cpp" />
+    <ClCompile Include="BattleShip OOP\BattleShip OOP.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

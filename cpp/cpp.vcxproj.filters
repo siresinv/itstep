@@ -15,11 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="BattleShip OOP\field2.f" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="BattleShip OOP\bs_oop.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="BattleShip OOP\BattleShip OOP.cpp">
+      <Filter>Файлы ресурсов</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
