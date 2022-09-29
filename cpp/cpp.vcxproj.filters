@@ -15,12 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BattleShip OOP\BattleShip OOP.cpp">
+    <ClCompile Include="classwork55 _02.09.22 — не писал почти.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="BattleShip OOP\field1.f" />
-    <None Include="BattleShip OOP\field2.f" />
   </ItemGroup>
 </Project>
