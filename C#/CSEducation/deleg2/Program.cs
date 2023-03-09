@@ -1,62 +1,57 @@
-﻿//using System;
+﻿using System.Runtime.CompilerServices;
 
-
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Diagnostics.Metrics;
-using System.Globalization;
-
-namespace ObserCollection
+namespace extensionMethods
 {
 
-    
+
+    public static class StringExtension
+    {
+        public static int CharCount(this string str, char c)
+        {
+            int counter = 0;
+            for (int i = 0; i<str.Length; i++)
+            {
+                if (str[i] == c)
+                {
+                    counter++;
+                }
+            }
+            return counter;
+        }
+    }
+
+
+    class User
+    {
+        public string Name { get; set; }
+        public User(string name) => Name = name;
+    }
+
+    static class UserExtension
+    {
+        public static string GetName(this User obj)
+        {
+            return obj.Name;
+        }
+
+    }
 
     class Program
     {
 
-        interface IMovable
-        {
-            public void Move() => Console.WriteLine("DEFAULT");
-            public string Name { get; }
-            delegate void MoveHandler(); //protected internal 
-            event MoveHandler MoveEvent;
 
-        }
-
-
-        class Person : IMovable
-        {
-            string name;
-
-            public IMovable.MoveHandler? moveEvent;
-
-             public event IMovable.MoveHandler MoveEvent
-            {
-                add => moveEvent += value;
-                remove => moveEvent -= value;
-            }
-
-            public string Name { get => name; }
-
-            public Person(string name) => this.name = name;
-
-            public void Move()
-            {
-                Console.WriteLine($"{name} is walking");
-                moveEvent?.Invoke();
-            }
-        }
-
-
+        
 
         static void Main(string[] args)
         {
-            IMovable tom = new Person("Tom");
-            tom.MoveEvent += () => Console.WriteLine($"{tom.Name} is moving");
-            tom.Move();
+            string str = "Hello, WORK!";
 
+            Console.WriteLine(str.CharCount('l'));
+
+
+            User user1 = new User("Tom");
+
+            Console.WriteLine(user1.GetName());
         }
-
-
     }
 }

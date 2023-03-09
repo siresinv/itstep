@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using WebApplication1.Models;
+using WebApplication2.Models;
 
-namespace WebApplication1.Controllers
+namespace WebApplication2.Controllers
 {
     public class HomeController : Controller
     {
@@ -22,14 +22,6 @@ namespace WebApplication1.Controllers
         {
             return View();
         }
-
-
-        public IActionResult Price()
-        {
-            return View();
-        }
-
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
