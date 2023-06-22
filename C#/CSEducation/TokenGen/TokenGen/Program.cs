@@ -13,6 +13,9 @@ namespace TokenGen
         {
             var builder = WebApplication.CreateBuilder();
 
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             builder.Services.AddAuthorization();
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -37,10 +40,17 @@ namespace TokenGen
                 });
             var app = builder.Build();
 
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+            app.UseHttpsRedirection();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.Map("/login/{username}", (string username) =>
+            app.MapGet("/login/{username}", (string username) =>
             {
                 var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
                 // создаем JWT-токен
@@ -54,7 +64,7 @@ namespace TokenGen
                 return new JwtSecurityTokenHandler().WriteToken(jwt);
             });
 
-            app.Map("/data", [Authorize] () => new { message = "Hello World!" });
+            app.MapGet("/data", [Authorize] () => new { message = "Hello World!" });
 
             app.Run();
         }

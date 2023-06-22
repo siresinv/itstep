@@ -5,7 +5,9 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TokenGen", "TokenGen\TokenGen.csproj", "{87094EFB-6ABB-45BC-8E50-56273C1464C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenGEN_JS", "TokenGEN_JS\TokenGEN_JS.csproj", "{4C87C4D0-8E7A-4DF1-BC75-84528031C4A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TokenGEN_JS", "TokenGEN_JS\TokenGEN_JS.csproj", "{4C87C4D0-8E7A-4DF1-BC75-84528031C4A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "swaggertest", "swaggertest\swaggertest.csproj", "{039108EB-1CE6-4320-886F-830645434A6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{4C87C4D0-8E7A-4DF1-BC75-84528031C4A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C87C4D0-8E7A-4DF1-BC75-84528031C4A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C87C4D0-8E7A-4DF1-BC75-84528031C4A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{039108EB-1CE6-4320-886F-830645434A6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{039108EB-1CE6-4320-886F-830645434A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{039108EB-1CE6-4320-886F-830645434A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{039108EB-1CE6-4320-886F-830645434A6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
