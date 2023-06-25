@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EF_Postgree", "EF_Postgree\EF_Postgree.csproj", "{BE387148-8D22-4F1D-985C-D6DFFC457748}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_appsettings_connectionstrings", "test_appsettings_connectionstrings\test_appsettings_connectionstrings.csproj", "{672A0E32-CEC2-4528-A0BA-A5A9FD693759}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BE387148-8D22-4F1D-985C-D6DFFC457748}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE387148-8D22-4F1D-985C-D6DFFC457748}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE387148-8D22-4F1D-985C-D6DFFC457748}.Release|Any CPU.Build.0 = Release|Any CPU
+		{672A0E32-CEC2-4528-A0BA-A5A9FD693759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{672A0E32-CEC2-4528-A0BA-A5A9FD693759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{672A0E32-CEC2-4528-A0BA-A5A9FD693759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{672A0E32-CEC2-4528-A0BA-A5A9FD693759}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
