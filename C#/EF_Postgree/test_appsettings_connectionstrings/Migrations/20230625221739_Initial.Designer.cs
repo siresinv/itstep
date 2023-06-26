@@ -11,7 +11,7 @@ using test_appsettings_connectionstrings;
 namespace test_appsettings_connectionstrings.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230625212922_Initial")]
+    [Migration("20230625221739_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
