@@ -363,5 +363,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/C#/ASPTEST/web70_for_add_ef_identity_api_controller/appsettings.json
-/C#/ASPTEST/web70_for_add_ef_identity_api_controller/appsettings.json
