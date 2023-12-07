@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "csABC_class3": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:51436;http://localhost:51437"
+    }
+  }
+}
