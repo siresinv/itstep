@@ -14,6 +14,5 @@ namespace DBRepository
             Database.EnsureCreated();
         }
 
-
     }
 }
