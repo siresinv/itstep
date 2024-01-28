@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend", "Frontend\Frontend.csproj", "{E37F28B5-093E-4594-B8E6-A31555FD0D2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBRepository", "DBRepository\DBRepository.csproj", "{6CC3B3DD-8411-429F-B070-BB5F63282794}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{C192CCA6-22D5-43FF-A9F4-CB76E9256EEE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E37F28B5-093E-4594-B8E6-A31555FD0D2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E37F28B5-093E-4594-B8E6-A31555FD0D2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E37F28B5-093E-4594-B8E6-A31555FD0D2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E37F28B5-093E-4594-B8E6-A31555FD0D2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CC3B3DD-8411-429F-B070-BB5F63282794}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CC3B3DD-8411-429F-B070-BB5F63282794}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CC3B3DD-8411-429F-B070-BB5F63282794}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CC3B3DD-8411-429F-B070-BB5F63282794}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C192CCA6-22D5-43FF-A9F4-CB76E9256EEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C192CCA6-22D5-43FF-A9F4-CB76E9256EEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C192CCA6-22D5-43FF-A9F4-CB76E9256EEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C192CCA6-22D5-43FF-A9F4-CB76E9256EEE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
